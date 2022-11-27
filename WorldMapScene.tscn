@@ -1,32 +1,39 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://tiles/terrain tiles.tres" type="TileSet" id=1]
-[ext_resource path="res://GameWorldMap.gd" type="Script" id=2]
+[ext_resource path="res://WorldMap.gd" type="Script" id=2]
+[ext_resource path="res://WorldMapScene.gd" type="Script" id=3]
 [ext_resource path="res://tiles/colored-transparent_packed.png" type="Texture" id=5]
 
 [sub_resource type="AtlasTexture" id=4]
+flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 560, 336, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=5]
+flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 352, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=1]
+flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 240, 288, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=2]
+flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 272, 144, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=3]
+flags = 4
 atlas = ExtResource( 5 )
 region = Rect2( 224, 288, 16, 16 )
 
 [node name="WorldMap" type="Node2D"]
+script = ExtResource( 3 )
 
-[node name="TileMap" type="TileMap" parent="."]
+[node name="GameWorldMap" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
@@ -88,9 +95,9 @@ margin_right = 114.0
 margin_bottom = 42.0
 text = "New World"
 
-[connection signal="toggled" from="ShowPlates" to="TileMap" method="_on_ShowPlates_toggled"]
-[connection signal="toggled" from="ShowElevation" to="TileMap" method="_on_ShowElevation_toggled"]
-[connection signal="toggled" from="ShowTemperature" to="TileMap" method="_on_ShowTemperature_toggled"]
-[connection signal="toggled" from="ShowWind" to="TileMap" method="_on_ShowWind_toggled"]
-[connection signal="toggled" from="ShowPrecipitation" to="TileMap" method="_on_ShowPrecipitation_toggled"]
-[connection signal="button_up" from="NewWorld" to="TileMap" method="_on_NewWorld_button_up"]
+[connection signal="toggled" from="ShowPlates" to="GameWorldMap" method="_on_ShowPlates_toggled"]
+[connection signal="toggled" from="ShowElevation" to="GameWorldMap" method="_on_ShowElevation_toggled"]
+[connection signal="toggled" from="ShowTemperature" to="GameWorldMap" method="_on_ShowTemperature_toggled"]
+[connection signal="toggled" from="ShowWind" to="GameWorldMap" method="_on_ShowWind_toggled"]
+[connection signal="toggled" from="ShowPrecipitation" to="GameWorldMap" method="_on_ShowPrecipitation_toggled"]
+[connection signal="button_up" from="NewWorld" to="GameWorldMap" method="_on_NewWorld_button_up"]

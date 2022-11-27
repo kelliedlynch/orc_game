@@ -10,18 +10,30 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "GameMapTile",
+"class": "OrcGameMapTile",
 "language": "GDScript",
-"path": "res://GameMapTile.gd"
+"path": "res://OrcGameMapTile.gd"
 }, {
 "base": "TileMap",
-"class": "GameWorldMap",
+"class": "RegionMap",
 "language": "GDScript",
-"path": "res://GameWorldMap.gd"
+"path": "res://RegionMap.gd"
+}, {
+"base": "TileMap",
+"class": "WorldMap",
+"language": "GDScript",
+"path": "res://WorldMap.gd"
+}, {
+"base": "Node",
+"class": "WorldMapTile",
+"language": "GDScript",
+"path": "res://WorldMapTile.gd"
 } ]
 _global_script_class_icons={
-"GameMapTile": "",
-"GameWorldMap": ""
+"OrcGameMapTile": "",
+"RegionMap": "",
+"WorldMap": "",
+"WorldMapTile": ""
 }
 
 [application]
@@ -43,4 +55,3 @@ common/enable_pause_aware_picking=true
 quality/driver/driver_name="GLES2"
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-environment/default_environment="res://default_env.tres"
