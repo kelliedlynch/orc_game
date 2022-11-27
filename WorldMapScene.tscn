@@ -1,0 +1,96 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://tiles/terrain tiles.tres" type="TileSet" id=1]
+[ext_resource path="res://GameWorldMap.gd" type="Script" id=2]
+[ext_resource path="res://tiles/colored-transparent_packed.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 5 )
+region = Rect2( 560, 336, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 5 )
+region = Rect2( 352, 0, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 5 )
+region = Rect2( 240, 288, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 5 )
+region = Rect2( 272, 144, 16, 16 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 5 )
+region = Rect2( 224, 288, 16, 16 )
+
+[node name="WorldMap" type="Node2D"]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 16, 16 )
+cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
+format = 1
+script = ExtResource( 2 )
+
+[node name="ShowPlates" type="Button" parent="."]
+margin_left = 960.0
+margin_top = 40.0
+margin_right = 988.0
+margin_bottom = 64.0
+hint_tooltip = "Show Plates"
+toggle_mode = true
+icon = SubResource( 4 )
+
+[node name="ShowElevation" type="Button" parent="."]
+margin_left = 960.0
+margin_top = 72.0
+margin_right = 988.0
+margin_bottom = 96.0
+hint_tooltip = "Show Elevation"
+toggle_mode = true
+icon = SubResource( 5 )
+
+[node name="ShowTemperature" type="Button" parent="."]
+margin_left = 960.0
+margin_top = 104.0
+margin_right = 988.0
+margin_bottom = 128.0
+hint_tooltip = "Show Temperature"
+toggle_mode = true
+icon = SubResource( 1 )
+icon_align = 1
+
+[node name="ShowWind" type="Button" parent="."]
+margin_left = 960.0
+margin_top = 136.0
+margin_right = 988.0
+margin_bottom = 160.0
+hint_tooltip = "Wind Speed"
+toggle_mode = true
+icon = SubResource( 2 )
+icon_align = 1
+
+[node name="ShowPrecipitation" type="Button" parent="."]
+margin_left = 960.0
+margin_top = 168.0
+margin_right = 988.0
+margin_bottom = 192.0
+hint_tooltip = "Show Precipitation"
+toggle_mode = true
+icon = SubResource( 3 )
+icon_align = 1
+
+[node name="NewWorld" type="Button" parent="."]
+margin_left = 32.0
+margin_top = 22.0
+margin_right = 114.0
+margin_bottom = 42.0
+text = "New World"
+
+[connection signal="toggled" from="ShowPlates" to="TileMap" method="_on_ShowPlates_toggled"]
+[connection signal="toggled" from="ShowElevation" to="TileMap" method="_on_ShowElevation_toggled"]
+[connection signal="toggled" from="ShowTemperature" to="TileMap" method="_on_ShowTemperature_toggled"]
+[connection signal="toggled" from="ShowWind" to="TileMap" method="_on_ShowWind_toggled"]
+[connection signal="toggled" from="ShowPrecipitation" to="TileMap" method="_on_ShowPrecipitation_toggled"]
+[connection signal="button_up" from="NewWorld" to="TileMap" method="_on_NewWorld_button_up"]
