@@ -1,4 +1,4 @@
-extends "res://OrcGameMapTile.gd"
+extends "res://maps/OrcGameMapTile.gd"
 class_name WorldMapTile
 
 var plateId: int

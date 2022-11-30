@@ -1,11 +1,12 @@
-extends "res://OrcGameMap.gd"
-class_name WorldMap
+extends "res://maps/OrcGameMap.gd"
+class_name GameWorldMap
 
-const WorldMapTile = preload("res://WorldMapTile.gd")
-const RegionMapScene = preload('res://RegionMapScene.gd')
+const WorldMapTile = preload("res://maps/worldmap/WorldMapTile.gd")
+const RegionMapScene = preload('res://maps/regionmap/RegionMapScene.gd')
+
 var dialog_window = ConfirmationDialog.new()
 
-func create_tiles():
+func generate_map_tiles():
 	var continental_plate_noise = init_noise(4, 40.0, 0.2, 4.0)
 	var soil_quality_noise = init_noise()
 	var temp_band_noise = init_noise(1, 60, 0.3, 20.0)
@@ -50,32 +51,26 @@ func create_tiles():
 			tile.temperature = apply_factor(tile.temperature, tile.elevation * .25)
 			
 	# Find terrain type of each tile based on its properties.
-		if tile.elevation < 0:
-			tile.region_type = "ocean"
-			continue
-		if tile.soil_quality < .4 and tile.precipitation < .4:
-			tile.region_type = "desert"
-			continue
-		if tile.soil_quality < .36:
-			tile.region_type = "rocky"
-			continue
-		if tile.soil_quality < .8 and tile.temperature < .5:
-			tile.region_type = "temperate"
-			continue
-		if tile.temperature > .49:
-			tile.region_type = "lush"
-			continue
-		tile.region_type = "unknown"
+	for tile in map_tiles:
+		var possible_regions = []
+		for region_type in TerrainConstants.REGION_PARAMETERS:
+			var region_parameters = TerrainConstants.REGION_PARAMETERS[region_type]['generation_parameters']
+			for p_name in region_parameters:
+				var param_name = p_name.substr(4)
+				if p_name.begins_with('min'):
+					if tile[param_name] < region_parameters[p_name]:
+						continue
+				elif p_name.begins_with('max'):
+					if tile[param_name] > region_parameters[p_name]:
+						continue
+				possible_regions.append(region_type)
+				
+		tile.region_type = possible_regions[0]
+
+
+func load_map_from_tiles(tiles: Array):
+	map_tiles = tiles
 		
-#	var minMax = get_min_max()
-#	prints("Elevation", minMax.minEl, minMax.maxEl)
-#	prints("Soil Quality",minMax.minSq, minMax.maxSq)
-#	prints("Temperature", minMax.minTm, minMax.maxTm)
-#	prints("Precipitation", minMax.minPr, minMax.maxPr)
-#	prints("Seismic Activity", minMax.minSe, minMax.maxSe)
-#	prints("Wind Intensity", minMax.minWi, minMax.maxWi)
-	pass
-	
 func get_min_max():
 	var maxEl = map_tiles[0].elevation; var minEl = maxEl
 	var maxSq = map_tiles[0].soil_quality; var minSq = maxSq
@@ -124,16 +119,6 @@ func get_min_max():
 		'minWi': minWi,
 		'maxWi': maxWi,
 	}
-	
-func apply_factor(value, factor):
-	if factor == 0 or value == 1 or value == -1:
-		return value
-	var distance = 1 - abs(value)
-	distance -= factor * distance
-	if value > 0:
-		return 1 - distance
-	else:
-		return -1 + distance
 
 func tile_is_plate_edge(tile: WorldMapTile):
 	for adj in tiles_adjacent_to(tile):
@@ -178,20 +163,20 @@ func color_world_map():
 		var blue = 0
 		var alpha = 1
 		
-		if tile.region_type == "ocean":
+		if tile.region_type == TerrainConstants.REGION_TYPE.OCEAN:
 			blue = apply_factor(0.7, tile.elevation)
-		elif tile.region_type == "desert":
+		elif tile.region_type == TerrainConstants.REGION_TYPE.DESERT:
 			green = apply_factor(.75, tile.elevation)
 			red = green
-		elif tile.region_type == "rocky":
+		elif tile.region_type == TerrainConstants.REGION_TYPE.ROCKY:
 			red = apply_factor(.5, tile.soil_quality)
 			green = red
 			blue = red
-		elif tile.region_type == "temperate":
+		elif tile.region_type == TerrainConstants.REGION_TYPE.TEMPERATE:
 			green = apply_factor(.7, tile.soil_quality)
 			blue = .25
 			red = .1
-		elif tile.region_type == "lush":
+		elif tile.region_type == TerrainConstants.REGION_TYPE.JUNGLE:
 			green = apply_factor(.55, tile.soil_quality * .5)
 			blue = apply_factor(.4, tile.precipitation * .25)
 		else:
@@ -201,11 +186,9 @@ func color_world_map():
 		
 		var color = Color(red, green, blue, alpha)
 		tile.rect.color = color
-	
-# Called when the node enters the scene tree for the first time.
+
 func _ready():
-	create_tiles()
-	draw_map()
+	draw_rect_map()
 	color_world_map()
 	
 func _unhandled_input(event):
@@ -219,15 +202,7 @@ func _unhandled_input(event):
 			dialog_window.popup_centered()
 			dialog_window.get_ok().connect('button_up', self.get_parent(), '_on_confirm_enter_region', [tile])
 			dialog_window.get_cancel().connect("button_up", self, '_on_cancel_dialog_window')
-#			get_tree().set_input_as_handled()
-		
-		
-func _on_confirm_enter_region(tile: WorldMapTile):
-#	dialog_window.hide()
-	remove_child(dialog_window)
 
-
-#	get_tree().change_scene('res://RegionMapScene')
 
 func _on_cancel_dialog_window():
 	self.remove_child(dialog_window)
@@ -263,12 +238,3 @@ func _on_ShowPrecipitation_toggled(button_pressed):
 		color_precipitation_map()
 	else:
 		color_world_map()
-
-
-func _on_NewWorld_button_up():
-	for tile in map_tiles:
-		tile.rect.queue_free()
-		tile.queue_free()
-	map_tiles = []
-	create_tiles()
-	draw_map()

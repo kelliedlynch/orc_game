@@ -9,38 +9,66 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "TileMap",
+"class": "GameWorldMap",
+"language": "GDScript",
+"path": "res://maps/worldmap/WorldMap.gd"
+}, {
+"base": "Area2D",
+"class": "Orc",
+"language": "GDScript",
+"path": "res://creatures/orcs/orc.gd"
+}, {
+"base": "TileMap",
+"class": "OrcGameMap",
+"language": "GDScript",
+"path": "res://maps/OrcGameMap.gd"
+}, {
 "base": "Node",
 "class": "OrcGameMapTile",
 "language": "GDScript",
-"path": "res://OrcGameMapTile.gd"
+"path": "res://maps/OrcGameMapTile.gd"
 }, {
 "base": "TileMap",
 "class": "RegionMap",
 "language": "GDScript",
-"path": "res://RegionMap.gd"
+"path": "res://maps/regionmap/RegionMap.gd"
 }, {
 "base": "TileMap",
-"class": "WorldMap",
+"class": "RegionMapLayer",
 "language": "GDScript",
-"path": "res://WorldMap.gd"
+"path": "res://maps/regionmap/RegionMapLayer.gd"
+}, {
+"base": "Node",
+"class": "RegionMapTile",
+"language": "GDScript",
+"path": "res://maps/regionmap/RegionMapTile.gd"
 }, {
 "base": "Node",
 "class": "WorldMapTile",
 "language": "GDScript",
-"path": "res://WorldMapTile.gd"
+"path": "res://maps/worldmap/WorldMapTile.gd"
 } ]
 _global_script_class_icons={
+"GameWorldMap": "",
+"Orc": "",
+"OrcGameMap": "",
 "OrcGameMapTile": "",
 "RegionMap": "",
-"WorldMap": "",
+"RegionMapLayer": "",
+"RegionMapTile": "",
 "WorldMapTile": ""
 }
 
 [application]
 
 config/name="Dwarf Whatever"
-run/main_scene="res://WorldMapScene.tscn"
+run/main_scene="res://scenes/WorldMapScene.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+WorldData="*res://maps/worldmap/WorldData.gd"
 
 [gui]
 

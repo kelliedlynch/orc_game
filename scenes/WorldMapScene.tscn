@@ -1,44 +1,42 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://tiles/terrain tiles.tres" type="TileSet" id=1]
-[ext_resource path="res://WorldMap.gd" type="Script" id=2]
-[ext_resource path="res://WorldMapScene.gd" type="Script" id=3]
-[ext_resource path="res://tiles/colored-transparent_packed.png" type="Texture" id=5]
+[ext_resource path="res://maps/worldmap/WorldMap.gd" type="Script" id=1]
+[ext_resource path="res://scenes/WorldMapScene.gd" type="Script" id=2]
+[ext_resource path="res://terrain/colored-transparent_packed.png" type="Texture" id=3]
 
 [sub_resource type="AtlasTexture" id=4]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 3 )
 region = Rect2( 560, 336, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=5]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 3 )
 region = Rect2( 352, 0, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 3 )
 region = Rect2( 240, 288, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=2]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 3 )
 region = Rect2( 272, 144, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=3]
 flags = 4
-atlas = ExtResource( 5 )
+atlas = ExtResource( 3 )
 region = Rect2( 224, 288, 16, 16 )
 
 [node name="WorldMap" type="Node2D"]
-script = ExtResource( 3 )
+script = ExtResource( 2 )
 
 [node name="GameWorldMap" type="TileMap" parent="."]
-tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
-script = ExtResource( 2 )
+script = ExtResource( 1 )
 
 [node name="ShowPlates" type="Button" parent="."]
 margin_left = 960.0
@@ -100,4 +98,4 @@ text = "New World"
 [connection signal="toggled" from="ShowTemperature" to="GameWorldMap" method="_on_ShowTemperature_toggled"]
 [connection signal="toggled" from="ShowWind" to="GameWorldMap" method="_on_ShowWind_toggled"]
 [connection signal="toggled" from="ShowPrecipitation" to="GameWorldMap" method="_on_ShowPrecipitation_toggled"]
-[connection signal="button_up" from="NewWorld" to="GameWorldMap" method="_on_NewWorld_button_up"]
+[connection signal="button_up" from="NewWorld" to="." method="_on_NewWorld_button_up"]

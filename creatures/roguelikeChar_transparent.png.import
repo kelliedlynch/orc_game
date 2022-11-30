@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/colored-transparent.png-c40637263a44bc9ca3b19b50877d610b.stex"
+path="res://.import/roguelikeChar_transparent.png-ec676cde9f0cc3f96ba1eacab3d66849.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tiles/colored-transparent.png"
-dest_files=[ "res://.import/colored-transparent.png-c40637263a44bc9ca3b19b50877d610b.stex" ]
+source_file="res://creatures/roguelikeChar_transparent.png"
+dest_files=[ "res://.import/roguelikeChar_transparent.png-ec676cde9f0cc3f96ba1eacab3d66849.stex" ]
 
 [params]
 
