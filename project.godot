@@ -9,10 +9,20 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "Creature",
+"language": "GDScript",
+"path": "res://creatures/Creature.gd"
+}, {
 "base": "TileMap",
 "class": "GameWorldMap",
 "language": "GDScript",
 "path": "res://maps/worldmap/WorldMap.gd"
+}, {
+"base": "Node",
+"class": "Job",
+"language": "GDScript",
+"path": "res://jobs/Job.gd"
 }, {
 "base": "Area2D",
 "class": "Orc",
@@ -28,6 +38,11 @@ _global_script_classes=[ {
 "class": "OrcGameMapTile",
 "language": "GDScript",
 "path": "res://maps/OrcGameMapTile.gd"
+}, {
+"base": "AStar2D",
+"class": "Pathfinder",
+"language": "GDScript",
+"path": "res://Pathfinder.gd"
 }, {
 "base": "TileMap",
 "class": "RegionMap",
@@ -50,10 +65,13 @@ _global_script_classes=[ {
 "path": "res://maps/worldmap/WorldMapTile.gd"
 } ]
 _global_script_class_icons={
+"Creature": "",
 "GameWorldMap": "",
+"Job": "",
 "Orc": "",
 "OrcGameMap": "",
 "OrcGameMapTile": "",
+"Pathfinder": "",
 "RegionMap": "",
 "RegionMapLayer": "",
 "RegionMapTile": "",
@@ -69,6 +87,8 @@ config/icon="res://icon.png"
 [autoload]
 
 WorldData="*res://maps/worldmap/WorldData.gd"
+JobDispatch="*res://jobs/JobDispatch.gd"
+Global="*res://Global.gd"
 
 [gui]
 

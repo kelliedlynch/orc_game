@@ -2,7 +2,7 @@ extends "res://maps/OrcGameMap.gd"
 class_name GameWorldMap
 
 const WorldMapTile = preload("res://maps/worldmap/WorldMapTile.gd")
-const RegionMapScene = preload('res://maps/regionmap/RegionMapScene.gd')
+const RegionMapScene = preload('res://scenes/RegionMapScene.gd')
 
 var dialog_window = ConfirmationDialog.new()
 
@@ -66,7 +66,6 @@ func generate_map_tiles():
 				possible_regions.append(region_type)
 				
 		tile.region_type = possible_regions[0]
-
 
 func load_map_from_tiles(tiles: Array):
 	map_tiles = tiles

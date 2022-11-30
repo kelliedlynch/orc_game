@@ -3,10 +3,6 @@ class_name RegionMap
 
 const RegionMapTile = preload("res://maps/regionmap/RegionMapTile.gd")
 
-func _init():
-	prints('RegionMap init')
-#	create_tiles(world_tile)
-
 func create_tiles(world_tile: WorldMapTile):
 	var elevation_noise = init_noise( int(floor(world_tile.seismic_activity * 5.0)), 10.0 + 50.0 * (1.0 - world_tile.elevation), abs(world_tile.elevation), 1.0 + 2.0 * world_tile.seismic_activity)
 	var soil_quality_noise = init_noise(3, 20.0, world_tile.soil_quality, 2.0)
@@ -21,7 +17,12 @@ func create_tiles(world_tile: WorldMapTile):
 		else:
 			tile.tile_type = TerrainConstants.TILE_TYPE.DIRT
 		map_tiles.append(tile)
-
+		Global.pathfinder.add_point(i, Vector2(x, y))
+	for i in range(map_tiles.size()):
+		var tile = map_tiles[i]
+		var adj_tiles = tiles_adjacent_to(tile)
+		for adj in adj_tiles:
+			Global.pathfinder.connect_points(i, map_tiles.find(adj))
 
 func color_tiles():
 	print('coloring tiles')
@@ -35,9 +36,9 @@ func color_tiles():
 
 func _ready():
 	draw_tile_map()
-	
-func _to_string():
-	var string = 'RegionMap'
-#	var string = "RegionMap with tile " + str(world_tile)
-#	string += 'map tile 0 ' + str(map_tiles[0])
-	return string
+
+func _unhandled_input(event):
+	if event is InputEventMouseButton and event.is_pressed():
+		var target_location = world_to_map(event.position)
+		var tile = tile_at(target_location.x, target_location.y)
+		JobDispatch.new_job(tile.location.x, tile.location.y)
