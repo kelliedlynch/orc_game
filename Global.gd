@@ -2,5 +2,11 @@ extends Node
 
 var pathfinder = Pathfinder.new()
 
-func _init():
-	pass
+var game_speed: int = GAME_SPEED.NORMAL
+
+enum GAME_SPEED {
+	PAUSED,
+	NORMAL,
+}
+
+

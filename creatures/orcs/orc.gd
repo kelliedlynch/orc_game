@@ -1,20 +1,16 @@
-extends 'res://creatures/Creature.gd'
+extends 'res://creatures/CreatureModel.gd'
 class_name Orc
 
+const CreatureType = preload('res://creatures/CreatureType.gd')
 
-var inputs = {"ui_right": Vector2.RIGHT,
-			"ui_left": Vector2.LEFT,
-			"ui_up": Vector2.UP,
-			"ui_down": Vector2.DOWN}
+func _init():
+	type = CreatureType.TYPE.HUMANOID
+	subtype = CreatureType.SUBTYPE.ORC
+	sprite_texture = load('res://creatures/orcs/orc_01.tres')
 
-func _ready():
-	position = position.snapped(Vector2.ONE * tile_size)
-	position += Vector2.ONE * tile_size/2
-	
-func _unhandled_input(event):
-	for dir in inputs.keys():
-		if event.is_action_pressed(dir):
-			move(dir)
-
-func move(dir):
-	position += inputs[dir] * tile_size
+	first_name_complete = ['Grug', 'Thog', 'Grest', 'Ogor', 'Ogon', 'Krag', 'Patrick']
+	first_name_syllable1 = ['Gr\'', 'Ku', 'Tak', 'Gor', 'Da', 'K\'', 'Bak']
+	first_name_syllable2 = ['thor', 'brag', 'duk', 'thak', 'tar', 'gar', 'dar', 'deg']
+	first_name_word1 = ['Snaggle', 'Rock', 'Green', 'Red', 'Yellow', 'Black', 'Crack', 'Gore', 'Dark', 'Sharp']
+	first_name_word2 = ['tooth', 'tusk', 'fang', 'heart', 'gut', 'wart', 'fist', 'grin', 'grip']
+	first_name = generate_first_name()

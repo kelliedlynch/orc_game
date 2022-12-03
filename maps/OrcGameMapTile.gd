@@ -1,7 +1,8 @@
 extends Node
 class_name OrcGameMapTile
 
-var location = { 'x': 0, 'y': 0}
+var x: int = 0
+var y: int = 0
 
 # these properties range from -1 to 1
 var elevation: float = 0.0
@@ -17,5 +18,6 @@ var region_type: int = 2
 
 var rect: ColorRect
 
-func _init(x: int, y: int):
-	location = {'x': x, 'y': y}
+func _init(_x: int, _y: int):
+	x = _x
+	y = _y

@@ -7,5 +7,5 @@ func _init(x: int, y: int).(x, y):
 	pass
 
 func _to_string():
-	var string = "worldMapTile at " + str(location.x) + ", " + str(location.y) + "\n"
+	var string = "worldMapTile at " + str(x) + ", " + str(y) + "\n"
 	return string

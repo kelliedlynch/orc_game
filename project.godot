@@ -10,29 +10,39 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Area2D",
-"class": "Creature",
+"class": "CreatureBody",
 "language": "GDScript",
-"path": "res://creatures/Creature.gd"
+"path": "res://creatures/CreatureBody.gd"
 }, {
-"base": "TileMap",
-"class": "GameWorldMap",
+"base": "Node",
+"class": "CreatureModel",
 "language": "GDScript",
-"path": "res://maps/worldmap/WorldMap.gd"
+"path": "res://creatures/CreatureModel.gd"
+}, {
+"base": "TabContainer",
+"class": "Inspector",
+"language": "GDScript",
+"path": "res://ui_elements/Inspector.gd"
 }, {
 "base": "Node",
 "class": "Job",
 "language": "GDScript",
 "path": "res://jobs/Job.gd"
 }, {
-"base": "Area2D",
+"base": "Node",
 "class": "Orc",
 "language": "GDScript",
-"path": "res://creatures/orcs/orc.gd"
+"path": "res://creatures/orcs/Orc.gd"
 }, {
-"base": "TileMap",
+"base": "Node2D",
 "class": "OrcGameMap",
 "language": "GDScript",
 "path": "res://maps/OrcGameMap.gd"
+}, {
+"base": "TileMap",
+"class": "OrcGameMapLayer",
+"language": "GDScript",
+"path": "res://maps/OrcGameMapLayer.gd"
 }, {
 "base": "Node",
 "class": "OrcGameMapTile",
@@ -44,7 +54,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Pathfinder.gd"
 }, {
-"base": "TileMap",
+"base": "Node2D",
 "class": "RegionMap",
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMap.gd"
@@ -54,10 +64,20 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMapLayer.gd"
 }, {
+"base": "Node2D",
+"class": "RegionMapScene",
+"language": "GDScript",
+"path": "res://scenes/RegionMapScene.gd"
+}, {
 "base": "Node",
 "class": "RegionMapTile",
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMapTile.gd"
+}, {
+"base": "Node2D",
+"class": "WorldMap",
+"language": "GDScript",
+"path": "res://maps/worldmap/WorldMap.gd"
 }, {
 "base": "Node",
 "class": "WorldMapTile",
@@ -65,22 +85,26 @@ _global_script_classes=[ {
 "path": "res://maps/worldmap/WorldMapTile.gd"
 } ]
 _global_script_class_icons={
-"Creature": "",
-"GameWorldMap": "",
+"CreatureBody": "",
+"CreatureModel": "",
+"Inspector": "",
 "Job": "",
 "Orc": "",
 "OrcGameMap": "",
+"OrcGameMapLayer": "",
 "OrcGameMapTile": "",
 "Pathfinder": "",
 "RegionMap": "",
 "RegionMapLayer": "",
+"RegionMapScene": "",
 "RegionMapTile": "",
+"WorldMap": "",
 "WorldMapTile": ""
 }
 
 [application]
 
-config/name="Dwarf Whatever"
+config/name="Orc Game"
 run/main_scene="res://scenes/WorldMapScene.tscn"
 config/icon="res://icon.png"
 

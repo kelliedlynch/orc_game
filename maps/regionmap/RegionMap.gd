@@ -23,22 +23,40 @@ func create_tiles(world_tile: WorldMapTile):
 		var adj_tiles = tiles_adjacent_to(tile)
 		for adj in adj_tiles:
 			Global.pathfinder.connect_points(i, map_tiles.find(adj))
-
-func color_tiles():
-	print('coloring tiles')
+	
+func draw_tile_map():
+	var surface_layer = RegionMapLayer.new(tile_size)
+	var vegetation_layer = RegionMapLayer.new(tile_size)
+	add_child(surface_layer)
+	add_child(vegetation_layer)
 	for tile in map_tiles:
-		var red = (tile.elevation + 1) / 2
-		var green = red
-		var blue = red
+		var x = tile.x
+		var y = tile.y
+		var base_tile_type = TerrainConstants.TILE_TYPE.keys()[TerrainConstants.REGION_PARAMETERS[tile.region_type]['tile_types']['base_tile_types'][0]]
+		surface_layer.set_cell(x, y, surface_layer.tile_set.find_tile_by_name(base_tile_type))
+		if tile.tile_type != TerrainConstants.TILE_TYPE.DIRT:
+			vegetation_layer.set_cell(x, y, vegetation_layer.tile_set.find_tile_by_name(TerrainConstants.TILE_TYPE.keys()[tile.tile_type]))
+		# Add a one tile border around the map so autotile will work
+		var xx = map_size.x; var yy = map_size.y
+		if x == 0:
+			xx = x - 1
+		if x == map_size.x - 1:
+			xx = x + 1
+		if x != xx:
+			surface_layer.set_cell(xx, y, surface_layer.get_cell(x, y))
+			vegetation_layer.set_cell(xx, y, vegetation_layer.get_cell(x, y))
+		if y == 0:
+			yy = y - 1
+		if y == map_size.x - 1:
+			yy = y + 1
+		if y != yy:
+			surface_layer.set_cell(x, yy, surface_layer.get_cell(x, y))
+			vegetation_layer.set_cell(x, yy, vegetation_layer.get_cell(x, y))
+		if x != xx and y != yy:
+			surface_layer.set_cell(xx, yy, surface_layer.get_cell(x, y))
+			vegetation_layer.set_cell(xx, yy, vegetation_layer.get_cell(x, y))
+	surface_layer.update_bitmask_region(Vector2(0, 0), Vector2(map_size.x, map_size.y))
+	vegetation_layer.update_bitmask_region(Vector2(0, 0), Vector2(map_size.x, map_size.y))
 
-		var color = Color(red, green, blue, 1)
-		tile.rect.color = color
-
-func _ready():
+func _enter_tree():
 	draw_tile_map()
-
-func _unhandled_input(event):
-	if event is InputEventMouseButton and event.is_pressed():
-		var target_location = world_to_map(event.position)
-		var tile = tile_at(target_location.x, target_location.y)
-		JobDispatch.new_job(tile.location.x, tile.location.y)

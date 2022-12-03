@@ -1,8 +1,8 @@
 extends "res://maps/OrcGameMap.gd"
-class_name GameWorldMap
+class_name WorldMap
 
-const WorldMapTile = preload("res://maps/worldmap/WorldMapTile.gd")
-const RegionMapScene = preload('res://scenes/RegionMapScene.gd')
+#const WorldMapTile = preload("res://maps/worldmap/WorldMapTile.gd")
+#const RegionMapScene = preload('res://scenes/RegionMapScene.gd')
 
 var dialog_window = ConfirmationDialog.new()
 
@@ -185,23 +185,6 @@ func color_world_map():
 		
 		var color = Color(red, green, blue, alpha)
 		tile.rect.color = color
-
-func _ready():
-	draw_rect_map()
-	color_world_map()
-	
-func _unhandled_input(event):
-	if event is InputEventMouseButton and event.is_pressed():
-		var target_location = world_to_map(event.position)
-		var tile = tile_at(target_location.x, target_location.y)
-		if !dialog_window.visible:
-			dialog_window.window_title = "window title"
-			dialog_window.dialog_text = "dialog text"
-			self.add_child(dialog_window)
-			dialog_window.popup_centered()
-			dialog_window.get_ok().connect('button_up', self.get_parent(), '_on_confirm_enter_region', [tile])
-			dialog_window.get_cancel().connect("button_up", self, '_on_cancel_dialog_window')
-
 
 func _on_cancel_dialog_window():
 	self.remove_child(dialog_window)

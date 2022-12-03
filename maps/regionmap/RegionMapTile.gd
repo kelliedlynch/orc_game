@@ -5,6 +5,3 @@ var tile_type: int
 
 func _init(x: int, y: int).(x, y):
 	pass
-	
-func _ready():
-	pass
