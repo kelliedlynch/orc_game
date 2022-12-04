@@ -1,5 +1,4 @@
 extends TabContainer
-class_name Inspector
 
 var margin: int = 10
 

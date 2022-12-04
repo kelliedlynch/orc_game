@@ -1,18 +1,15 @@
-extends Node2D
-class_name RegionMapScene
+extends OrcGameMapScene
 
-var region_map: RegionMap
-var inspector: TabContainer
+onready var region_map: RegionMap = $RegionMap
+onready var inspector: TabContainer = load('res://ui_elements/Inspector.gd').new()
 
 func _init():
 	pause_mode = Node.PAUSE_MODE_PROCESS
 
 func _ready():
-	load_inspector()
+	add_child(inspector)
 
 func create_region_from_tile(tile: WorldMapTile):
-	region_map = RegionMap.new()
-	add_child(region_map)
 	region_map.create_tiles(tile)
 
 func _on_BackButton_button_up():
@@ -26,17 +23,15 @@ func _spawn_new_orc(x: int = -1, y: int = -1):
 	var orc = Orc.new()
 	add_child(orc)
 	if x == -1 or y == -1:
-		x = int(region_map.map_size.x / 2)
-		y = int(region_map.map_size.y / 2)
+		#warning-ignore:integer_division
+		x = region_map.width / 2
+		#warning-ignore:integer_division
+		y = region_map.height / 2
 	var tile = region_map.tile_at(x, y)
 	orc.move_to_tile(tile)
 	
 func find_adjacent_tiles(creature: CreatureModel) -> Array:
 	return region_map.tiles_adjacent_to(region_map.tile_at(creature.x, creature.y))
-	
-func load_inspector():
-	inspector = Inspector.new()
-	add_child(inspector)
 	
 func show_inspector(position: Vector2):
 	var data = {}
@@ -68,15 +63,16 @@ func _unhandled_input(event):
 				show_inspector(event.position)
 
 func _input(event):
-	if event is InputEventKey:
-		if event.is_pressed():
-			if event.get_scancode() == KEY_SPACE:
-				toggle_game_speed()
-			if event.get_scancode() == KEY_ESCAPE:
-				inspector.hide()
-		
-		
+	match event.get_class():
+		'InputEventKey':
+			match event.get_scancode():
+				KEY_SPACE:
+					if event.is_pressed(): toggle_game_speed()
+				KEY_ESCAPE:
+					if event.is_pressed(): inspector.hide()
+
 func toggle_game_speed():
+	print('toggle game speed')
 	if Global.game_speed == Global.GAME_SPEED.PAUSED:
 		Global.game_speed = Global.GAME_SPEED.NORMAL
 		get_tree().paused = false

@@ -1,11 +1,10 @@
-extends "res://maps/OrcGameMapLayer.gd"
+extends OrcGameMapLayer
 class_name RegionMapLayer
 
-const RegionMapTile = preload("res://maps/regionmap/RegionMapTile.gd")
+#const RegionMapTile = preload("res://maps/regionmap/RegionMapTile.gd")
 
-func _init(tile_size: Vector2) -> void:
-	set_cell_size(tile_size)
-	set_tileset(load('res://terrain/terrain_tiles.tres'))
+#func _init():
+#	set_tileset(load('res://terrain/terrain_tiles.tres'))
 
 #func _unhandled_input(event):
 #	if event is InputEventMouseButton and event.is_pressed():

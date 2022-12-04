@@ -4,10 +4,11 @@
 extends "res://scenes/RegionMapScene.gd"
 
 func _init():
-	var default_tile = WorldMapTile.new(1, 1)
-	create_region_from_tile(default_tile)
+	pass
 
 func _ready():
+	var default_tile = WorldMapTile.new(1, 1)
+	create_region_from_tile(default_tile)
 	create_spawn_button()
 
 func create_spawn_button():

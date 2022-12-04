@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://creatures/CreatureModel.gd"
 }, {
-"base": "TabContainer",
-"class": "Inspector",
-"language": "GDScript",
-"path": "res://ui_elements/Inspector.gd"
-}, {
 "base": "Node",
 "class": "Job",
 "language": "GDScript",
@@ -45,6 +40,11 @@ _global_script_classes=[ {
 "path": "res://maps/OrcGameMapLayer.gd"
 }, {
 "base": "Node",
+"class": "OrcGameMapScene",
+"language": "GDScript",
+"path": "res://scenes/OrcGameMapScene.gd"
+}, {
+"base": "Object",
 "class": "OrcGameMapTile",
 "language": "GDScript",
 "path": "res://maps/OrcGameMapTile.gd"
@@ -54,32 +54,27 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Pathfinder.gd"
 }, {
-"base": "Node2D",
+"base": "OrcGameMap",
 "class": "RegionMap",
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMap.gd"
 }, {
-"base": "TileMap",
+"base": "OrcGameMapLayer",
 "class": "RegionMapLayer",
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMapLayer.gd"
 }, {
-"base": "Node2D",
-"class": "RegionMapScene",
-"language": "GDScript",
-"path": "res://scenes/RegionMapScene.gd"
-}, {
-"base": "Node",
-"class": "RegionMapTile",
-"language": "GDScript",
-"path": "res://maps/regionmap/RegionMapTile.gd"
-}, {
-"base": "Node2D",
+"base": "OrcGameMap",
 "class": "WorldMap",
 "language": "GDScript",
 "path": "res://maps/worldmap/WorldMap.gd"
 }, {
-"base": "Node",
+"base": "OrcGameMapLayer",
+"class": "WorldMapLayer",
+"language": "GDScript",
+"path": "res://maps/worldmap/WorldMapLayer.gd"
+}, {
+"base": "Object",
 "class": "WorldMapTile",
 "language": "GDScript",
 "path": "res://maps/worldmap/WorldMapTile.gd"
@@ -87,25 +82,24 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "CreatureBody": "",
 "CreatureModel": "",
-"Inspector": "",
 "Job": "",
 "Orc": "",
 "OrcGameMap": "",
 "OrcGameMapLayer": "",
+"OrcGameMapScene": "",
 "OrcGameMapTile": "",
 "Pathfinder": "",
 "RegionMap": "",
 "RegionMapLayer": "",
-"RegionMapScene": "",
-"RegionMapTile": "",
 "WorldMap": "",
+"WorldMapLayer": "",
 "WorldMapTile": ""
 }
 
 [application]
 
 config/name="Orc Game"
-run/main_scene="res://scenes/WorldMapScene.tscn"
+run/main_scene="res://scenes/testing grounds/WorldMapTestingGround.tscn"
 config/icon="res://icon.png"
 
 [autoload]

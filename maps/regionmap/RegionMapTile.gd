@@ -1,5 +1,4 @@
 extends "res://maps/OrcGameMapTile.gd"
-class_name RegionMapTile
 
 var tile_type: int
 

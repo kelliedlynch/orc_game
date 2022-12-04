@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scenes/testing grounds/CreatureTestingGround.gd" type="Script" id=1]
+[ext_resource path="res://maps/regionmap/RegionMap.gd" type="Script" id=2]
+[ext_resource path="res://maps/regionmap/RegionMapLayer.gd" type="Script" id=3]
+[ext_resource path="res://terrain/region_tiles.tres" type="TileSet" id=4]
+
+[node name="CreatureTestingGround" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="RegionMap" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="SurfaceLayer" type="TileMap" parent="RegionMap"]
+tile_set = ExtResource( 4 )
+format = 1
+script = ExtResource( 3 )
+
+[node name="VegetationLayer" type="TileMap" parent="RegionMap"]
+tile_set = ExtResource( 4 )
+format = 1
+script = ExtResource( 3 )

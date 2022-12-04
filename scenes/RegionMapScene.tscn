@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://terrain/terrain_tiles.tres" type="TileSet" id=1]
+[ext_resource path="res://terrain/region_tiles.tres" type="TileSet" id=1]
 [ext_resource path="res://terrain/colored-transparent_packed.png" type="Texture" id=2]
 [ext_resource path="res://maps/regionmap/RegionMap.gd" type="Script" id=3]
 [ext_resource path="res://scenes/RegionMapScene.gd" type="Script" id=4]
+[ext_resource path="res://maps/regionmap/RegionMapLayer.gd" type="Script" id=5]
 
 [sub_resource type="AtlasTexture" id=1]
 flags = 4
@@ -19,6 +20,14 @@ cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 0, 0, 0, 0, 0, 0 )
 format = 1
 script = ExtResource( 3 )
+
+[node name="SurfaceLayer" type="TileMap" parent="RegionMap"]
+format = 1
+script = ExtResource( 5 )
+
+[node name="VegetationLayer" type="TileMap" parent="RegionMap"]
+format = 1
+script = ExtResource( 5 )
 
 [node name="BackButton" type="Button" parent="."]
 margin_left = 36.0
