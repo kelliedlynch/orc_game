@@ -9,91 +9,104 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Area2D",
-"class": "CreatureBody",
-"language": "GDScript",
-"path": "res://creatures/CreatureBody.gd"
-}, {
-"base": "Node",
+"base": "EntityModel",
 "class": "CreatureModel",
 "language": "GDScript",
-"path": "res://creatures/CreatureModel.gd"
+"path": "res://entity/creature/CreatureModel.gd"
+}, {
+"base": "RegionMapScene",
+"class": "CreatureTestingGround",
+"language": "GDScript",
+"path": "res://scene/testing grounds/CreatureTestingGround.gd"
+}, {
+"base": "Area2D",
+"class": "EntityBody",
+"language": "GDScript",
+"path": "res://entity/EntityBody.gd"
+}, {
+"base": "Node",
+"class": "EntityModel",
+"language": "GDScript",
+"path": "res://entity/EntityModel.gd"
 }, {
 "base": "Node",
 "class": "Job",
 "language": "GDScript",
-"path": "res://jobs/Job.gd"
+"path": "res://job/Job.gd"
 }, {
-"base": "Node",
-"class": "Orc",
+"base": "CreatureModel",
+"class": "OGCreatureOrc",
 "language": "GDScript",
-"path": "res://creatures/orcs/Orc.gd"
+"path": "res://entity/creature/orc/OGCreatureOrc.gd"
+}, {
+"base": "EntityModel",
+"class": "OGItemBone",
+"language": "GDScript",
+"path": "res://entity/item/OGItemBone.gd"
 }, {
 "base": "Node2D",
 "class": "OrcGameMap",
 "language": "GDScript",
-"path": "res://maps/OrcGameMap.gd"
+"path": "res://map/OrcGameMap.gd"
 }, {
 "base": "TileMap",
 "class": "OrcGameMapLayer",
 "language": "GDScript",
-"path": "res://maps/OrcGameMapLayer.gd"
+"path": "res://map/OrcGameMapLayer.gd"
 }, {
 "base": "Node",
 "class": "OrcGameMapScene",
 "language": "GDScript",
-"path": "res://scenes/OrcGameMapScene.gd"
+"path": "res://scene/OrcGameMapScene.gd"
 }, {
 "base": "Object",
 "class": "OrcGameMapTile",
 "language": "GDScript",
-"path": "res://maps/OrcGameMapTile.gd"
+"path": "res://map/OrcGameMapTile.gd"
 }, {
 "base": "AStar2D",
 "class": "Pathfinder",
 "language": "GDScript",
-"path": "res://Pathfinder.gd"
+"path": "res://autoload_global/Pathfinder.gd"
 }, {
 "base": "OrcGameMap",
 "class": "RegionMap",
 "language": "GDScript",
-"path": "res://maps/regionmap/RegionMap.gd"
+"path": "res://map/regionmap/RegionMap.gd"
 }, {
 "base": "OrcGameMapLayer",
 "class": "RegionMapLayer",
 "language": "GDScript",
-"path": "res://maps/regionmap/RegionMapLayer.gd"
+"path": "res://map/regionmap/RegionMapLayer.gd"
 }, {
 "base": "OrcGameMapScene",
 "class": "RegionMapScene",
 "language": "GDScript",
-"path": "res://scenes/RegionMapScene.gd"
+"path": "res://scene/RegionMapScene.gd"
 }, {
 "base": "OrcGameMapTile",
 "class": "RegionMapTile",
 "language": "GDScript",
-"path": "res://maps/regionmap/RegionMapTile.gd"
+"path": "res://map/regionmap/RegionMapTile.gd"
 }, {
 "base": "OrcGameMap",
 "class": "WorldMap",
 "language": "GDScript",
-"path": "res://maps/worldmap/WorldMap.gd"
+"path": "res://map/worldmap/WorldMap.gd"
 }, {
 "base": "OrcGameMapLayer",
 "class": "WorldMapLayer",
 "language": "GDScript",
-"path": "res://maps/worldmap/WorldMapLayer.gd"
-}, {
-"base": "Object",
-"class": "WorldMapTile",
-"language": "GDScript",
-"path": "res://maps/worldmap/WorldMapTile.gd"
+"path": "res://map/worldmap/WorldMapLayer.gd"
 } ]
 _global_script_class_icons={
-"CreatureBody": "",
 "CreatureModel": "",
+"CreatureTestingGround": "",
+"EntityBody": "",
+"EntityModel": "",
 "Job": "",
-"Orc": "",
+"OGCreatureOrc": "",
+"OGItemBone": "",
 "OrcGameMap": "",
 "OrcGameMapLayer": "",
 "OrcGameMapScene": "",
@@ -104,21 +117,24 @@ _global_script_class_icons={
 "RegionMapScene": "",
 "RegionMapTile": "",
 "WorldMap": "",
-"WorldMapLayer": "",
-"WorldMapTile": ""
+"WorldMapLayer": ""
 }
 
 [application]
 
 config/name="Orc Game"
-run/main_scene="res://scenes/testing grounds/WorldMapTestingGround.tscn"
+run/main_scene="res://scene/testing grounds/WorldMapTestingGround.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-WorldData="*res://maps/worldmap/WorldData.gd"
-JobDispatch="*res://jobs/JobDispatch.gd"
-Global="*res://Global.gd"
+WorldData="*res://map/worldmap/WorldData.gd"
+Global="*res://autoload_global/Global.gd"
+JobDispatch="*res://autoload_global/JobDispatch.gd"
+CreatureType="*res://autoload_global/CreatureType.gd"
+CreatureSubtype="*res://autoload_global/CreatureSubtype.gd"
+RegionType="*res://autoload_global/RegionType.gd"
+TileType="*res://autoload_global/TileType.gd"
 
 [gui]
 
