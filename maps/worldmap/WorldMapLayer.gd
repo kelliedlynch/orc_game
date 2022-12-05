@@ -63,13 +63,4 @@ func color_tiles(colors: Array):
 	var index = 0
 	for color in colors:
 		rect_tiles[index].set_frame_color(colors[index])
-		index += 1	
-
-#	for tile in tiles:
-#		var position = map_to_viewport(Vector2(tile.x, tile.y))
-#		var rect = ColorRect.new()
-#		rect.set_position(position)
-#		rect.set_size(cell_size)
-#		tile.rect = rect
-#		rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
-#		self.add_child(rect)
+		index += 1

@@ -87,7 +87,7 @@ func wander(delta) -> void:
 	if time_idle / 4  + randf() / 5 > laziness:
 		# move to a random valid adjacent tile that it has the energy to move to
 		# first find adjacent tiles
-		var tiles = get_tree().current_scene.find_adjacent_tiles(self)
+		var tiles = get_parent().tiles_adjacent_to_creature(self)
 		# then make sure tiles are valid
 		# then check energy
 		# then pick tile

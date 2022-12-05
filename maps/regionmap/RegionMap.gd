@@ -1,16 +1,14 @@
 extends OrcGameMap
 class_name RegionMap
 
-const RegionMapTile = preload("res://maps/regionmap/RegionMapTile.gd")
-var surface_layer: RegionMapLayer 
-var vegetation_layer: RegionMapLayer
+onready var surface_layer: RegionMapLayer = $SurfaceLayer
+onready var vegetation_layer: RegionMapLayer = $VegetationLayer
+
+signal region_tiles_generated()
 
 func _ready():
-#	surface_layer = $SurfaceLayer
-#	vegetation_layer = $VegetationLayer
-	surface_layer = get_node("SurfaceLayer") as RegionMapLayer
-	vegetation_layer = get_node("VegetationLayer") as RegionMapLayer
-	call_deferred('draw_tile_map')
+	var error_code = connect("region_tiles_generated", self, 'draw_tile_map')
+	if error_code != 0: push_error('ERROR: %d' % error_code)
 
 func create_tiles(world_tile: WorldMapTile):
 	var elevation_noise = init_noise( int(floor(world_tile.terrain_intensity * 5.0)), 10.0 + 50.0 * (1.0 - world_tile.elevation), abs(world_tile.elevation), 1.0 + 2.0 * world_tile.terrain_intensity)
@@ -33,6 +31,7 @@ func create_tiles(world_tile: WorldMapTile):
 		var adj_tiles = tiles_adjacent_to(tile)
 		for adj in adj_tiles:
 			Global.pathfinder.connect_points(i, map_tiles.find(adj))
+	emit_signal("region_tiles_generated")
 	
 func draw_tile_map():
 	for tile in map_tiles:

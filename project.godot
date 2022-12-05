@@ -64,6 +64,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://maps/regionmap/RegionMapLayer.gd"
 }, {
+"base": "OrcGameMapScene",
+"class": "RegionMapScene",
+"language": "GDScript",
+"path": "res://scenes/RegionMapScene.gd"
+}, {
+"base": "OrcGameMapTile",
+"class": "RegionMapTile",
+"language": "GDScript",
+"path": "res://maps/regionmap/RegionMapTile.gd"
+}, {
 "base": "OrcGameMap",
 "class": "WorldMap",
 "language": "GDScript",
@@ -91,6 +101,8 @@ _global_script_class_icons={
 "Pathfinder": "",
 "RegionMap": "",
 "RegionMapLayer": "",
+"RegionMapScene": "",
+"RegionMapTile": "",
 "WorldMap": "",
 "WorldMapLayer": "",
 "WorldMapTile": ""

@@ -1,13 +1,14 @@
 extends OrcGameMapScene
+class_name RegionMapScene
 
 onready var region_map: RegionMap = $RegionMap
-onready var inspector: TabContainer = load('res://ui_elements/Inspector.gd').new()
+onready var inspector: TabContainer = $Inspector
 
 func _init():
 	pause_mode = Node.PAUSE_MODE_PROCESS
 
 func _ready():
-	add_child(inspector)
+	pass
 
 func create_region_from_tile(tile: WorldMapTile):
 	region_map.create_tiles(tile)
@@ -30,10 +31,11 @@ func _spawn_new_orc(x: int = -1, y: int = -1):
 	var tile = region_map.tile_at(x, y)
 	orc.move_to_tile(tile)
 	
-func find_adjacent_tiles(creature: CreatureModel) -> Array:
+func tiles_adjacent_to_creature(creature: CreatureModel) -> Array:
 	return region_map.tiles_adjacent_to(region_map.tile_at(creature.x, creature.y))
 	
 func show_inspector(position: Vector2):
+	print('show inspector')
 	var data = {}
 	var grid = viewport_to_grid(position)
 	data.tile = region_map.tile_at(grid.x, grid.y)
@@ -72,7 +74,6 @@ func _input(event):
 					if event.is_pressed(): inspector.hide()
 
 func toggle_game_speed():
-	print('toggle game speed')
 	if Global.game_speed == Global.GAME_SPEED.PAUSED:
 		Global.game_speed = Global.GAME_SPEED.NORMAL
 		get_tree().paused = false

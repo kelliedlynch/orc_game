@@ -1,4 +1,5 @@
-extends "res://maps/OrcGameMapTile.gd"
+extends OrcGameMapTile
+class_name RegionMapTile
 
 var tile_type: int
 
