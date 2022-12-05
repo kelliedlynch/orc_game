@@ -12,6 +12,14 @@ func _init():
 func _ready():
 	add_child(sprite)
 
-func place_at_position(pos: Vector2):
+func _location_changed(_model, loc: Vector2, _old):
+	var pos = location_to_position(loc)
+	_position_changed(pos)
+	
+func _position_changed(pos: Vector2):
 	position = pos
 	position += sprite_size / 2
+
+func location_to_position(loc: Vector2):
+	return loc * Global.tile_size
+	

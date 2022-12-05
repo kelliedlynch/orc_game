@@ -26,6 +26,7 @@ format = 1
 script = ExtResource( 5 )
 
 [node name="Inspector" parent="." instance=ExtResource( 1 )]
+visible = false
 
 [node name="SpawnNewOrc" type="Button" parent="."]
 margin_left = 10.0

@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entity/EntityModel.gd"
 }, {
+"base": "EntityModel",
+"class": "ItemModel",
+"language": "GDScript",
+"path": "res://entity/item/ItemModel.gd"
+}, {
 "base": "Node",
 "class": "Job",
 "language": "GDScript",
@@ -39,7 +44,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entity/creature/orc/OGCreatureOrc.gd"
 }, {
-"base": "EntityModel",
+"base": "ItemModel",
 "class": "OGItemBone",
 "language": "GDScript",
 "path": "res://entity/item/OGItemBone.gd"
@@ -104,6 +109,7 @@ _global_script_class_icons={
 "CreatureTestingGround": "",
 "EntityBody": "",
 "EntityModel": "",
+"ItemModel": "",
 "Job": "",
 "OGCreatureOrc": "",
 "OGItemBone": "",
@@ -135,6 +141,7 @@ CreatureType="*res://autoload_global/CreatureType.gd"
 CreatureSubtype="*res://autoload_global/CreatureSubtype.gd"
 RegionType="*res://autoload_global/RegionType.gd"
 TileType="*res://autoload_global/TileType.gd"
+EntityManager="*res://autoload_global/EntityManager.gd"
 
 [gui]
 

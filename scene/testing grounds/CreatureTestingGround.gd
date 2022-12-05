@@ -21,11 +21,9 @@ func _ready():
 
 
 func _on_SpawnNewBone_button_up():
-	print('button pressed')
 	var bone = OGItemBone.new()
 	add_child(bone)
-	bone.body.connect('item_placed', self, 'place_item_at_position')
-	bone.body.held_by_player = true
+	bone.held_by_player = true
 
 	
 #	print('setting cursor')

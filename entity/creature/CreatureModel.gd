@@ -37,11 +37,9 @@ enum CreatureSkill {
 }
 
 func _init():
-	print('CreatureModel init')
 	pause_mode = PAUSE_MODE_STOP
 
 func _ready():
-#	add_child(body)
 	add_to_group('creatures')
 	JobDispatch.connect("worker_requested", self, "_on_worker_requested")
 	if connect('job_accepted', JobDispatch, '_on_job_accepted'):
@@ -79,21 +77,11 @@ func _process(delta):
 func wander(delta) -> void:
 	time_idle += delta
 	if time_idle / 4  + randf() / 5 > laziness:
-		# move to a random valid adjacent tile that it has the energy to move to
-		# first find adjacent tiles
 		var tiles = get_parent().tiles_adjacent_to_creature(self)
-
-		# then make sure tiles are valid
-		# then check energy
-		# then pick tile
 		var tile = tiles[randi() % (tiles.size())]
-		# then move
-
-		self.set_location(Vector2(tile.x, tile.y))
-#		place_at_location(Vector2(tile.x, tile.y))
+		self.location = Vector2(tile.x, tile.y)
 		time_idle = 0.0
 		
-
 		
 func path_to_tile(to_x: int, to_y: int):
 	current_state = CreatureState.MOVING
