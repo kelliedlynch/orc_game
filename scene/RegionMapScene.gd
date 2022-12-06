@@ -27,14 +27,14 @@ func _spawn_new_orc(x: int = -1, y: int = -1):
 	orc.location = Vector2(x, y)
 	
 func tiles_adjacent_to_creature(creature: CreatureModel) -> Array:
-	#warning-ignore:narrowing_conversion
-	return region_map.tiles_adjacent_to(region_map.tile_at(creature.location.x, creature.location.y))
+	var tile = region_map.tile_at(int(creature.location.x), int(creature.location.y))
+	return region_map.tiles_adjacent_to(tile)
 	
 func show_inspector(position: Vector2):
 	var grid = viewport_to_grid(position)
 	inspector.inspect_tile(region_map.tile_at(grid.x, grid.y))
 
-func viewport_to_grid(location: Vector2):
+func position_to_location(location: Vector2):
 	var x = int(location.x / region_map.tile_size.x)
 	var y = int(location.y / region_map.tile_size.y)
 	return Vector2(x, y)	

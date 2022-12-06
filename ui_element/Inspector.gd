@@ -21,7 +21,9 @@ func _set_item_index(val: int):
 signal item_index_changed()
 
 func _ready():
+# warning-ignore:return_value_discarded
 	connect("creature_index_changed", self, '_creature_index_changed')
+# warning-ignore:return_value_discarded
 	connect("item_index_changed", self, '_item_index_changed')
 	pass
 

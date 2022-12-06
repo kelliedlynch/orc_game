@@ -10,7 +10,7 @@ var inactive_jobs = []
 
 func new_job(x: int = 0, y: int = 0):
 	prints('creating new job', x, y)
-	var job = Job.new(x, y)
+	var job = Job.new(Vector2(x, y))
 	inactive_jobs.append(job)
 	job.connect("job_completed", self, "_on_job_completed")
 	emit_signal('worker_requested', job)

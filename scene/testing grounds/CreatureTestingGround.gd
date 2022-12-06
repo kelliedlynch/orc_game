@@ -2,32 +2,37 @@
 extends RegionMapScene
 class_name CreatureTestingGround
 
+var placing_item = false
+
 func _init():
 	pass
 
 func _ready():
 	var default_tile = OrcGameMapTile.new(1, 1)
 	create_region_from_tile(default_tile)
-	
+# warning-ignore:return_value_discarded
+	connect('picked_bone_location', self, 'place_bone_at_location')
 
+signal picked_bone_location()
 
-#func create_spawn_button():
-#	var button = Button.new()
-#	button.text = 'Spawn New Orc'
-#	button.connect("button_up", self, '_spawn_new_orc')
-#	button.set_position(Vector2(10, 10))
-#	button.set_focus_mode(Control.FOCUS_NONE)	
-#	region_map.add_child(button)
-
-
-func _on_SpawnNewBone_button_up():
+func place_bone_at_location(loc: Vector2):
 	var bone = OGItemBone.new()
 	add_child(bone)
-	bone.held_by_player = true
+	bone.location = loc
+	placing_item = false
 
+func _on_SpawnNewBone_button_up():
+
+	# There is currently (12/5/22) a bug preventing use of .tres as mouse cursor.
+	# png workaround for now
+	var png = load('res://entity/item/og_item_bone.png')
+	Input.set_custom_mouse_cursor(png)
+	placing_item = true
 	
-#	print('setting cursor')
-#	var png = load('res://items/og_item_bone.png')
-#	var atlas = preload('res://items/bone.tres')
-#	var orc = preload('res://creatures/orcs/orc_01.tres')
-#	Input.set_custom_mouse_cursor(png)
+func _input(event):
+	if event is InputEventMouseButton:
+		if event.is_pressed():
+			if event.button_index == BUTTON_LEFT:
+				if placing_item:
+					emit_signal("picked_bone_location", Global.position_to_location(event.global_position))
+				show_inspector(event.position)

@@ -8,6 +8,8 @@ var first_name: String
 var current_state = CreatureState.IDLE
 var current_job = null
 
+var inventory = []
+
 # interval is time in seconds between AI ticks, elapsed is how long since last tick
 # This is how fast the creature 'thinks', lower is faster
 var interval: float = 0.1
@@ -22,7 +24,17 @@ var move_delay: float = 0.1
 # this affects climbing ability, speed over ground obstacles, fall damage
 var move_power: float = 0.1
 
-var current_path = []
+var current_path = [] setget set_current_path
+
+func set_current_path(val: Array):
+	current_path = val
+	if val.size() > 0:
+		current_state = CreatureState.MOVING
+#		connect("reached_end_of_path", self, '_on_reached_end_of_path')
+	else:
+		emit_signal('reached_end_of_path')
+		
+signal reached_end_of_path()
 
 enum CreatureState {
 	IDLE,
@@ -68,27 +80,43 @@ func _process(delta):
 		return
 	elapsed = 0.0
 	if current_state == CreatureState.MOVING:
-#		current_path = body.step_along_path(current_path)
-		if current_path.size() == 0:
-			emit_signal('move_completed')
+		_step_along_path()
 	if current_state == CreatureState.IDLE:
-		wander(delta)
+		if time_idle / 4  + (randf() - .5) / 4 > laziness:
+			choose_next_behavior()
+			time_idle = 0.0
+		else:
+			time_idle += delta
+		
+func choose_next_behavior():
+	for priority_level in behavior_priority:
+		for behavior in priority_level:
+			if self.call(behavior):
+				break
 
-func wander(delta) -> void:
-	time_idle += delta
-	if time_idle / 4  + randf() / 5 > laziness:
-		var tiles = get_parent().tiles_adjacent_to_creature(self)
-		var tile = tiles[randi() % (tiles.size())]
-		self.location = Vector2(tile.x, tile.y)
-		time_idle = 0.0
+func _step_along_path():
+	var loc = current_path.pop_back()
+	if current_path.size() == 0:
+		emit_signal("reached_end_of_path")
+	else:
+		self.location = loc
 		
-		
-func path_to_tile(to_x: int, to_y: int):
-	current_state = CreatureState.MOVING
-	var position_id = Global.pathfinder.xy_to_index(location.x, location.y)
-	var destination_id = Global.pathfinder.xy_to_index(to_x, to_y)
-	current_path = Global.pathfinder.get_id_path(position_id, destination_id)
-	current_path.remove(0)
+func _on_reached_end_of_path():
+#	current_state = CreatureState.IDLE
+	pass
+
+func _wander() -> bool:
+	var tiles = get_parent().tiles_adjacent_to_creature(self)
+	var tile = tiles[randi() % (tiles.size())]
+	self.location = Vector2(tile.x, tile.y)
+	return true
+
+#func find_path_to_tile(to_x: int, to_y: int):
+#	current_state = CreatureState.MOVING
+#	var position_id = Global.pathfinder.xy_to_index(location.x, location.y)
+#	var destination_id = Global.pathfinder.xy_to_index(to_x, to_y)
+#	current_path = Global.pathfinder.get_id_path(position_id, destination_id)
+#	current_path.remove(0)
 
 func _on_worker_requested(job):
 	if !job.worker:
@@ -103,10 +131,10 @@ func accept_job(job):
 func _on_job_completed(job):
 	current_state = CreatureState.IDLE
 	if current_job == job:
+		current_job.queue_free()
 		current_job = null
 
 
-signal move_completed()
 signal job_accepted(job, worker)
 
 # Name generator variables to be set by creature type/subtype
@@ -115,3 +143,34 @@ var first_name_syllable1: Array
 var first_name_syllable2: Array
 var first_name_word1: Array
 var first_name_word2: Array
+
+enum Priority {
+	EMERGENCY,
+	HIGH,
+	MEDIUM,
+	LOW,
+	IDLE,
+}
+var behavior_priority: Array = [
+	# EMERGENCY
+	[
+		
+	],
+	# HIGH
+	[
+		
+	],
+	# MEDIUM
+	[
+		
+	],
+	# LOW
+	[
+		
+	],
+	# IDLE
+	[
+		'_wander'
+	],
+]
+
