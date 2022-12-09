@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://terrain/region_tiles.tres" type="TileSet" id=1]
-[ext_resource path="res://terrain/colored-transparent_packed.png" type="Texture" id=2]
+[ext_resource path="res://asset/sprite/colored-transparent_packed.png" type="Texture" id=2]
 [ext_resource path="res://map/regionmap/RegionMap.gd" type="Script" id=3]
-[ext_resource path="res://scene/RegionMapScene.gd" type="Script" id=4]
+[ext_resource path="res://scene/RegionMapController.gd" type="Script" id=4]
 [ext_resource path="res://map/regionmap/RegionMapLayer.gd" type="Script" id=5]
 
 [sub_resource type="AtlasTexture" id=1]

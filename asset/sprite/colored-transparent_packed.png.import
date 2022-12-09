@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/dirt-tiles.png-80cf2df09d96c487eec069d3e060ef40.stex"
+path="res://.import/colored-transparent_packed.png-369f0e54346a2decde5d919330e3f77c.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://terrain/dirt-tiles.png"
-dest_files=[ "res://.import/dirt-tiles.png-80cf2df09d96c487eec069d3e060ef40.stex" ]
+source_file="res://asset/sprite/colored-transparent_packed.png"
+dest_files=[ "res://.import/colored-transparent_packed.png-369f0e54346a2decde5d919330e3f77c.stex" ]
 
 [params]
 

@@ -50,7 +50,6 @@ func do_next_step():
 	
 	
 	
-	
 #	if step_action == Step.GO_TO_LOCATION:
 #		print('action: go to ', loc)
 #

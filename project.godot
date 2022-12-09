@@ -9,60 +9,100 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "EntityModel",
-"class": "CreatureModel",
+"base": "GOAPAction",
+"class": "ActionPickUpBone",
 "language": "GDScript",
-"path": "res://entity/creature/CreatureModel.gd"
+"path": "res://entity/goap/ActionPickUpBone.gd"
 }, {
-"base": "RegionMapScene",
+"base": "GOAPAction",
+"class": "ActionWander",
+"language": "GDScript",
+"path": "res://entity/goap/ActionWander.gd"
+}, {
+"base": "RegionMapController",
 "class": "CreatureTestingGround",
 "language": "GDScript",
 "path": "res://scene/testing grounds/CreatureTestingGround.gd"
 }, {
-"base": "Area2D",
-"class": "EntityBody",
+"base": "Node",
+"class": "GOAPAction",
 "language": "GDScript",
-"path": "res://entity/EntityBody.gd"
+"path": "res://entity/goap/GOAPAction.gd"
 }, {
 "base": "Node",
-"class": "EntityModel",
+"class": "GOAPAgent",
 "language": "GDScript",
-"path": "res://entity/EntityModel.gd"
+"path": "res://entity/goap/GOAPAgent.gd"
 }, {
-"base": "EntityModel",
-"class": "ItemModel",
+"base": "Node",
+"class": "GOAPGoal",
 "language": "GDScript",
-"path": "res://entity/item/ItemModel.gd"
+"path": "res://entity/goap/GOAPGoal.gd"
+}, {
+"base": "Node",
+"class": "GOAPPlanner",
+"language": "GDScript",
+"path": "res://entity/goap/GOAPPlanner.gd"
+}, {
+"base": "Node",
+"class": "GOAPStateTracker",
+"language": "GDScript",
+"path": "res://entity/goap/GOAPStateTracker.gd"
+}, {
+"base": "GOAPGoal",
+"class": "GoalEntertainSelf",
+"language": "GDScript",
+"path": "res://entity/goap/GoalEntertainSelf.gd"
+}, {
+"base": "GOAPGoal",
+"class": "GoalHoldBone",
+"language": "GDScript",
+"path": "res://entity/goap/GoalHoldBone.gd"
 }, {
 "base": "Node",
 "class": "Job",
 "language": "GDScript",
 "path": "res://job/Job.gd"
 }, {
-"base": "CreatureModel",
+"base": "OGEntity",
+"class": "OGCreature",
+"language": "GDScript",
+"path": "res://entity/creature/OGCreature.gd"
+}, {
+"base": "OGCreature",
 "class": "OGCreatureOrc",
 "language": "GDScript",
 "path": "res://entity/creature/orc/OGCreatureOrc.gd"
 }, {
-"base": "ItemModel",
+"base": "Node",
+"class": "OGEntity",
+"language": "GDScript",
+"path": "res://entity/OGEntity.gd"
+}, {
+"base": "OGEntity",
+"class": "OGItem",
+"language": "GDScript",
+"path": "res://entity/item/OGItem.gd"
+}, {
+"base": "OGItem",
 "class": "OGItemBone",
 "language": "GDScript",
 "path": "res://entity/item/OGItemBone.gd"
 }, {
-"base": "Node2D",
+"base": "Node",
 "class": "OrcGameMap",
 "language": "GDScript",
 "path": "res://map/OrcGameMap.gd"
+}, {
+"base": "Node",
+"class": "OrcGameMapController",
+"language": "GDScript",
+"path": "res://scene/OrcGameMapController.gd"
 }, {
 "base": "TileMap",
 "class": "OrcGameMapLayer",
 "language": "GDScript",
 "path": "res://map/OrcGameMapLayer.gd"
-}, {
-"base": "Node",
-"class": "OrcGameMapScene",
-"language": "GDScript",
-"path": "res://scene/OrcGameMapScene.gd"
 }, {
 "base": "Object",
 "class": "OrcGameMapTile",
@@ -79,15 +119,15 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://map/regionmap/RegionMap.gd"
 }, {
+"base": "OrcGameMapController",
+"class": "RegionMapController",
+"language": "GDScript",
+"path": "res://scene/RegionMapController.gd"
+}, {
 "base": "OrcGameMapLayer",
 "class": "RegionMapLayer",
 "language": "GDScript",
 "path": "res://map/regionmap/RegionMapLayer.gd"
-}, {
-"base": "OrcGameMapScene",
-"class": "RegionMapScene",
-"language": "GDScript",
-"path": "res://scene/RegionMapScene.gd"
 }, {
 "base": "OrcGameMapTile",
 "class": "RegionMapTile",
@@ -105,22 +145,30 @@ _global_script_classes=[ {
 "path": "res://map/worldmap/WorldMapLayer.gd"
 } ]
 _global_script_class_icons={
-"CreatureModel": "",
+"ActionPickUpBone": "",
+"ActionWander": "",
 "CreatureTestingGround": "",
-"EntityBody": "",
-"EntityModel": "",
-"ItemModel": "",
+"GOAPAction": "",
+"GOAPAgent": "",
+"GOAPGoal": "",
+"GOAPPlanner": "",
+"GOAPStateTracker": "",
+"GoalEntertainSelf": "",
+"GoalHoldBone": "",
 "Job": "",
+"OGCreature": "",
 "OGCreatureOrc": "",
+"OGEntity": "",
+"OGItem": "",
 "OGItemBone": "",
 "OrcGameMap": "",
+"OrcGameMapController": "",
 "OrcGameMapLayer": "",
-"OrcGameMapScene": "",
 "OrcGameMapTile": "",
 "Pathfinder": "",
 "RegionMap": "",
+"RegionMapController": "",
 "RegionMapLayer": "",
-"RegionMapScene": "",
 "RegionMapTile": "",
 "WorldMap": "",
 "WorldMapLayer": ""
@@ -136,12 +184,18 @@ config/icon="res://icon.png"
 
 WorldData="*res://map/worldmap/WorldData.gd"
 Global="*res://autoload_global/Global.gd"
-JobDispatch="*res://autoload_global/JobDispatch.gd"
 CreatureType="*res://autoload_global/CreatureType.gd"
 CreatureSubtype="*res://autoload_global/CreatureSubtype.gd"
 RegionType="*res://autoload_global/RegionType.gd"
 TileType="*res://autoload_global/TileType.gd"
+CreatureManager="*res://autoload_global/CreatureManager.gd"
+ItemManager="*res://autoload_global/ItemManager.gd"
+SpriteManager="*res://autoload_global/SpriteManager.gd"
 EntityManager="*res://autoload_global/EntityManager.gd"
+
+[debug]
+
+gdscript/warnings/return_value_discarded=false
 
 [gui]
 

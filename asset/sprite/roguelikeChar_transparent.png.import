@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/roguelikeChar_transparent.png-3da96731f8781c8e86fe4c9e892510db.stex"
+path="res://.import/roguelikeChar_transparent.png-b87b1caac40cbb6969dee2912cf49ea2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://entity/creature/roguelikeChar_transparent.png"
-dest_files=[ "res://.import/roguelikeChar_transparent.png-3da96731f8781c8e86fe4c9e892510db.stex" ]
+source_file="res://asset/sprite/roguelikeChar_transparent.png"
+dest_files=[ "res://.import/roguelikeChar_transparent.png-b87b1caac40cbb6969dee2912cf49ea2.stex" ]
 
 [params]
 

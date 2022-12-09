@@ -1,6 +1,12 @@
 extends Node
 
-var pathfinder = Pathfinder.new()
+var pathfinder
+
+# the default size in tiles of maps (will probably have to be handled differently later)
+var map_size = Vector2(200, 100)
+# the default size of game sprites
+var tile_size = Vector2(16, 16)
+
 
 var game_speed: int = GameSpeed.NORMAL
 
@@ -9,12 +15,9 @@ enum GameSpeed {
 	NORMAL,
 }
 
-var tile_size: Vector2 = Vector2(16, 16)
+func _init():
+	#initialize random number generator
+	randomize()
 
-func position_to_location(pos: Vector2):
-	var x = floor(pos.x / tile_size.x)
-	var y = floor(pos.y / tile_size.y)
-	return Vector2(x, y)
-
-func location_to_position(loc: Vector2):
-	return loc * tile_size
+func _ready():
+	pathfinder = Pathfinder.new()

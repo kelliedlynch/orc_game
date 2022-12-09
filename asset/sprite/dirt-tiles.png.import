@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/UI Icons.png-5b0bdb72a89beb2774390a9cc4b4279e.stex"
+path="res://.import/dirt-tiles.png-1560ee97cad8203d3eb68090aa76cbdc.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icon/UI Icons.png"
-dest_files=[ "res://.import/UI Icons.png-5b0bdb72a89beb2774390a9cc4b4279e.stex" ]
+source_file="res://asset/sprite/dirt-tiles.png"
+dest_files=[ "res://.import/dirt-tiles.png-1560ee97cad8203d3eb68090aa76cbdc.stex" ]
 
 [params]
 

@@ -1,8 +1,7 @@
 extends Object
 class_name OrcGameMapTile
 
-var x: int = 0
-var y: int = 0
+var location: Vector2
 var tile_size: Vector2
 
 var region_type: int = 2
@@ -17,5 +16,4 @@ var precipitation: float = 0.0
 var soil_quality: float = 0.0
 
 func _init(_x: int, _y: int):
-	x = _x
-	y = _y
+	location = Vector2(_x, _y)

@@ -1,4 +1,4 @@
-extends VBoxContainer
+extends World2D
 
 
 # Declare member variables here. Examples:

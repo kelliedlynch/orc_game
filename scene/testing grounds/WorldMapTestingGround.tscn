@@ -2,7 +2,7 @@
 
 [ext_resource path="res://map/worldmap/WorldMap.gd" type="Script" id=1]
 [ext_resource path="res://scene/testing grounds/WorldMapTestingGround.gd" type="Script" id=2]
-[ext_resource path="res://terrain/colored-transparent_packed.png" type="Texture" id=3]
+[ext_resource path="res://asset/sprite/colored-transparent_packed.png" type="Texture" id=3]
 [ext_resource path="res://map/worldmap/WorldMapLayer.gd" type="Script" id=4]
 
 [sub_resource type="AtlasTexture" id=4]

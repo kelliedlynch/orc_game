@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/colored-transparent.png-5e805a5438658904a0fd97efed1b99b7.stex"
+path="res://.import/UI Icons.png-27352ca9646cb4c9b72549bd0ecaba28.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://terrain/colored-transparent.png"
-dest_files=[ "res://.import/colored-transparent.png-5e805a5438658904a0fd97efed1b99b7.stex" ]
+source_file="res://asset/sprite/UI Icons.png"
+dest_files=[ "res://.import/UI Icons.png-27352ca9646cb4c9b72549bd0ecaba28.stex" ]
 
 [params]
 
