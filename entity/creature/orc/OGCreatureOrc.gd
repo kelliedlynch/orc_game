@@ -14,13 +14,15 @@ func _init():
 	
 func _ready():
 	
-	$GOAPAgent.add_goals([
-		GoalHoldBone.new(),
-		GoalEntertainSelf.new(),
-	])
-#	$GOAPAgent.set_state_tracker($GOAPStateTracker)
+	state_tracker.add_goals([
+		Goal.HoldBone,
+		Goal.EntertainSelf,
+	], self)
+	# TODO NEXT
+	# Should probably convert Actions to singletons like I did with goals.
+	# They're going to be executed the same way for every creature, I'm pretty sure.
 	
-	$GOAPAgent/GOAPPlanner.add_actions([
+	state_tracker.add_actions([
 		ActionPickUpBone.new(),
 		ActionWander.new(),
 	])

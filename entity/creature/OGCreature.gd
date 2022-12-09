@@ -5,30 +5,35 @@ var type: int
 var subtype: int
 var first_name: String
 
+onready var agent: AIAgent = AIAgent
+onready var state_tracker: GOAPStateTracker = $GOAPStateTracker
 
 var _inventory = [] setget set_inventory, get_inventory
 func set_inventory(val: Array) -> void:
 	_inventory = val
-	emit_signal("inventory_changed")
+	emit_signal("inventory_changed", self)
 func get_inventory() -> Array:
 	return _inventory
 func add_to_inventory(item: OGItem) -> void:
 	_inventory.append(item)
-	emit_signal("inventory_changed")
+	emit_signal("inventory_changed", self)
 func remove_from_inventory(item: OGItem) -> void:
 	var i = _inventory.find(item)
 	_inventory.remove(i)
-	emit_signal("inventory_changed")
+	emit_signal("inventory_changed", self)
 
 var tagged = [] 
 func tag_item(item: OGItem) -> void:
 	if !tagged.has(item):
 		tagged.append(item)
 		item.tagged = true
+		emit_signal("creature_tagged_item", self, item, true)
+signal creature_tagged_item()
 func untag_item(item: OGItem) -> void:
 	if tagged.has(item):
 		tagged.erase(item)
 		item.tagged = false
+		emit_signal("creature_tagged_item", self, item, false)
 
 
 # interval is time in seconds between AI ticks, elapsed is how long since last tick
@@ -61,6 +66,8 @@ enum CreatureSkill {
 
 func _init():
 	pause_mode = PAUSE_MODE_STOP
+	connect('inventory_changed', ItemManager, "inventory_changed")
+	connect('creature_tagged_item', ItemManager, "creature_tagged_item")
 
 
 	
@@ -69,6 +76,11 @@ func move_toward_location(loc: Vector2):
 	if path.empty(): return
 	self.location = path[0]
 	
+func _process(delta):
+	elapsed += delta
+	if elapsed > interval:
+		agent.run(self)
+		elapsed = 0
 	
 	
 # TODO: move namegen data out of creature model, as it's not needed after creature generation

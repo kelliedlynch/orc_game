@@ -192,6 +192,9 @@ CreatureManager="*res://autoload_global/CreatureManager.gd"
 ItemManager="*res://autoload_global/ItemManager.gd"
 SpriteManager="*res://autoload_global/SpriteManager.gd"
 EntityManager="*res://autoload_global/EntityManager.gd"
+AIAgent="*res://autoload_global/AIAgent.gd"
+AIPlanner="*res://autoload_global/AIPlanner.gd"
+Goal="*res://autoload_global/Goal.gd"
 
 [debug]
 

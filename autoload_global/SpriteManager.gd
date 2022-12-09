@@ -1,6 +1,6 @@
 extends Node
 
-func entity_location_changed(entity: OGEntity, loc: Vector2, old_loc: Vector2 = Vector2.ZERO):
+func entity_location_changed(entity: OGEntity, loc: Vector2, _old_loc: Vector2 = Vector2.ZERO):
 	entity.sprite.position = location_to_position(loc)
 	
 # "location" always refers to the map tile integer coordinate system, while "position" means the 

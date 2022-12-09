@@ -7,5 +7,5 @@
 [node name="OGCreatureOrc" instance=ExtResource( 3 )]
 script = ExtResource( 2 )
 
-[node name="EntitySprite" parent="." index="0"]
+[node name="EntitySprite" parent="." index="1"]
 texture = ExtResource( 1 )

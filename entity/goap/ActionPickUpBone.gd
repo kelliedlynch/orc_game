@@ -13,7 +13,7 @@ func get_results():
 		'has_a_bone': true
 	}
 
-func perform(actor, _delta):
+func perform(actor):
 	var bone = null
 	for item in actor.tagged:
 		if item is OGItemBone:

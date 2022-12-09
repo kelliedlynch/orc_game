@@ -44,5 +44,8 @@ func item_availability_changed(item):
 		emit_signal("bone_availability_changed")
 signal bone_availability_changed()
 
+func creature_tagged_item(creature, item, is_tagged):
+	pass
+
 #func _bone_availability_changed():
 #	emit_signal("bone_availability_changed")

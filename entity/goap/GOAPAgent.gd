@@ -24,8 +24,8 @@ func add_goals(goals: Array):
 		goal.state_tracker = state_tracker
 		_goals.append(goal)
 
-func _process(delta):
-	if !planner: return
+func run_GOAP():
+#	if !planner: return
 	var goal = _get_best_goal()
 	if goal == null: return
 	if _current_goal == null or goal != _current_goal or _current_plan.size() == 0:
@@ -37,7 +37,7 @@ func _process(delta):
 			_current_plan = planner.get_plan(_current_goal, state_tracker._state.duplicate())
 			_current_plan_step = 0
 	else:
-		_follow_plan(_current_plan, delta)
+		_follow_plan(_current_plan)
 		
 #
 # Returns the highest priority goal available.
@@ -69,10 +69,10 @@ func _get_best_goal():
 # Every action exposes a function called perform, which will return true when
 # the job is complete, so the agent can jump to the next action in the list.
 #
-func _follow_plan(plan, delta):
+func _follow_plan(plan):
 	if plan.size() == 0:
 		return
 
-	var is_step_complete = plan[_current_plan_step].perform(get_parent(), delta)
+	var is_step_complete = plan[_current_plan_step].perform(get_parent())
 	if is_step_complete and _current_plan_step < plan.size() - 1:
 		_current_plan_step += 1
