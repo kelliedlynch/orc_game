@@ -66,8 +66,8 @@ enum CreatureSkill {
 
 func _init():
 	pause_mode = PAUSE_MODE_STOP
-	connect('inventory_changed', ItemManager, "inventory_changed")
-	connect('creature_tagged_item', ItemManager, "creature_tagged_item")
+#	connect('inventory_changed', ItemManager, "inventory_changed")
+#	connect('creature_tagged_item', ItemManager, "creature_tagged_item")
 
 
 	

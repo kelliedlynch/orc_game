@@ -4,9 +4,6 @@ class_name CreatureTestingGround
 
 var placing_item = false
 
-func _init():
-	pass
-
 func _ready():
 	connect('picked_bone_location', self, 'place_bone_at_location')
 
@@ -29,10 +26,18 @@ func _on_SpawnNewBone_button_up():
 #	var png = load('res://asset/sprite/og_item_bone.png')
 #	Input.set_custom_mouse_cursor(png)
 	placing_item = true
-	
+
+#func _input(event):
+#	pass
+#
+#func _gui_input(event):
+#	pass
+
 func _input(event):
-	if event is InputEventMouseButton:
-		if event.is_pressed():
-			if event.button_index == BUTTON_LEFT:
-				if placing_item:
-					emit_signal("picked_bone_location", SpriteManager.position_to_location(event.global_position))
+	match event.get_class():
+		"InputEventMouseButton":
+			if event.is_pressed():
+				if event.button_index == BUTTON_LEFT:
+					if placing_item:
+						get_tree().set_input_as_handled()
+						emit_signal("picked_bone_location", SpriteManager.position_to_location(event.global_position))

@@ -195,6 +195,7 @@ EntityManager="*res://autoload_global/EntityManager.gd"
 AIAgent="*res://autoload_global/AIAgent.gd"
 AIPlanner="*res://autoload_global/AIPlanner.gd"
 Goal="*res://autoload_global/Goal.gd"
+Group="*res://autoload_global/Group.gd"
 
 [debug]
 

@@ -8,6 +8,7 @@
 script = ExtResource( 1 )
 
 [node name="SurfaceLayer" type="TileMap" parent="."]
+z_as_relative = false
 tile_set = ExtResource( 2 )
 format = 1
 script = ExtResource( 3 )

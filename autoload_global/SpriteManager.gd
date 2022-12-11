@@ -15,3 +15,8 @@ func position_to_location(position: Vector2) -> Vector2:
 
 func location_to_position(location: Vector2) -> Vector2:
 	return location * Global.tile_size
+
+func snap_position_to_grid(pos: Vector2) -> Vector2:
+	var x = floor(pos.x / Global.tile_size.x)
+	var y = floor(pos.y / Global.tile_size.y)
+	return Vector2(x * Global.tile_size.x, y * Global.tile_size.y)

@@ -23,7 +23,7 @@ func get_desired_outcome() -> Dictionary:
 	
 func assign_to_creature(creature: OGCreature):
 	creature.connect("inventory_changed", self, "_set_has_a_bone")
-	creature.add_to_group('looking_for_bone')
+	creature.add_to_group(Group.Creature.LOOKING_FOR_BONE)
 	_set_has_a_bone(creature)
 	creature.state_tracker.set_state_for('bone_is_available', ItemManager.find_available_item_with_properties({'class_name': 'OGItemBone'}) != null)
 
@@ -32,10 +32,10 @@ func _set_has_a_bone(actor):
 	for item in actor.get_inventory():
 		if item is OGItemBone:
 			actor.state_tracker.set_state_for('has_a_bone', true)
-			actor.remove_from_group('looking_for_bone')
+			actor.remove_from_group(Group.Creature.LOOKING_FOR_BONE)
 			return	
 	actor.state_tracker.set_state_for('has_a_bone', false)
-	actor.add_to_group('looking_for_bone')
+	actor.add_to_group(Group.Creature.LOOKING_FOR_BONE)
 
 # this is run whenever an OGItemBone is changed (created, destroyed, tagged, untagged)
 # a bone is available if there is an untagged or tagged by this creature bone accessible by the creature
