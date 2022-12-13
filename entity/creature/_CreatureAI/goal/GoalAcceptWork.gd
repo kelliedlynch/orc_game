@@ -1,19 +1,20 @@
 extends GOAPGoal
-class_name GoalHoldBone
+class_name GoalAcceptWork
+
+var current_job
 
 func _ready():
-	ItemManager.connect("bone_availability_changed", self, "_set_bone_is_available")
+	JobDispatch.connect("worker_requested", self, "_set_bone_is_available")
 
 func is_valid() -> bool:
-	return true
+	return !current_job
 	
 func get_priority():
-	return 1
+	return Goal.PRIORITY_WORK
 	
 func trigger_conditions() -> Dictionary:
 	return {
-		'has_a_bone': false,
-		'bone_is_available': true,
+		'worker_requested': true,
 	}
 	
 func get_desired_outcome() -> Dictionary:

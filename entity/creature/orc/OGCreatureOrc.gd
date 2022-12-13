@@ -1,6 +1,9 @@
 extends OGCreature
 class_name OGCreatureOrc
 
+onready var agent: AIAgent = AIAgent
+onready var state_tracker: GOAPStateTracker = $GOAPStateTracker
+
 func _init():
 	type = CreatureType.Type.TYPE_HUMANOID
 	subtype = CreatureSubtype.Subtype.SUBTYPE_ORC
@@ -13,17 +16,28 @@ func _init():
 	first_name = generate_first_name()
 	
 func _ready():
+	state_tracker.actor = self
 	
 	state_tracker.add_goals([
-		Goal.HoldBone,
-		Goal.EntertainSelf,
-	], self)
+		GoalClaimBone.new(),
+		GoalEntertainSelf.new(),
+	])
 	# TODO NEXT
 	# Should probably convert Actions to singletons like I did with goals.
 	# They're going to be executed the same way for every creature, I'm pretty sure.
 	
 	state_tracker.add_actions([
-		ActionPickUpBone.new(),
+		ActionClaimBone.new(),
 		ActionWander.new(),
+		ActionConstructBuilt.new(),
 	])
 
+	state_tracker.add_skills([
+		CreatureSkill.BUILDING,
+		CreatureSkill.FARMING,
+		CreatureSkill.FIGHTING,
+		CreatureSkill.HAULING,
+	])
+
+func _run_agent():
+	agent.run(self)

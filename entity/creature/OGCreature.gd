@@ -5,9 +5,6 @@ var type: int
 var subtype: int
 var first_name: String
 
-onready var agent: AIAgent = AIAgent
-onready var state_tracker: GOAPStateTracker = $GOAPStateTracker
-
 var _inventory = [] setget set_inventory, get_inventory
 func set_inventory(val: Array) -> void:
 	_inventory = val
@@ -21,6 +18,7 @@ func remove_from_inventory(item: OGItem) -> void:
 	var i = _inventory.find(item)
 	_inventory.remove(i)
 	emit_signal("inventory_changed", self)
+signal inventory_changed()
 
 var tagged = [] 
 func tag_item(item: OGItem) -> void:
@@ -28,49 +26,39 @@ func tag_item(item: OGItem) -> void:
 		tagged.append(item)
 		item.tagged = true
 		emit_signal("creature_tagged_item", self, item, true)
-signal creature_tagged_item()
 func untag_item(item: OGItem) -> void:
 	if tagged.has(item):
 		tagged.erase(item)
 		item.tagged = false
 		emit_signal("creature_tagged_item", self, item, false)
-
+signal creature_tagged_item()
+		
+var owned = [] 
+func own_item(item: OGItem) -> void:
+	if !owned.has(item):
+		owned.append(item)
+		item.owned = true
+		emit_signal("creature_owned_item", self, item, true)
+func unown_item(item: OGItem) -> void:
+	if owned.has(item):
+		owned.erase(item)
+		item.owned = false
+		emit_signal("creature_owned_item", self, item, false)
+signal creature_owned_item()
 
 # interval is time in seconds between AI ticks, elapsed is how long since last tick
 # This is how fast the creature 'thinks', lower is faster
 var interval: float = 0.1
 var elapsed: float = 0.0
-# The higher the laziness, the longer the creature will remain idle between actions
-# This is how fast the creature works
-var laziness: float = 0.1
-var time_idle: float = 0.0
-# higher move_delay means the creature will take longer between move steps
-var move_delay: float = 0.1
-# higher move_power means the creature can traverse more difficult terrain
-# this affects climbing ability, speed over ground obstacles, fall damage
-var move_power: float = 0.1
+# build_power is how much build_cost is paid toward the construction of a Built per tick
+var build_power: float = 1.1
 
-signal inventory_changed()
 
-enum CreatureState {
-	IDLE,
-	MOVING,
-	WORKING,
-}
-
-enum CreatureSkill {
-	HAULING,
-	FARMING,
-	FIGHTING,
-}
+var skills: Array = [ CreatureSkill.HAULING, CreatureSkill.BUILDING]
 
 func _init():
 	pause_mode = PAUSE_MODE_STOP
-#	connect('inventory_changed', ItemManager, "inventory_changed")
-#	connect('creature_tagged_item', ItemManager, "creature_tagged_item")
 
-
-	
 func move_toward_location(loc: Vector2):
 	var path = Global.pathfinder.get_path(location, loc)
 	if path.empty(): return
@@ -79,9 +67,11 @@ func move_toward_location(loc: Vector2):
 func _process(delta):
 	elapsed += delta
 	if elapsed > interval:
-		agent.run(self)
+		_run_agent()
 		elapsed = 0
-	
+
+func _run_agent():
+	pass
 	
 # TODO: move namegen data out of creature model, as it's not needed after creature generation
 		

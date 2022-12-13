@@ -38,5 +38,13 @@ size_flags_vertical = 0
 enabled_focus_mode = 0
 text = "Spawn New Orc"
 
+[node name="PlaceCampfire" type="Button" parent="DevActions"]
+margin_left = 20.0
+margin_top = 76.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "Place Campfire"
+
 [connection signal="button_up" from="DevActions/SpawnNewBone" to="." method="_on_SpawnNewBone_button_up"]
 [connection signal="button_up" from="DevActions/SpawnNewOrc" to="." method="_on_SpawnNewOrc_button_up"]
+[connection signal="button_up" from="DevActions/PlaceCampfire" to="." method="_on_PlaceCampfire_button_up"]

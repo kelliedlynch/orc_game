@@ -21,6 +21,8 @@ enum RenderLayer {
 	GUI_LAYER,
 }
 
+var OFF_MAP = Vector2(-1, -1)
+
 var _player_target: Object = null setget set_player_target, get_player_target
 
 func set_player_target(obj: Object):

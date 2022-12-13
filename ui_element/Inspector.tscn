@@ -117,6 +117,131 @@ margin_bottom = 14.0
 size_flags_horizontal = 3
 align = 2
 
+[node name="Built" type="VBoxContainer" parent="InspectorWindow"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="tab_header" type="CenterContainer" parent="InspectorWindow/Built"]
+margin_right = 406.0
+margin_bottom = 30.0
+rect_min_size = Vector2( 0, 30 )
+size_flags_horizontal = 7
+size_flags_vertical = 0
+
+[node name="built_selector" type="HBoxContainer" parent="InspectorWindow/Built/tab_header"]
+margin_left = 145.0
+margin_top = 5.0
+margin_right = 261.0
+margin_bottom = 25.0
+size_flags_horizontal = 7
+
+[node name="prev_built" type="Button" parent="InspectorWindow/Built/tab_header/built_selector"]
+margin_right = 20.0
+margin_bottom = 20.0
+disabled = true
+enabled_focus_mode = 0
+text = "<"
+
+[node name="built_name" type="Label" parent="InspectorWindow/Built/tab_header/built_selector"]
+margin_left = 24.0
+margin_top = 3.0
+margin_right = 120.0
+margin_bottom = 17.0
+size_flags_horizontal = 6
+size_flags_vertical = 6
+text = "BuiltName"
+align = 1
+valign = 1
+
+[node name="next_built" type="Button" parent="InspectorWindow/Built/tab_header/built_selector"]
+margin_left = 124.0
+margin_right = 144.0
+margin_bottom = 20.0
+disabled = true
+enabled_focus_mode = 0
+text = ">"
+
+[node name="built_data" type="GridContainer" parent="InspectorWindow/Built"]
+margin_top = 34.0
+margin_right = 406.0
+margin_bottom = 194.0
+grow_vertical = 0
+size_flags_horizontal = 7
+size_flags_vertical = 7
+custom_constants/vseparation = 8
+custom_constants/hseparation = 28
+columns = 2
+
+[node name="built_size" type="HBoxContainer" parent="InspectorWindow/Built/built_data"]
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 7
+size_flags_vertical = 4
+
+[node name="Size" type="Label" parent="InspectorWindow/Built/built_data/built_size"]
+margin_right = 92.0
+margin_bottom = 14.0
+size_flags_horizontal = 7
+size_flags_vertical = 6
+text = "Size:"
+
+[node name="value" type="Label" parent="InspectorWindow/Built/built_data/built_size"]
+margin_left = 181.0
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 10
+size_flags_vertical = 6
+text = "0"
+align = 2
+
+[node name="built_location" type="HBoxContainer" parent="InspectorWindow/Built/built_data"]
+margin_left = 217.0
+margin_right = 406.0
+margin_bottom = 14.0
+size_flags_horizontal = 7
+size_flags_vertical = 4
+
+[node name="Location" type="Label" parent="InspectorWindow/Built/built_data/built_location"]
+margin_right = 92.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "Location:"
+
+[node name="value" type="Label" parent="InspectorWindow/Built/built_data/built_location"]
+margin_left = 96.0
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 11
+text = "x: -1, y: -1	"
+align = 2
+
+[node name="built_weight" type="HBoxContainer" parent="InspectorWindow/Built/built_data"]
+margin_top = 22.0
+margin_right = 189.0
+margin_bottom = 36.0
+size_flags_horizontal = 7
+size_flags_vertical = 4
+
+[node name="Weight" type="Label" parent="InspectorWindow/Built/built_data/built_weight"]
+margin_right = 92.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Weight:"
+
+[node name="value" type="Label" parent="InspectorWindow/Built/built_data/built_weight"]
+margin_left = 96.0
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "0"
+align = 2
+
 [node name="Item" type="VBoxContainer" parent="InspectorWindow"]
 visible = false
 anchor_right = 1.0
@@ -367,7 +492,51 @@ size_flags_horizontal = 3
 text = "SUBTYPE_NULL	"
 align = 2
 
-[connection signal="button_down" from="InspectorWindow/Item/tab_header/item_selector/prev_item" to="InspectorWindow" method="show_prev_item"]
-[connection signal="button_down" from="InspectorWindow/Item/tab_header/item_selector/next_item" to="InspectorWindow" method="show_next_item"]
-[connection signal="button_down" from="InspectorWindow/Creature/tab_header/creature_selector/prev_creature" to="InspectorWindow" method="show_prev_creature"]
-[connection signal="button_down" from="InspectorWindow/Creature/tab_header/creature_selector/next_creature" to="InspectorWindow" method="show_next_creature"]
+[node name="creature_goal" type="HBoxContainer" parent="InspectorWindow/Creature/creature_data"]
+margin_top = 22.0
+margin_right = 189.0
+margin_bottom = 36.0
+size_flags_horizontal = 7
+size_flags_vertical = 4
+
+[node name="Current Goal" type="Label" parent="InspectorWindow/Creature/creature_data/creature_goal"]
+margin_right = 90.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "Current Goal:"
+
+[node name="value" type="Label" parent="InspectorWindow/Creature/creature_data/creature_goal"]
+margin_left = 94.0
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "None"
+align = 2
+
+[node name="creature_action" type="HBoxContainer" parent="InspectorWindow/Creature/creature_data"]
+margin_top = 22.0
+margin_right = 189.0
+margin_bottom = 36.0
+size_flags_horizontal = 7
+size_flags_vertical = 4
+
+[node name="Current Action\?" type="Label" parent="InspectorWindow/Creature/creature_data/creature_action"]
+margin_right = 90.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "???"
+
+[node name="value" type="Label" parent="InspectorWindow/Creature/creature_data/creature_action"]
+margin_left = 94.0
+margin_right = 189.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "None"
+align = 2
+
+[connection signal="button_down" from="InspectorWindow/Built/tab_header/built_selector/prev_built" to="InspectorWindow" method="show_prev"]
+[connection signal="button_down" from="InspectorWindow/Built/tab_header/built_selector/next_built" to="InspectorWindow" method="show_next"]
+[connection signal="button_down" from="InspectorWindow/Item/tab_header/item_selector/prev_item" to="InspectorWindow" method="show_prev"]
+[connection signal="button_down" from="InspectorWindow/Item/tab_header/item_selector/next_item" to="InspectorWindow" method="show_next"]
+[connection signal="button_down" from="InspectorWindow/Creature/tab_header/creature_selector/prev_creature" to="InspectorWindow" method="show_prev"]
+[connection signal="button_down" from="InspectorWindow/Creature/tab_header/creature_selector/next_creature" to="InspectorWindow" method="show_next"]

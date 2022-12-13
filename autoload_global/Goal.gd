@@ -1,8 +1,19 @@
 extends Node
 
-var HoldBone = GoalHoldBone.new()
-var EntertainSelf = GoalEntertainSelf.new()
+enum {
+	PRIORITY_IDLE,
+	PRIORITY_WANT,
+	PRIORITY_WORK,
+	PRIORITY_NEED,
+	PRIORITY_EMERGENCY,
+}
 
-func _ready():
-	add_child(HoldBone)
-	add_child(EntertainSelf)
+enum {
+	GOAL_ENTERTAIN_SELF,
+	GOAL_HOLD_BONE,
+}
+
+var Classes = {
+	GOAL_ENTERTAIN_SELF: 'GoalEntertainSelf',
+	GOAL_HOLD_BONE: 'GoalHoldBone',
+}

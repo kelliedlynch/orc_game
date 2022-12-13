@@ -6,6 +6,7 @@ var tile_type: int
 
 var _creatures: Array = [] setget _set_creatures, get_creatures
 var _items: Array = [] setget _set_items, get_items
+var _builts: Array = [] setget _set_builts, get_builts
 
 func _set_creatures(val: Array):
 	_creatures = val
@@ -16,20 +17,35 @@ func _set_items(val):
 	_items = val
 func get_items() -> Array:
 	return _items
+	
+func _set_builts(val):
+	_builts = val
+func get_builts():
+	return _builts
 
 #signal did_add_creature_to_tile()
-
+func _get_entity_category(entity: OGEntity) -> Array:
+	if entity is OGCreature:
+		return _creatures
+	elif entity is OGItem:
+		return _items
+	elif entity is OGBuilt:
+		return _builts
+	else:
+		return []
+	
+	
 func add_entity_to_tile(entity: OGEntity):
-	var cat = _creatures if entity is OGCreature else _items
-	if cat.has(entity):
+	var category = _get_entity_category(entity)
+	if category.has(entity):
 		push_error("Failed to add entity to tile: entity already here")
 		return
-	cat.append(entity)
+	category.append(entity)
 	
 func remove_entity_from_tile(entity: OGEntity):
-	var cat = _creatures if entity is OGCreature else _items
+	var cat = _get_entity_category(entity)
 	if !cat.has(entity):
-		push_error("Failed to remove entity from tile: entity is not here")
+		push_error("Failed to remove entity from tile: entity %s is not here" % entity.get_class())
 		return
 	cat.erase(entity)
 

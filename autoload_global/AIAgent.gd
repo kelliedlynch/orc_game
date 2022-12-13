@@ -6,9 +6,11 @@ extends Node
 
 # Later there may be more Agents: i.e., FriendlyAgent, EnemyAgent, ResidentAgent
 
-func run(actor):
+# TODO: FIX CYCLIC DEPENDENCIES WITH CREATURES
+
+func run(actor: OGCreature):
 	var tracker = actor.state_tracker
-	var goal = _get_best_goal(tracker)
+	var goal = _get_best_goal(actor)
 	if goal == null: return
 	if tracker.current_goal == null or goal != tracker.current_goal or tracker.current_plan.size() == 0:
 
@@ -24,15 +26,23 @@ func run(actor):
 #
 # Returns the highest priority goal available.
 #
-func _get_best_goal(tracker):
+func _get_best_goal(actor: OGCreature):
+	var goals = actor.state_tracker.goals.duplicate()
 	var highest_priority
-
-	for goal in tracker.goals:
+	var inactive_jobs = get_tree().get_nodes_in_group(Group.Jobs.INACTIVE_JOBS)
+	var jobs_to_consider = []
+	for job in inactive_jobs:
+		if job.is_valid_for_creature(actor):
+			job.assign_to_creature(actor)
+			jobs_to_consider.append(job)
+			
+	goals.append_array(jobs_to_consider)
+	for goal in goals:
 		if goal.is_valid():
 			var triggers = goal.trigger_conditions()
 			var triggers_met = false if triggers.size() > 0 else true
 			for condition in triggers:
-				if triggers[condition] == tracker.check_state_for(condition, triggers[condition]):
+				if triggers[condition] == actor.state_tracker.check_state_for(condition, triggers[condition]):
 					triggers_met = true
 				else:
 					triggers_met = false
@@ -40,7 +50,13 @@ func _get_best_goal(tracker):
 			if triggers_met:
 				if highest_priority == null or goal.get_priority() > highest_priority.get_priority():
 					highest_priority = goal
-
+					
+	for job in jobs_to_consider:
+		job.unassign()
+		
+	if highest_priority is Job:
+		actor.state_tracker.add_goals([highest_priority])
+		
 	return highest_priority
 
 
@@ -51,7 +67,7 @@ func _get_best_goal(tracker):
 # Every action exposes a function called perform, which will return true when
 # the job is complete, so the agent can jump to the next action in the list.
 #
-func _follow_plan(actor):
+func _follow_plan(actor: OGCreature):
 	var plan = actor.state_tracker.current_plan
 	var step = actor.state_tracker.current_plan_step
 	if plan.size() == 0:

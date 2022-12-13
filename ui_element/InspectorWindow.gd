@@ -2,13 +2,37 @@ extends TabContainer
 
 enum {
 	TAB_TILE,
+	TAB_BUILT,
 	TAB_ITEM,
 	TAB_CREATURE,
 }
 
-onready var _creature_index: int = 0 setget _set_creature_index
-onready var _item_index: int = 0 setget _set_item_index
+var _creature_index: int = 0 setget _set_creature_index
+
+func _set_creature_index(val: int):
+	_creature_index = val
+	emit_signal('creature_index_changed', _target_location)
+signal creature_index_changed()
+
+
+var _item_index: int = 0 setget _set_item_index
+
+func _set_item_index(val: int):
+	_item_index = val
+	emit_signal('item_index_changed', _target_location)
+signal item_index_changed()
+
+
+var _built_index: int = 0 setget _set_built_index
+
+func _set_built_index(val: int):
+	_built_index = val
+	emit_signal('built_index_changed', _target_location)
+signal built_index_changed()
+
+
 var _map: OrcGameMap setget set_current_map
+
 func set_current_map(map: OrcGameMap):
 	_map = map
 
@@ -20,26 +44,17 @@ func set_target_location(loc):
 		_target_location = loc
 		emit_signal("inspector_target_location_changed")
 signal inspector_target_location_changed()
+
 func get_target_location():
 	return _target_location
+
 	
-#var _mouse_pointing_at: Object
 var _following_mouse: bool = false setget _set_following_mouse
 
 func _set_following_mouse(val):
 	_following_mouse = val
 	emit_signal('following_mouse_changed')
 signal following_mouse_changed()
-
-func _set_creature_index(val: int):
-	_creature_index = val
-	emit_signal('creature_index_changed', _target_location)
-signal creature_index_changed()
-
-func _set_item_index(val: int):
-	_item_index = val
-	emit_signal('item_index_changed', _target_location)
-signal item_index_changed()
 
 
 func _init():
@@ -125,21 +140,23 @@ func _populate_inspector(loc: Vector2) -> void:
 	set_current_tab(tab)
 	visible = true
 
-func show_next_creature():
-#	if _creature_index < _creatures.size() -1:
-	self._creature_index += 1
-	
-func show_prev_creature():
-#	if _creature_index > 0:
-	self._creature_index -= 1
-		
-func show_next_item():
-#	if _item_index < _items.size() -1:
-	self._item_index += 1
-	
-func show_prev_item():
-#	if _item_index > 0:
-	self._item_index -= 1
+func show_next():
+	match current_tab:
+		TAB_CREATURE:
+			self._creature_index += 1
+		TAB_ITEM:
+			self._item_index += 1
+		TAB_BUILT:
+			self._built_index += 1
+
+func show_prev():
+	match current_tab:
+		TAB_CREATURE:
+			self._creature_index -= 1
+		TAB_ITEM:
+			self._item_index -= 1
+		TAB_BUILT:
+			self._built_index -= 1
 	
 func populate_creature_tab(creatures) -> void:
 	var creature = creatures[_creature_index]
@@ -151,6 +168,7 @@ func populate_creature_tab(creatures) -> void:
 	get_node("Creature/creature_data/creature_type/value").text = CreatureType.Type.keys()[creature.type]
 	get_node("Creature/creature_data/creature_subtype/value").text = CreatureSubtype.Subtype.keys()[creature.subtype]
 	get_node("Creature/creature_data/creature_location/value").text = 'x: %d, y: %d' % [creature.location.x, creature.location.y]
+	get_node("Creature/creature_data/creature_goal/value").text = creature.state_tracker.current_goal.get_class() if creature.state_tracker.current_goal else 'None'
 	
 func populate_item_tab(items) -> void:
 	var item = items[_item_index]
@@ -158,10 +176,21 @@ func populate_item_tab(items) -> void:
 	var isLast = _item_index == items.size() - 1
 	get_node("Item/tab_header/item_selector/prev_item").disabled = isFirst
 	get_node("Item/tab_header/item_selector/next_item").disabled = isLast
-	get_node("Item/tab_header/item_selector/item_name").text = item.item_name
+	get_node("Item/tab_header/item_selector/item_name").text = item.entity_name
 	get_node("Item/item_data/item_size/value").text = '%s' % item.size
 	get_node("Item/item_data/item_weight/value").text = '%s' % item.weight
 	get_node("Item/item_data/item_location/value").text = 'x: %d, y: %d' % [item.location.x, item.location.y]
+	
+func populate_built_tab(builts) -> void:
+	var built = builts[_built_index]
+	var isFirst = _built_index == 0
+	var isLast = _built_index == builts.size() - 1
+	get_node("Built/tab_header/built_selector/prev_built").disabled = isFirst
+	get_node("Built/tab_header/built_selector/next_built").disabled = isLast
+	get_node("Built/tab_header/built_selector/item_name").text = built.entity_name
+	get_node("Built/built_data/built_size/value").text = '%s' % built.size
+	get_node("Built/built_data/built_weight/value").text = '%s' % built.weight
+	get_node("Built/built_data/built_location/value").text = 'x: %d, y: %d' % [built.location.x, built.location.y]
 	
 func populate_tile_tab(tile):
 	get_node("Tile/col1/tile_location/value").text = 'x: %d, y: %d' % [tile.location.x, tile.location.y]

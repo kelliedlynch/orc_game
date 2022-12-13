@@ -14,6 +14,12 @@ var held_by_player: bool = false
 var size: float
 var weight: float
 
+# entity_name is the base name for any entity of this type
+# other names can be changed or overwritten, but a Bone will always
+# be a Bone
+var entity_name: String = 'Entity'
+var instance_name: String = 'Entity'
+
 signal location_changed()
 
 func _ready():
@@ -22,9 +28,10 @@ func _ready():
 	sprite = $EntitySprite
 	emit_signal("location_changed", self, location)
 	
-func set_location(val: Vector2):
+func set_location(val):
 	var oldval = location
 	location = val
 	emit_signal('location_changed', self, location, oldval)
 
 
+func get_class(): return 'OGEntity'

@@ -86,7 +86,7 @@ func _transform_tree_into_array(p, blackboard):
 
 	return plans
 	
-func _get_cheapest_plan(plans):
+func _get_cheapest_plan(plans: Array):
 	var best_plan
 	for p in plans:
 		if best_plan == null or p.cost < best_plan.cost:

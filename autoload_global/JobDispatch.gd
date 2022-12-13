@@ -1,37 +1,33 @@
 extends Node
 
-#const Job = load("res://jobs/Job.gd")
+var interval: float = 2.0
+var elapsed: float = 0
 
-var active_jobs = []
-var inactive_jobs = []
 
-#func _ready():
-#	self.connect('job_accepted', self, '_on_job_accepted')
+func _add_job_to_queue(job: Job):
+	job.add_to_group(Group.Jobs.INACTIVE_JOBS)
 
-func new_job(x: int = 0, y: int = 0):
-	prints('creating new job', x, y)
-	var job = Job.new(Vector2(x, y))
-	inactive_jobs.append(job)
-	job.connect("job_completed", self, "_on_job_completed")
-	emit_signal('worker_requested', job)
 
-signal worker_requested(job)
+func generate_job_for_built(built: OGBuilt):
+	var job = JobConstructBuilt.new(built)
+	add_child(job)
+	_add_job_to_queue(job)
 
-func _on_job_accepted(job: Job, worker: CreatureModel):
-	if job.worker == null:
-		worker.current_job = job
-		job.worker = worker
-		inactive_jobs.remove(inactive_jobs.find(job))
-		active_jobs.append(job)
-		job.do_next_step()
-
-func _on_job_abandoned(job: Job):
-	active_jobs.remove(active_jobs.find(job))
-	inactive_jobs.append(job)
-	job.worker.current_job = null
-	job.worker = null
-	emit_signal('worker_requested', job)
+func _on_job_assigned(job: Job):
+	job.remove_from_group(Group.Jobs.INACTIVE_JOBS)
+	job.add_to_group(Group.Jobs.ACTIVE_JOBS)
+	
+func _on_job_unassigned(job: Job):
+	job.remove_from_group(Group.Jobs.ACTIVE_JOBS)
+	job.add_to_group(Group.Jobs.INACTIVE_JOBS)
 
 func _on_job_completed(job):
-	active_jobs.remove(active_jobs.find(job))
+	job.remove_from_group(Group.Jobs.ACTIVE_JOBS)
 	job.queue_free()
+	
+#func _process(delta):
+#	elapsed += delta
+#	if elapsed > interval:
+#		for job in get_tree().get_nodes_in_group(Group.Jobs.INACTIVE_JOBS):
+#			emit_signal('worker_requested', job)
+#		elapsed = 0
