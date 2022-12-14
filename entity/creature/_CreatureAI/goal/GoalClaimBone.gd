@@ -1,28 +1,46 @@
 extends GOAPGoal
 class_name GoalClaimBone
 
-# TODO: FIX CYCLIC DEPENDENCIES WITH CREATURES
 
 func _ready():
 	ItemManager.connect("item_availability_changed", self, "_set_bone_is_available")
 
-func is_valid() -> bool:
-	return true
+func requirements(conditions: Array = []) -> Array:
+	var all_conditions = conditions.append_array([
+		OR,
+			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
+			{ 'item.is_available_with_properties' : [ HAS, { 'material': 'bone' } ] },
+	])
+	return .goal_is_possible(all_conditions)
 	
 func get_priority():
 	return Goal.PRIORITY_WANT
 	
-func trigger_conditions() -> Dictionary:
-	return {
-		'owns_a_bone': false,
-		'bone_is_available': true,
-	}
+func trigger_conditions(conditions: Array = []) -> Array:
+	var all_conditions = conditions.append_array([
+		AND,
+			{ 'creature.inventory': [ 
+				NOT,
+					[ HAS, { 'material': 'bone' } ]
+				]
+			}
+	])
+	return .trigger_conditions(all_conditions)
 	
-func get_desired_outcome() -> Dictionary:
-	return {
-		'carries_a_bone': true,
-		'owns_a_bone': true,
-	}
+func end_state(conditions: Array = []) -> Array:
+	var all_conditions = conditions.append_array([
+		AND,
+			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
+			{ 'creature.inventory': [ HAS, { 'material': 'bone' } ] },
+	])
+	return .end_state(all_conditions)
+	
+	
+	
+	
+	
+	
+	
 	
 func assign_to_creature(creature: OGCreature):
 	.assign_to_creature(creature)

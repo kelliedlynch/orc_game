@@ -13,7 +13,7 @@ func item_is_at_location(item: OGItem, loc: Vector2):
 	return get_items_on_tile(tile).has(item)
 
 # finds an item on the map with the given properties and returns it
-func find_available_item_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
+func is_available_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
 	# { class_name: OGItemBone }
 	var found = []
 	for item in get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS):

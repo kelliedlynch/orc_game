@@ -1,4 +1,4 @@
-extends Node
+extends GOAPQueryable
 #class_name AIPlanner
 
 # Generic singleton action planner. For a given goal, picks the creature's best path to victory
@@ -25,6 +25,33 @@ func _find_best_plan(tracker: GOAPStateTracker, desired_outcome: Dictionary):
 		return _get_cheapest_plan(plans)
 	
 	return []
+	
+func find_best_plan(creature: OGCreature, goal: GOAPGoal):
+	var goal_state = goal.end_state()
+	
+	
+	pass
+	
+func find_previous_step(creature: OGCreature, goal_state: Array, simulated_creature: Dictionary):
+	var actions = creature.state_tracker.actions
+	for action in actions:
+		if !action.creature_is_capable():
+			continue
+			
+		# does this action result in our goal state?
+# GOAL STATE:		
+#	[
+#		AND,
+#			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
+#			{ 'creature.inventory': [ HAS, { 'material': 'bone' } ] },
+#	]
+
+# ACTION OUTCOME
+#	[
+#		{ 'creature.inventory': properties_array }
+#	]
+	
+	pass
 	
 func _path_exists(tracker: GOAPStateTracker, step: Dictionary, tracker_state: Dictionary):
 	var has_followup = false

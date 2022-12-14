@@ -7,15 +7,15 @@ func is_valid() -> bool:
 func get_priority() -> int:
 	return Goal.PRIORITY_IDLE
 	
-func trigger_conditions() -> Dictionary:
-	return {
-		'is_entertained': false
-	}
-	
-func get_desired_outcome() -> Dictionary:
-	return {
-		'is_entertained': true
-	}
+#func trigger_conditions() -> Dictionary:
+#	return {
+#		'is_entertained': false
+#	}
+#
+#func get_desired_outcome() -> Dictionary:
+#	return {
+#		'is_entertained': true
+#	}
 
 func assign_to_creature(creature: OGCreature):
 	.assign_to_creature(creature)

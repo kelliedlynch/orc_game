@@ -7,11 +7,13 @@ var elapsed: float = 0
 func _add_job_to_queue(job: Job):
 	job.add_to_group(Group.Jobs.INACTIVE_JOBS)
 
-
-func generate_job_for_built(built: OGBuilt):
-	var job = JobConstructBuilt.new(built)
-	add_child(job)
-	_add_job_to_queue(job)
+#func generate_job_for_built(built: OGBuilt):
+#	var job = JobConstructBuilt.new(built)
+#	add_child(job)
+#	_add_job_to_queue(job)
+	
+func assign_job_to_evaluate(job: Job, actor: OGCreature):
+	pass
 
 func _on_job_assigned(job: Job):
 	job.remove_from_group(Group.Jobs.INACTIVE_JOBS)
