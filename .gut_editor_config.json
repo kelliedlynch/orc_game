@@ -30,7 +30,7 @@
  "tests": [
 
  ],
- "unit_test_name": "test__find_has_conditions_in_simulated_state",
+ "unit_test_name": "test__eval_has_state_dicts",
  "gut_on_top": true,
  "panel_options": {
   "font_name": "CourierPrime",

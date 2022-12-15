@@ -9,19 +9,18 @@ var actor: OGCreature
 
 # Things that must be true for this goal to be considered
 func requirements(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 
 # The conditions that activate the goal
 func trigger_conditions(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 
 # The desired outcome of the goal
 func end_state(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 
 func assign_to_creature(creature: OGCreature):
 	actor = creature

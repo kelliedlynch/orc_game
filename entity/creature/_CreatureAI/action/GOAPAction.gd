@@ -9,18 +9,18 @@ class_name GOAPAction
 
 # Things that must be true for this Action to be considered
 func requirements(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 
 # The conditions that activate the Action
 func trigger_conditions(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 
 # The outcome of the Action
 func end_state(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([])
-	return all_conditions
+	conditions.append_array([])
+	return conditions
 	
 func get_cost(_blackboard) -> int:
 	return 0

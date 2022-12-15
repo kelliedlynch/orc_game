@@ -6,7 +6,8 @@ func _ready():
 	ItemManager.connect("item_availability_changed", self, "_set_bone_is_available")
 
 func requirements(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([
+	var all_conditions = conditions.duplicate()
+	all_conditions.append_array([
 		OR,
 			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
 			{ 'item.is_available_with_properties' : [ HAS, { 'material': 'bone' } ] },
@@ -17,7 +18,8 @@ func get_priority():
 	return Goal.PRIORITY_WANT
 	
 func trigger_conditions(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([
+	var all_conditions = conditions.duplicate()
+	all_conditions.append_array([
 		AND,
 			{ 'creature.inventory': [ 
 				NOT,
@@ -28,7 +30,8 @@ func trigger_conditions(conditions: Array = []) -> Array:
 	return .trigger_conditions(all_conditions)
 	
 func end_state(conditions: Array = []) -> Array:
-	var all_conditions = conditions.append_array([
+	var all_conditions = conditions.duplicate()
+	all_conditions.append_array([
 		AND,
 			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
 			{ 'creature.inventory': [ HAS, { 'material': 'bone' } ] },

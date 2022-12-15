@@ -92,3 +92,15 @@ func test__find_has_conditions_in_simulated_state():
 	assert_array(output).is_equal(expected_output)
 
 	target.free()
+
+func test__eval_has_state_dicts():
+	var target = t.new()
+	var input1 = {
+		'character.inventory': [ target.HAS, { 'material': 'bone'}]
+	}
+	var input2 = input1
+	var expected_output = {}
+	var output = target._eval_has_state_dicts(input1, input2)
+	assert_dict(output).is_equal(expected_output)
+	
+	target.free()
