@@ -9,8 +9,8 @@ func requirements(conditions: Array = []) -> Array:
 	var all_conditions = conditions.duplicate()
 	all_conditions.append_array([
 		OR,
-			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
-			{ 'item.is_available_with_properties' : [ HAS, { 'material': 'bone' } ] },
+			{ 'creature.owned': [ HAS, { 'material': Item.Material.BONE } ] },
+			{ 'item.is_available_with_properties' : [ HAS, { 'material': Item.Material.BONE } ] },
 	])
 	return .goal_is_possible(all_conditions)
 	
@@ -23,7 +23,7 @@ func trigger_conditions(conditions: Array = []) -> Array:
 		AND,
 			{ 'creature.inventory': [ 
 				NOT,
-					[ HAS, { 'material': 'bone' } ]
+					[ HAS, { 'material': Item.Material.BONE } ]
 				]
 			}
 	])
@@ -33,8 +33,8 @@ func end_state(conditions: Array = []) -> Array:
 	var all_conditions = conditions.duplicate()
 	all_conditions.append_array([
 		AND,
-			{ 'creature.owned': [ HAS, { 'material': 'bone' } ] },
-			{ 'creature.inventory': [ HAS, { 'material': 'bone' } ] },
+			{ 'creature.owned': [ HAS, { 'material': Item.Material.BONE } ] },
+			{ 'creature.inventory': [ HAS, { 'material': Item.Material.BONE } ] },
 	])
 	return .end_state(all_conditions)
 	

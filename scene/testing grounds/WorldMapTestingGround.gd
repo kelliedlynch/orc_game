@@ -1,11 +1,11 @@
-extends OrcGameMapScene
+extends OrcGameMapController
 #class_name WorldMapScene
 #const RegionMapScene = preload('res://scenes/RegionMapScene.gd')
 #const WorldMap = preload('res://maps/worldmap/WorldMap.gd')
 
 onready var world_map: WorldMap = $WorldMap
 
-func _on_confirm_enter_region(tile: WorldMapTile):
+func _on_confirm_enter_region(tile: OrcGameMapTile):
 	WorldData.world_map_tiles = world_map.map_tiles
 	var new_scene = load('res://scenes/RegionMapScene.tscn').instance()
 	new_scene.create_region_from_tile(tile)

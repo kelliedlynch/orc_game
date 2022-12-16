@@ -4,19 +4,22 @@ class_name OGCreature
 var type: int
 var subtype: int
 var first_name: String
+var idle_state: int = Creature.IdleState.IDLE
 
-var _inventory = [] setget set_inventory, get_inventory
+
+
+var inventory = [] setget set_inventory
 func set_inventory(val: Array) -> void:
-	_inventory = val
+	inventory = val
 	emit_signal("inventory_changed", self)
 func get_inventory() -> Array:
-	return _inventory
+	return inventory
 func add_to_inventory(item: OGItem) -> void:
-	_inventory.append(item)
+	inventory.append(item)
 	emit_signal("inventory_changed", self)
 func remove_from_inventory(item: OGItem) -> void:
-	var i = _inventory.find(item)
-	_inventory.remove(i)
+	var i = inventory.find(item)
+	inventory.remove(i)
 	emit_signal("inventory_changed", self)
 signal inventory_changed()
 
@@ -54,7 +57,7 @@ var elapsed: float = 0.0
 var build_power: float = 1.1
 
 
-var skills: Array = [ CreatureSkill.HAULING, CreatureSkill.BUILDING]
+var skills: Array = [ Creature.Skill.HAULING, Creature.Skill.BUILDING]
 
 func _init():
 	pause_mode = PAUSE_MODE_STOP

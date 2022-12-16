@@ -1046,7 +1046,7 @@ _global_script_class_icons={
 
 [WAT]
 
-Test_Directory="res://test/unit"
+Test_Directory="res://test/wat"
 Results_Directory="res://test"
 Test_Metadata_Directory="res://test"
 Tags=PoolStringArray(  )
@@ -1059,15 +1059,13 @@ Display=8
 [application]
 
 config/name="Orc Game"
-run/main_scene="res://scene/testing grounds/WorldMapTestingGround.tscn"
+run/main_scene="res://scene/testing grounds/CreatureTestingGround.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
 WorldData="*res://map/worldmap/WorldData.gd"
 Global="*res://autoload_global/Global.gd"
-CreatureType="*res://autoload_global/CreatureType.gd"
-CreatureSubtype="*res://autoload_global/CreatureSubtype.gd"
 RegionType="*res://autoload_global/RegionType.gd"
 TileType="*res://autoload_global/TileType.gd"
 CreatureManager="*res://autoload_global/CreatureManager.gd"
@@ -1079,19 +1077,25 @@ AIPlanner="*res://autoload_global/AIPlanner.gd"
 Goal="*res://autoload_global/Goal.gd"
 Group="*res://autoload_global/Group.gd"
 JobDispatch="*res://autoload_global/JobDispatch.gd"
-CreatureSkill="*res://autoload_global/CreatureSkill.gd"
+Item="*res://autoload_global/Item.gd"
+Creature="*res://autoload_global/Creature.gd"
 
 [debug]
 
 gdscript/warnings/return_value_discarded=false
 
+[display]
+
+window/size/always_on_top=true
+
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/WAT/plugin.cfg", "res://addons/gdUnit3/plugin.cfg", "res://addons/gut/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/gut/plugin.cfg" )
 
 [gdunit3]
 
 report/godot/push_error=true
+settings/test/test_root_folder="res://test/gdu"
 
 [gui]
 

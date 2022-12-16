@@ -1,12 +1,9 @@
 extends OGEntity
 class_name OGItem
 
-# TODO: THIS SHOULDN'T BE A STRING
-var material: String
+var material: int
 # TODO: FIGURE OUT HOW VALUE IS MEASURED
 var value: int
-# TODO: FIGURE OUT STACKING ITEMS
-var quantity: int
 
 var tagged: bool = false setget _set_tagged
 var owned: bool = false setget _set_owned

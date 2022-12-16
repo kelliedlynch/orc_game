@@ -5,8 +5,8 @@ onready var agent: AIAgent = AIAgent
 onready var state_tracker: GOAPStateTracker = $GOAPStateTracker
 
 func _init():
-	type = CreatureType.Type.TYPE_HUMANOID
-	subtype = CreatureSubtype.Subtype.SUBTYPE_ORC
+	type = Creature.Type.TYPE_HUMANOID
+	subtype = Creature.Subtype.SUBTYPE_ORC
 
 	first_name_complete = ['Grug', 'Thog', 'Grest', 'Ogor', 'Ogon', 'Krag', 'Patrick']
 	first_name_syllable1 = ['Gr\'', 'Ku', 'Tak', 'Gor', 'Da', 'K\'', 'Bak']
@@ -33,10 +33,10 @@ func _ready():
 	])
 
 	state_tracker.add_skills([
-		CreatureSkill.BUILDING,
-		CreatureSkill.FARMING,
-		CreatureSkill.FIGHTING,
-		CreatureSkill.HAULING,
+		Creature.Skill.BUILDING,
+		Creature.Skill.FARMING,
+		Creature.Skill.FIGHTING,
+		Creature.Skill.HAULING,
 	])
 
 func _run_agent():

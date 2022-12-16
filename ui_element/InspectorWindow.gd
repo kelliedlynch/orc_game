@@ -166,7 +166,7 @@ func populate_creature_tab(creatures) -> void:
 	get_node("Creature/tab_header/creature_selector/next_creature").disabled = isLast
 	get_node("Creature/tab_header/creature_selector/creature_name").text = creature.first_name
 	get_node("Creature/creature_data/creature_type/value").text = CreatureType.Type.keys()[creature.type]
-	get_node("Creature/creature_data/creature_subtype/value").text = CreatureSubtype.Subtype.keys()[creature.subtype]
+	get_node("Creature/creature_data/creature_subtype/value").text = CreatureType.Subtype.keys()[creature.subtype]
 	get_node("Creature/creature_data/creature_location/value").text = 'x: %d, y: %d' % [creature.location.x, creature.location.y]
 	get_node("Creature/creature_data/creature_goal/value").text = creature.state_tracker.current_goal.get_class() if creature.state_tracker.current_goal else 'None'
 	

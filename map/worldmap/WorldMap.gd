@@ -1,7 +1,9 @@
 extends OrcGameMap
 class_name WorldMap
 
-var map_layer: WorldMapLayer
+var map_layer: OrcGameMapLayer
+var width = Global.map_size.x
+var height = Global.map_size.y
 
 signal generated_map_tiles()
 
@@ -29,7 +31,7 @@ func generate_map_tiles() -> void:
 	for i in range(width * height):
 		var y = floor(i / float(width))
 		var x = i % width
-		var tile = WorldMapTile.new(x, y)
+		var tile = OrcGameMapTile.new(x, y)
 		
 		tile.terrain_intensity = max(min((apply_factor((terrain_intensity_noise.get_noise_2d(tile.x, tile.y)) - .4, 0.4)) + 0.25, 1), -1)
 		tile.soil_quality = soil_quality_noise.get_noise_2d(tile.x, tile.y)
@@ -54,8 +56,9 @@ func generate_map_tiles() -> void:
 			
 	# Find terrain type of each tile based on its properties.
 		var possible_regions = []
-		for region_type in TerrainConstants.REGION_PARAMETERS:
-			var region_parameters = TerrainConstants.REGION_PARAMETERS[region_type]['generation_parameters']
+		var worldgen = load('res://map/worldmap/WorldgenParameters.gd')
+		for region_type in worldgen.REGION_PARAMETERS:
+			var region_parameters = worldgen.REGION_PARAMETERS[region_type]['generation_parameters']
 			for p_name in region_parameters:
 				var param_name = p_name.substr(4)
 				if p_name.begins_with('min'):

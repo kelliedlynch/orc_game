@@ -18,12 +18,11 @@ func trigger_conditions(conditions: Array = []) -> Array:
 	return conditions
 
 # The outcome of the Action
+# NOTE: This can lie. See ActionWander for example.
 func end_state(conditions: Array = []) -> Array:
 	conditions.append_array([])
 	return conditions
 	
-func get_cost(_blackboard) -> int:
+func get_cost() -> int:
 	return 0
-
-
 
