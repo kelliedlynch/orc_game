@@ -20,7 +20,7 @@
  "post_run_script": "",
  "pre_run_script": "",
  "prefix": "test_",
- "selected": "test_gut_GOAPQueryable.gd",
+ "selected": null,
  "should_exit": false,
  "should_exit_on_success": false,
  "should_maximize": false,
@@ -30,7 +30,7 @@
  "tests": [
 
  ],
- "unit_test_name": "test__evaluate_query_condition_against_simulated_condition",
+ "unit_test_name": null,
  "gut_on_top": true,
  "panel_options": {
   "font_name": "CourierPrime",

@@ -2,26 +2,31 @@ extends GOAPAction
 
 var item: OGItem
 
+# Things that must be true for this Action to be considered
+# These are not compared against a simulated state--for purposes of planning, these are not things
+# that creature actions can affect
+func requirements(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
 
-func requirements(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([
-		{ 'creature.has_arms': true },
-	])
-	return .requirements(all_conditions)
+	}
+	return conditions
 
-func trigger_conditions(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([
+# The conditions that activate the Action
+func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			'idle_state': Creature.IdleState.IDLE
+		}
+	}
+	return conditions
 
-	])
-	return .trigger_conditions(all_conditions)
-	
-func get_results(results: Array) -> Array:
-	var all_results = results.duplicate()
-	all_results.append_array([])
-
-	return .get_results(all_results)
-	
-func get_cost(_blackboard) -> int:
-	return 0
+# The outcome of the Action
+# Action never actually changes the idle state, but still seeks the PLAYING state.
+# This way, the action will be performed endlessly until another, better action becomes available
+func end_state(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			'idle_state': Creature.IdleState.PLAYING
+		}
+	}
+	return conditions

@@ -34,40 +34,40 @@ func _find_best_plan(creature: OGCreature, goal: GOAPGoal):
 func _path_exists(creature: OGCreature, step: Dictionary, simulated_state: Array = []):
 	var has_followup = false
 	
-	var desired_state = step.goal.duplicate()
-
-	
-	for action in creature.state_tracker.actions:
-		if !evaluate_query(action.requirements(), creature):
-			continue
-			
-		var q = evaluate_query(desired_state, creature, action.end_result())
-			
-		var action_satisfies = false
-		var action_results = action.get_results()
-		var next_desired_state = desired_state.duplicate()
-		
-		for element in next_desired_state:
-			# what if it doesn't exist in either one?
-			if next_desired_state[element] == action_results.get(element):
-				next_desired_state.erase(element)
-#				action_satisfies_requirement = true
-		
-#		if action_satisfies_requirement:
-#			var requirements = action.get_requirements()
-#			for requirement in requirements:
-#				next_desired_state[requirement] = requirements[requirement]
-			
-			var next_step = {
-				'action': action,
-				'state': next_desired_state,
-				'children': []
-			}
-			
-			# is duplicating the actor_state necessary here? I don't think it's being mutated.
-#			if next_desired_state.empty() or _path_exists(creature.state_tracker, next_step, tracker_state.duplicate()):
-#				step.children.push_back(next_step)
-#				has_followup = true
+#	var desired_state = step.goal.duplicate()
+#
+#
+#	for action in creature.state_tracker.actions:
+#		if !evaluate_query(action.requirements(), creature):
+#			continue
+#
+#		var q = evaluate_query(desired_state, creature, action.end_result())
+#
+#		var action_satisfies = false
+#		var action_results = action.get_results()
+#		var next_desired_state = desired_state.duplicate()
+#
+#		for element in next_desired_state:
+#			# what if it doesn't exist in either one?
+#			if next_desired_state[element] == action_results.get(element):
+#				next_desired_state.erase(element)
+##				action_satisfies_requirement = true
+#
+##		if action_satisfies_requirement:
+##			var requirements = action.get_requirements()
+##			for requirement in requirements:
+##				next_desired_state[requirement] = requirements[requirement]
+#
+#			var next_step = {
+#				'action': action,
+#				'state': next_desired_state,
+#				'children': []
+#			}
+#
+#			# is duplicating the actor_state necessary here? I don't think it's being mutated.
+##			if next_desired_state.empty() or _path_exists(creature.state_tracker, next_step, tracker_state.duplicate()):
+##				step.children.push_back(next_step)
+##				has_followup = true
 				
 	return has_followup
 				

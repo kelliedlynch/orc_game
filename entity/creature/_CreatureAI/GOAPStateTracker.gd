@@ -7,7 +7,7 @@ class_name GOAPStateTracker
 var actor: OGCreature
 var actions: Array
 var goals: Array
-var skills: Array
+var skills: PoolIntArray
 var current_goal
 var current_plan: Array = []
 var current_plan_step = 0

@@ -10,19 +10,23 @@ func requirements(conditions: Array = []) -> Array:
 	return conditions
 
 # The conditions that activate the Action
-func trigger_conditions(conditions: Array = []) -> Array:
-	conditions.append_array([
-		{ 'creature.idle_state': Creature.IdleState.IDLE }
-	])
+func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			'idle_state': Creature.IdleState.IDLE
+		}
+	}
 	return conditions
 
 # The outcome of the Action
 # Action never actually changes the idle state, but still seeks the PLAYING state.
 # This way, the action will be performed endlessly until another, better action becomes available
-func end_state(conditions: Array = []) -> Array:
-	conditions.append_array([
-		{ 'creature.idle_state': Creature.IdleState.PLAYING }
-	])
+func end_state(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			'idle_state': Creature.IdleState.PLAYING
+		}
+	}
 	return conditions
 	
 func perform(actor):

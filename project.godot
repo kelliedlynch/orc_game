@@ -1084,10 +1084,6 @@ Creature="*res://autoload_global/Creature.gd"
 
 gdscript/warnings/return_value_discarded=false
 
-[display]
-
-window/size/always_on_top=true
-
 [editor_plugins]
 
 enabled=PoolStringArray( "res://addons/gut/plugin.cfg" )

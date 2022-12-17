@@ -1,318 +1,140 @@
 extends GutTest
 
-var t = load('res://entity/creature/_CreatureAI/GOAPQueryable.gd')
+var target = load('res://entity/creature/_CreatureAI/GOAPQueryable.gd')
 
-func test__find_has_conditions_in_simulated_state():
-	# FINDS SHALLOW HAS CONDITION
-	var target = t.new()
-	var input = [
-		{ 'character.inventory': [ target.HAS, { 'material': Item.Material.BONE } ] }
-	]
-	var output = target._find_has_conditions_in_simulated_state(input)
-	var expected_output = input.duplicate(true)
-	assert_eq_deep(output, expected_output)
+func test_simulate_object():
+	var t = target.new()
+	var obj = OGCreatureOrc.new()
+	var item = OGItemBone.new()
+	obj.add_to_inventory(item)
+	var sim = t.simulate_object(obj)
 
-	# FINDS SHALLOW HAS CONDITION AND EXCLUDES OTHER CONDITIONS
-	input = [
-		{ 'creature.inventory': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		{ 'creature.first_name': 'Grug' },
-	]
-	assert_eq_deep(output, expected_output)
+	assert_typeof(sim, TYPE_DICTIONARY)
+	assert_true(!sim.empty())
+	assert_eq(sim.inventory[0].instance_name, item.instance_name)
+	
+	item.free()
+	obj.free()
+	t.free()
 
-	# EXCLUDES NON-HAS CONDITIONS
-	input = [
-		{ 'creature.first_name': 'Grug' }
-	]
-	expected_output = []
-	output = target._find_has_conditions_in_simulated_state(input)
-	assert_eq_deep(output, expected_output)
-
-	# FINDS DEEP HAS CONDITION
-	input = [
-		target.AND,
-		{ 'creature.first_name': 'Grug' },
-		[ target.OR,
-			{ 'creature.subtype': Creature.Subtype.SUBTYPE_ORC },
-			{ 'creature.tagged': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		]
-	]
-	expected_output = [
-		target.AND,
-		[ target.OR,
-			{ 'creature.tagged': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		]
-	]
-	output = target._find_has_conditions_in_simulated_state(input)
-	assert_eq_deep(output, expected_output)
-
-	# FINDS DEEP AND EXTRA DEEP HAS CONDITIONS AT MULTIPLE NESTING LEVELS
-	input = [
-		{ 'creature.first_name': 'Grug' },
-		[ target.OR,
-			{ 'creature.subtype': Creature.Subtype.SUBTYPE_ORC },
-			{ 'creature.tagged': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		],
-		{ 'creature.owned': [ target.HAS, {'material': 'wood'}]},
-		[ target.NOT,
-			[ target.OR,
-				{ 'creature.intelligence': [ target.GREATER_THAN, 5]},
-				[ target.AND,
-					{ 'creature.location': [ target.NOT_EQUAL, Vector2(-1, -1)]},
-					{ 'creature.inventory': [ target.HAS,
-											{
-												'material': 'silk',
-												target.QUANTITY: 5,
-											},
-					]}
-				]
-			]
-		]
-	]
-	expected_output = [
-		[ target.OR,
-			{ 'creature.tagged': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		],
-		{ 'creature.owned': [ target.HAS, {'material': 'wood'}]},
-		[ target.NOT,
-			[ target.OR,
-				[ target.AND,
-					{ 'creature.inventory': [ target.HAS,
-											{
-												'material': 'silk',
-												target.QUANTITY: 5,
-											},
-					]}
-				]
-			]
-		]
-	]
-	output = target._find_has_conditions_in_simulated_state(input)
-	assert_eq_deep(output, expected_output)
-
-	target.free()
-
-func test__evaluate_query_condition_against_simulated_condition():
-	# SIMPLE COMPARISON OF IDENTICAL DICTIONARIES
-	var target = t.new()
-	var input1 = {
-		'character.inventory': [ target.HAS, { 'material': Item.Material.BONE}]
-	}
-	var input2 = input1
-	var expected_output = {
-		'still_seeking': {},
-		'unused_elements_in_simulated_state': {},
-	}
-	var output = target._evaluate_query_condition_against_simulated_condition(input1, input2)
+func test_apply_dictionary_transform_to_world_array():
+	var t = target.new()
+	var transform = t.ADD
+	var dictionary = { 'material': Item.Material.BONE }
+	var world = []
+	var expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
+	var output = t.apply_dictionary_transform_to_world_array(transform, dictionary, world)
+	
 	assert_eq_deep(output, expected_output)
 	
-	# QUERY WITH MULTIPLE PROPERTIES AND OPERATORS
-	input1 = {
-		'character.inventory': [ target.HAS, 
-									{ 'material': Item.Material.BONE, target.QUANTITY: 3 }, 
-									{ 'value': [ target.LESS_THAN, 100 ] }
-		],
-		'character.tagged': [ target.HAS,
-									{ 'material': Item.Material.BONE, 'value': [ target.GREATER_THAN, 20 ]},
-									{ 'item_name': 'rock', target.QUANTITY: 8 }
-		]
-	}
-	input2 = {
-		'character.inventory': [ target.HAS, 
-									{ 'material': Item.Material.BONE, target.QUANTITY: 3 }, 
-									{ 'value': 50 }
-		],
-		'character.tagged': [ target.HAS,
-									{ 'material': Item.Material.BONE, 'value': 30},
-									{ 'item_name': 'rock', target.QUANTITY: 10 },
-									
-		]
-	}
-	expected_output = {
-		'still_seeking': {},
-		'unused_elements_in_simulated_state': { 
-			'character.tagged': [ target.HAS, 
-									{ 'item_name': 'rock', target.QUANTITY: 2 },
-			],
+	world = [{ 'material': Item.Material.BONE }]
+	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 2 }]
+	output = t.apply_dictionary_transform_to_world_array(transform, dictionary, world)
+	
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.SUBTRACT
+	dictionary = { 'material': Item.Material.BONE }
+	world = [{ 'material': Item.Material.BONE, t.QUANTITY: 2 }]
+	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
+	output = t.apply_dictionary_transform_to_world_array(transform, dictionary, world)
+
+	assert_eq_deep(output, expected_output)
+
+	transform = t.SUBTRACT
+	dictionary = { 'material': Item.Material.BONE, t.QUANTITY: 2 }
+	world = [{ 'material': Item.Material.BONE}]
+	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
+	output = t.apply_dictionary_transform_to_world_array(transform, dictionary, world)
+
+	assert_eq_deep(output, expected_output)
+
+	t.free()
+
+func test_apply_transform_to_world_state():
+	var t = target.new()
+	var transform = t.ADD
+	var sim = [{ 'material': Item.Material.BONE}]
+	var world = []
+	var expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
+	var output = t.apply_transform_to_world_state(transform, world, sim)
+	
+	assert_eq_deep(output, expected_output)
+	
+	sim = [{ 'material': Item.Material.BONE}, { 'material': Item.Material.BONE}]
+	world = [{ 'material': Item.Material.BONE}]
+	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 3 }]
+	output = t.apply_transform_to_world_state(transform, world, sim)
+	
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.SUBTRACT
+	sim = [{ 'material': Item.Material.BONE}]
+	world = [{ 'material': Item.Material.BONE, t.QUANTITY: 2 }]
+	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
+	output = t.apply_transform_to_world_state(transform, world, sim)
+	
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.SUBTRACT
+	sim = 1
+	world = 10
+	expected_output = 9
+	output = t.apply_transform_to_world_state(transform, world, sim)
+
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.ADD
+	expected_output = 11
+	output = t.apply_transform_to_world_state(transform, world, sim)
+
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.ADD
+	sim = Vector2(1, 1)
+	world = Vector2(3, 4)
+	expected_output = Vector2(4, 5)
+	output = t.apply_transform_to_world_state(transform, world, sim)
+
+	assert_eq_deep(output, expected_output)
+	
+	transform = t.SUBTRACT
+	sim = 10
+	world = 1
+	expected_output = 1
+	output = t.apply_transform_to_world_state(transform, world, sim)
+
+	assert_eq_deep(output, expected_output)
+	
+	t.free()
+
+func test_apply_simulated_state_to_world_state():
+	var t = target.new()
+	var world = {
+		'creature': {
+			'inventory': [],
+			'intelligence': 10,
+			'first_name': 'Frank',
 		}
 	}
+	var sim = {
+		'creature': {
+			t.ADD: {
+				'last_name': 'Smith',
+			}
+		}
+	}
+	var expected_output = {
+		'creature': {
+			'inventory': [],
+			'intelligence': 10,
+			'first_name': 'Frank',
+			'last_name': 'Smith',
+		}
+	}
+	var output = t.apply_simulated_state_to_world_state(world, sim)
 	
-	output = target._evaluate_query_condition_against_simulated_condition(input1, input2)
 	assert_eq_deep(output, expected_output)
 	
-	target.free()
-
-func test__compare_properties_of_seeking_and_simulated():
-	var target = t.new()
-	var seeking = { 'material': Item.Material.BONE }
-	var simulated = seeking
-	var expected_output = true
 	
-	var output = target._compare_properties_of_seeking_and_simulated(seeking, simulated)
-	assert_eq(output, expected_output)
-	
-	seeking = {
-		'material': Item.Material.BONE,
-		'value': [ target.GREATER_THAN, 50 ],
-		target.QUANTITY: 9
-	}
-	simulated = {
-		'material': Item.Material.BONE,
-		'value': 100,
-		'weight': 50,
-		target.QUANTITY: 10
-	}
-
-	output = target._compare_properties_of_seeking_and_simulated(seeking, simulated)
-	assert_eq(output, expected_output)
-	
-	seeking = {
-		'material': Item.Material.BONE,
-		'value': [ target.LESS_THAN, 50 ],
-		target.QUANTITY: 9
-	}
-	simulated = {
-		'material': Item.Material.BONE,
-		'value': 100,
-		'weight': 50,
-		target.QUANTITY: 10
-	}
-	expected_output = false
-
-	output = target._compare_properties_of_seeking_and_simulated(seeking, simulated)
-	assert_eq(output, expected_output)
-	
-	target.free()
-
-func test__evaluate_query_condition_against_simulated_state():
-	# SIMPLE COMPARISON OF IDENTICAL DICTIONARIES
-	var target = t.new()
-	var input1 = {
-		'character.inventory': [ target.HAS, { 'material': Item.Material.BONE}]
-	}
-	var input2 = []
-	var expected_output = {}
-	var output = target._evaluate_query_condition_against_simulated_state(input1, input2)
-	assert_eq_deep(output, expected_output)
-	
-	# QUERIES WITH MULTIPLE ITEMS, MULTIPLE PROPERTIES, AND OPERATORS
-	input1 = {
-		'character.inventory': [ target.HAS, { 'material': Item.Material.BONE, target.QUANTITY: 2, 'value': 30}]
-	}
-	input2 = {
-		'character.inventory': [ target.HAS, 
-									{ 'material': Item.Material.BONE, target.QUANTITY: 3 }, 
-									{ 'value': 50, 'material': Item.Material.BONE },
-									{ 'value': 100, 'material': Item.Material.BONE }
-		],
-		'character.tagged': [ target.HAS,
-									{ 'material': Item.Material.BONE, 'value': 20},
-									{ 'item_name': 'rock', target.QUANTITY: 10 },
-									{ 'weight': 50, target.QUANTITY: 1}
-		]
-	}
-	output = target._evaluate_query_condition_against_simulated_state(input1, [input2])
-	assert_eq_deep(output, expected_output)
-	
-	target.free()
-
-func test__evaluate_has_query():
-	# SIMPLE TEST AGAINST CREATURE INVENTORY
-	var target = t.new()
-	var creature = OGCreatureOrc.new()
-	var items = [OGItemBone.new()]
-	creature.add_to_inventory(items[0])
-	var seeking = { 'material': Item.Material.BONE }
-	var property = 'inventory'
-	var simulated_state = []
-	
-	var output = target._evaluate_has_query(seeking, creature, property, simulated_state)
-	var expected_output = true
-	assert_eq_deep(output, expected_output)
-	
-	items = [OGItemBone.new(), OGItemBone.new(), OGItemBone.new()]
-#	items[0].quantity = 4
-	items[1].value = 100
-	items[2].value = 50
-#	items[2].quantity = 2
-	for item in items:
-		creature.add_to_inventory(item)
-		
-	# ADD QUANTITY
-	seeking = {
-		'material': Item.Material.BONE,
-		target.QUANTITY: 7,
-	}
-	output = target._evaluate_has_query(seeking, creature, property, simulated_state)
-	assert_eq_deep(output, expected_output)
-	
-	# ADD QUANTITY, PROPERTY, AND OPERATOR QUERY
-	seeking = {
-		'material': Item.Material.BONE,
-		target.QUANTITY: 3,
-		'value': [ target.GREATER_THAN, 20 ],
-	}
-	output = target._evaluate_has_query(seeking, creature, property, simulated_state)
-	assert_eq_deep(output, expected_output)
-	
-	for item in creature.inventory:
-		item.free()
-	creature.free()
-	target.free()
-
-func test_evaluate_query():
-	# SIMPLEST QUERY, CHECK FOR A SINGLE ITEM
-	var target = t.new()
-	var creature = OGCreatureOrc.new()
-	var items = [OGItemBone.new()]
-	creature.add_to_inventory(items[0])
-	var query = [
-		{ 'creature.inventory': [ target.HAS, { 'material': Item.Material.BONE} ] }
-	]
-	var simulated_state = []
-	var expected_output = true
-	
-	var output = target.evaluate_query(query, creature, simulated_state)
-	assert_eq_deep(output, expected_output)
-	
-	# NESTED QUERY WITH OPERATOR QUERIES
-	query = [
-		{ 'creature.subtype': Creature.Subtype.SUBTYPE_ORC },
-		{ 'creature.build_power': [ target.GREATER_THAN, 1 ] },
-		[ target.OR,
-			{ 'creature.first_name': 'Francis'},
-			{ 'creature.inventory': [ target.HAS, { 'material': Item.Material.BONE } ] },
-		],
-		[ target.NOT,
-			{ 'creature.inventory': [ target.HAS, { 'quality': 'masterwork' } ] },
-		]
-	]
-	
-	output = target.evaluate_query(query, creature, simulated_state)
-	assert_eq_deep(output, expected_output)
-	
-	# NESTED QUERY WITH OPERATOR QUERIES AND SIMULATED STATE
-	query = [
-		{ 'creature.subtype': Creature.Subtype.SUBTYPE_ORC },
-		{ 'creature.build_power': [ target.GREATER_THAN, 1 ] },
-		[ target.OR,
-			{ 'creature.first_name': 'Francis'},
-			{ 'creature.inventory': [ target.HAS, { 'material': Item.Material.BONE, target.QUANTITY: 2 } ] },
-		],
-		[ target.NOT,
-			{ 'creature.inventory': [ target.HAS, { 'quality': 'masterwork' } ] },
-		]
-	]
-	simulated_state = [
-		[ target.AND, 
-			{ 'creature.inventory': [ target.HAS, { 'material': Item.Material.BONE } ] },
-			{ 'creature.weight': 100 }
-		]
-	]
-	
-	output = target.evaluate_query(query, creature, simulated_state)
-	assert_eq_deep(output, expected_output)
-	
-	for item in creature.inventory:
-		item.free()
-	creature.free()
-	target.free()
+	t.free()

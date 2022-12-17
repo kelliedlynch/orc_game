@@ -57,7 +57,7 @@ var elapsed: float = 0.0
 var build_power: float = 1.1
 
 
-var skills: Array = [ Creature.Skill.HAULING, Creature.Skill.BUILDING]
+var skills: PoolIntArray = [ Creature.Skill.HAULING, Creature.Skill.BUILDING]
 
 func _init():
 	pause_mode = PAUSE_MODE_STOP

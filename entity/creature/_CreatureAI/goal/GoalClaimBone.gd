@@ -5,38 +5,73 @@ class_name GoalClaimBone
 func _ready():
 	ItemManager.connect("item_availability_changed", self, "_set_bone_is_available")
 
-func requirements(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([
-		OR,
-			{ 'creature.owned': [ HAS, { 'material': Item.Material.BONE } ] },
-			{ 'item.is_available_with_properties' : [ HAS, { 'material': Item.Material.BONE } ] },
-	])
-	return .goal_is_possible(all_conditions)
+# Things that must be true for this goal to be considered
+func requirements(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		OR: {
+			'world': {
+				'unowned_items': {
+					HAS: {
+						'material': Item.Material.BONE
+					}
+				}
+			},
+			'creature': {
+				'owned': {
+					HAS: {
+						'material': Item.Material.BONE
+					}
+				}
+			}
+		}
+	}
+	return conditions
+
+# The conditions that activate the goal
+func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			NOT: {
+				OR: {
+					'owned': {
+						HAS: {
+							'material': Item.Material.BONE
+						}
+					},
+					'inventory': {
+						HAS: {
+							'material': Item.Material.BONE
+						}
+					}
+					
+				}
+			}
+		}
+	}
+	return conditions
+
+# The desired outcome of the goal
+func goal_state(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		'creature': {
+			'owned': {
+				HAS: {
+					'material': Item.Material.BONE
+				}
+			},
+			'inventory': {
+				HAS: {
+					'material': Item.Material.BONE
+				}
+			}
+		}
+	}
+	return conditions
 	
 func get_priority():
 	return Goal.PRIORITY_WANT
 	
-func trigger_conditions(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([
-		AND,
-			{ 'creature.inventory': [ 
-				NOT,
-					[ HAS, { 'material': Item.Material.BONE } ]
-				]
-			}
-	])
-	return .trigger_conditions(all_conditions)
-	
-func end_state(conditions: Array = []) -> Array:
-	var all_conditions = conditions.duplicate()
-	all_conditions.append_array([
-		AND,
-			{ 'creature.owned': [ HAS, { 'material': Item.Material.BONE } ] },
-			{ 'creature.inventory': [ HAS, { 'material': Item.Material.BONE } ] },
-	])
-	return .end_state(all_conditions)
+
 	
 	
 	

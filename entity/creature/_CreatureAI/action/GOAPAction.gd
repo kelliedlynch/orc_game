@@ -8,20 +8,20 @@ class_name GOAPAction
 # the action from consideration, while trigger conditions are things that qualify
 
 # Things that must be true for this Action to be considered
-func requirements(conditions: Array = []) -> Array:
-	conditions.append_array([])
-	return conditions
+#func requirements(conditions: Array = []) -> Array:
+#	conditions.append_array([])
+#	return conditions
 
 # The conditions that activate the Action
-func trigger_conditions(conditions: Array = []) -> Array:
-	conditions.append_array([])
-	return conditions
+#func trigger_conditions(conditions: Array = []) -> Array:
+#	conditions.append_array([])
+#	return conditions
 
 # The outcome of the Action
 # NOTE: This can lie. See ActionWander for example.
-func end_state(conditions: Array = []) -> Array:
-	conditions.append_array([])
-	return conditions
+#func end_state(conditions: Array = []) -> Array:
+#	conditions.append_array([])
+#	return conditions
 	
 func get_cost() -> int:
 	return 0
