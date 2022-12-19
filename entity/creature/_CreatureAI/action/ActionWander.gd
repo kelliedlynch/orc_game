@@ -4,9 +4,9 @@ class_name ActionWander
 # Things that must be true for this Action to be considered
 # These are not compared against a simulated state--for purposes of planning, these are not things
 # that creature actions can affect
-func requirements(conditions: Array = []) -> Array:
+func requirements(conditions: Dictionary = {}) -> Dictionary:
 	# CREATURE MUST BE MOBILE
-	conditions.append_array([])
+
 	return conditions
 
 # The conditions that activate the Action

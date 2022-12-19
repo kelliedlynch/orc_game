@@ -31,8 +31,20 @@ func _find_best_plan(creature: OGCreature, goal: GOAPGoal):
 	
 	return []
 	
-func _path_exists(creature: OGCreature, step: Dictionary, simulated_state: Array = []):
+func _path_exists(creature: OGCreature, step: Dictionary, simulated_state: Dictionary = {}):
 	var has_followup = false
+	
+	for action in creature.state_tracker.actions:
+		var is_valid = eval_query(action.requirements(), simulated_state)
+		if !is_valid: continue
+		var requirements_met = eval_query(action.trigger_conditions(), simulated_state)
+		if !requirements_met: continue
+		var new_state = simulated_state.duplicate(true)
+		var transform = action.end_state()
+		var outcome = apply_simulated_state_to_world_state(new_state, transform)
+		var any_matches = any_conditions_satisfied(step.goal, outcome)
+	
+	
 	
 #	var desired_state = step.goal.duplicate()
 #
