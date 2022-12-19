@@ -8,19 +8,19 @@ var actor: OGCreature
 # the goal from consideration, while trigger conditions are things that qualify
 
 # Things that must be true for this goal to be considered
-#func requirements(conditions: Array = []) -> Array:
+#func requirements(conditions: Dictionary = {}) -> Dictionary:
 #	conditions.append_array([])
 #	return conditions
 
 # The conditions that activate the goal
-#func trigger_conditions(conditions: Array = []) -> Array:
+#func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 #	conditions.append_array([])
 #	return conditions
 
 # The desired outcome of the goal
-#func end_state(conditions: Array = []) -> Array:
-#	conditions.append_array([])
-#	return conditions
+#func desired_state(query: Dictionary = {}) -> Dictionary:
+#	query.append_array([])
+#	return query
 
 func assign_to_creature(creature: OGCreature):
 	actor = creature

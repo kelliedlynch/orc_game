@@ -17,6 +17,9 @@ const QUANTITY = 'QueryTransformQUANTITY'
 const ADD = 'TransformADD'
 const SUBTRACT = 'TransformSUBTRACT'
 
+# used for testing and development, makes a query return true or false regardless
+const OVERRIDE = 'QueryOVERRIDE'
+
 const QueryConditionals: Array = [AND, OR, NOT]
 const QueryOperators: Array = [GREATER_THAN, GREATER_OR_EQUAL, LESS_THAN, LESS_OR_EQUAL]
 const TransformOperators: Array = [ADD, SUBTRACT]
@@ -70,73 +73,73 @@ func simulate_world_state_for_creature(creature: OGCreature):
 	var state = {}
 	state['creature'] = simulate_object(creature)
 
-func apply_simulated_state_to_world_state(world_: Dictionary, sim_: Dictionary):
+func apply_transform_to_world_state(transform_: Dictionary, world_: Dictionary):
 	var world = world_.duplicate(true)
-	var sim = sim_.duplicate(true)
-	for key in sim:
-
-		var stype = typeof(sim[key])
-
+	var transform = transform_.duplicate(true)
+	for key in transform:
+		if key == 'inventory':
+			pass
+		var stype = typeof(transform[key])
 		if stype == TYPE_DICTIONARY:
 			if key in world:
 				var wtype = typeof(world[key])
 				if wtype == TYPE_DICTIONARY:
-					world[key] = apply_simulated_state_to_world_state(world[key], sim[key])
+					world[key] = apply_transform_to_world_state(transform[key], world[key])
 					continue
 			if key in TransformOperators:
-				world = _apply_transform_to_world_state(key, world, sim[key])
+				world = _apply_transform_step_to_world_state(key, transform[key], world)
 			else:
-				for simkey in sim[key]:
+				for simkey in transform[key]:
 					if simkey in TransformOperators:
-						world[key] = _apply_transform_to_world_state(simkey, world[key], sim[key][simkey])
+						world[key] = _apply_transform_step_to_world_state(simkey, transform[key][simkey], world[key])
 					else:
 						push_error("Invalid transform format in simulated state")
 		else:
-			world[key] = sim[key]
+			world[key] = transform[key]
 #		else:
 #			push_error('Invalid key %s in simulated state' % key)
 	return world
 			
-func _apply_transform_to_world_state(transform: String, world_, sim):
+func _apply_transform_step_to_world_state(tname: String, transform, world_):
 	var world = world_
 	var wtype = typeof(world)
-	var stype = typeof(sim)
-	if transform == ADD or transform == SUBTRACT:
+	var stype = typeof(transform)
+	if tname == ADD or tname == SUBTRACT:
 		if (wtype in ArrayTypes):
 			if (stype in ArrayTypes):
-				for sitem in sim:
+				for sitem in transform:
 					var sitype = typeof(sitem)
 					if sitype == TYPE_DICTIONARY:
-						world = _apply_dictionary_transform_to_world_array(transform, sitem, world)
+						world = _apply_dictionary_transform_to_world_array(tname, sitem, world)
 			elif stype == TYPE_DICTIONARY:
-				world = _apply_dictionary_transform_to_world_array(transform, sim, world)
+				world = _apply_dictionary_transform_to_world_array(tname, transform, world)
 		elif (wtype == TYPE_REAL or wtype == TYPE_INT or wtype == TYPE_VECTOR2):
-			if transform == ADD:
-				world = world + sim
+			if tname == ADD:
+				world = world + transform
 			else:
-				if world >= sim:
-					world = world - sim
+				if world >= transform:
+					world = world - transform
 		elif wtype == TYPE_DICTIONARY:
 			world = world_.duplicate()
-			for key in sim:
-				if transform == ADD:
+			for key in transform:
+				if tname == ADD:
 					if key in world:
 						push_error('Cannot ADD to dictionary; property already exists')
 						return world_
-					world[key] = sim[key]
+					world[key] = transform[key]
 				else:
 					if !world.has(key):
 						push_error('Cannot SUBTRACT from dictionary; property already exists')
 						return world_
-					if world[key] != sim[key]:
+					if world[key] != transform[key]:
 						push_error('Cannot SUBTRACT from dictionary; property values do not match')
 						return world_
 					world.erase(key)
 		else:
-			push_error('Invalid type %s for %s transform' % [stype, transform])
+			push_error('Invalid type %s for %s transform name' % [stype, tname])
 			return world_
 	else:
-		push_error('Invalid transform %s in simulated state' % transform)
+		push_error('Invalid transform name %s in simulated state' % tname)
 		return world_
 	return world
 
@@ -172,6 +175,56 @@ func _apply_dictionary_transform_to_world_array(transform: String, dict: Diction
 		world.append(dict)
 	return world
 
+func remove_satisfied_conditions_from_query(query: Dictionary, state: Dictionary):
+	for key in query:
+		_remove_satisfied_query_key(query[key], state[key])
+		
+func _remove_satisfied_query_key(query, state):
+	var qtype = typeof(query)
+	var stype = typeof(state)
+	if qtype == TYPE_DICTIONARY:
+		if query.has(HAS) and state is Array:
+			return _remove_satisfied_has_conditions(query[HAS], state)
+
+		for condition in QueryConditionals:
+			if condition in query:
+#				conditional = true
+				var passes = _eval_conditional_query(condition, query[condition], state)
+				if passes: query.erase(condition)
+				
+				
+				
+				
+				
+				# TODO NEXT: CONSIDER:
+#				{
+#					NOT: { 'intelligence': 10},
+#					'speed': 2,
+#				}
+				# WE NEED TO EVALUATE THE CONDITIONAL QUERIES WHILE NOT MISSING THE OTHERS
+				# ALSO NEED TO ADDRESS THIS IN TRANSFORMS
+				
+				
+				
+				
+		if stype == TYPE_DICTIONARY:
+			for key in query:
+				var passed = _eval_query_key(query[key], state[key])
+				if !passed: return false
+			return true
+	elif qtype == TYPE_ARRAY and stype in PropertyValueTypes:
+		return _eval_operator_query(query[0], state, query[1])
+	elif qtype in PropertyValueTypes and stype in PropertyValueTypes:
+		return _eval_operator_query("", query, state)
+	elif (qtype is Array and stype in ArrayTypes) or (qtype in ArrayTypes and stype is Array)\
+			or (qtype in ArrayTypes and qtype == stype) or (qtype is Array and stype is Array):
+		# Theoretically, this could cause a bug because hash values aren't necessarily unique,
+		# but it's terribly unlikely
+		return hash(query) == hash(state)
+		
+func _remove_satisfied_has_conditions(query: Array, state: Array):
+	pass
+
 func _eval_operator_query(operator: String, l_val, r_val) -> bool:
 	if operator == GREATER_THAN:
 		return l_val > r_val
@@ -185,6 +238,7 @@ func _eval_operator_query(operator: String, l_val, r_val) -> bool:
 		return l_val == r_val
 
 func eval_query(query_: Dictionary, state_: Dictionary):
+	if query_.has(OVERRIDE): return query_.OVERRIDE
 	var query = query_.duplicate(true)
 	var state = state_.duplicate(true)
 	var passed = false	
@@ -194,14 +248,20 @@ func eval_query(query_: Dictionary, state_: Dictionary):
 	return passed
 	
 func _eval_query_key(query, state):
+	if query is Dictionary and query.has(OVERRIDE): return query.OVERRIDE
 	var qtype = typeof(query) 
 	var stype = typeof(state) 
 	if qtype == TYPE_DICTIONARY:
 		if query.has(HAS) and state is Array:
 			return _eval_has_condition(query[HAS], state)
+		var passes = false
 		for condition in QueryConditionals:
 			if condition in query:
-				return _eval_conditional_query(condition, query[condition], state)
+				passes = _eval_conditional_query(condition, query[condition], state)
+				if !passes: return false
+			else:
+				continue
+		if passes: return true
 		if stype == TYPE_DICTIONARY:
 			for key in query:
 				var passed = _eval_query_key(query[key], state[key])
@@ -218,6 +278,7 @@ func _eval_query_key(query, state):
 		return hash(query) == hash(state)
 	
 func _eval_conditional_query(condition: String, query: Dictionary, state: Dictionary):
+	if query is Dictionary and query.has(OVERRIDE): return query.OVERRIDE
 	if condition == AND:
 		for key in query:
 			var passes = _eval_query_key(query[key], state[key])
@@ -301,6 +362,7 @@ func _eval_has_condition(has_: Array, state_: Array, is_OR_query = false) -> boo
 	return false
 
 func any_conditions_satisfied(conditions: Dictionary, state: Dictionary) -> bool:
+	if conditions is Dictionary and conditions.has(OVERRIDE): return conditions.OVERRIDE
 	for key in conditions:
 		if key in state:
 			var passed = _search_for_any_match(conditions[key], state[key])
@@ -308,6 +370,7 @@ func any_conditions_satisfied(conditions: Dictionary, state: Dictionary) -> bool
 	return false
 
 func _search_for_any_match(query, state) -> bool:
+	if query is Dictionary and query.has(OVERRIDE): return query.OVERRIDE
 	var qtype = typeof(query) 
 	var stype = typeof(state) 
 	if qtype == TYPE_DICTIONARY:

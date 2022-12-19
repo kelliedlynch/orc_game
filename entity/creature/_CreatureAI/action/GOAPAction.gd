@@ -19,7 +19,7 @@ class_name GOAPAction
 
 # The outcome of the Action
 # NOTE: This can lie. See ActionWander for example.
-#func end_state(conditions: Array = []) -> Array:
+#func applied_transform(conditions: Array = []) -> Array:
 #	conditions.append_array([])
 #	return conditions
 	

@@ -51,8 +51,8 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 	return conditions
 
 # The desired outcome of the goal
-func goal_state(conditions: Dictionary = {}) -> Dictionary:
-	conditions = {
+func desired_state(query: Dictionary = {}) -> Dictionary:
+	query = {
 		'creature': {
 			'owned': {
 				HAS: {
@@ -66,7 +66,7 @@ func goal_state(conditions: Dictionary = {}) -> Dictionary:
 			}
 		}
 	}
-	return conditions
+	return query
 	
 func get_priority():
 	return Goal.PRIORITY_WANT

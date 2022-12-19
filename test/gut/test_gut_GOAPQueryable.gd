@@ -51,20 +51,20 @@ func test_apply_dictionary_transform_to_world_array():
 
 	t.free()
 
-func test_apply_transform_to_world_state():
+func test_apply_transform_step_to_world_state():
 	var t = target.new()
 	var transform = t.ADD
 	var sim = [{ 'material': Item.Material.BONE}]
 	var world = []
 	var expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
-	var output = t._apply_transform_to_world_state(transform, world, sim)
+	var output = t._apply_transform_step_to_world_state(transform, sim, world)
 	
 	assert_eq_deep(output, expected_output)
 	
 	sim = [{ 'material': Item.Material.BONE}, { 'material': Item.Material.BONE}]
 	world = [{ 'material': Item.Material.BONE}]
 	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 3 }]
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 	
 	assert_eq_deep(output, expected_output)
 	
@@ -72,7 +72,7 @@ func test_apply_transform_to_world_state():
 	sim = [{ 'material': Item.Material.BONE}]
 	world = [{ 'material': Item.Material.BONE, t.QUANTITY: 2 }]
 	expected_output = [{ 'material': Item.Material.BONE, t.QUANTITY: 1 }]
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 	
 	assert_eq_deep(output, expected_output)
 	
@@ -80,13 +80,13 @@ func test_apply_transform_to_world_state():
 	sim = 1
 	world = 10
 	expected_output = 9
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 
 	assert_eq_deep(output, expected_output)
 	
 	transform = t.ADD
 	expected_output = 11
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 
 	assert_eq_deep(output, expected_output)
 	
@@ -94,7 +94,7 @@ func test_apply_transform_to_world_state():
 	sim = Vector2(1, 1)
 	world = Vector2(3, 4)
 	expected_output = Vector2(4, 5)
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 
 	assert_eq_deep(output, expected_output)
 	
@@ -102,13 +102,13 @@ func test_apply_transform_to_world_state():
 	sim = 10
 	world = 1
 	expected_output = 1
-	output = t._apply_transform_to_world_state(transform, world, sim)
+	output = t._apply_transform_step_to_world_state(transform, sim, world)
 
 	assert_eq_deep(output, expected_output)
 	
 	t.free()
 
-func test_apply_simulated_state_to_world_state():
+func test_apply_transform_to_world_state():
 	var t = target.new()
 	var world = {
 		'creature': {
@@ -132,7 +132,7 @@ func test_apply_simulated_state_to_world_state():
 			'last_name': 'Smith',
 		}
 	}
-	var output = t.apply_simulated_state_to_world_state(world, sim)
+	var output = t.apply_transform_to_world_state(sim, world)
 
 	assert_eq_deep(output, expected_output)
 	
@@ -142,7 +142,7 @@ func test_apply_simulated_state_to_world_state():
 				t.SUBTRACT: 2
 			},
 			'inventory': {
-				t.ADD: { 'material': Item.Material.BONE }
+				t.ADD: [{ 'material': Item.Material.BONE }]
 			}
 		}
 	}
@@ -154,7 +154,7 @@ func test_apply_simulated_state_to_world_state():
 		}
 	}
 	
-	output = t.apply_simulated_state_to_world_state(world, sim)
+	output = t.apply_transform_to_world_state(sim, world)
 	
 	assert_eq_deep(output, expected_output)
 	
@@ -165,8 +165,8 @@ func test_apply_simulated_state_to_world_state():
 				t.ADD: 4,
 			},
 			'inventory': {
-				t.ADD: { 'material': Item.Material.BONE },
-				t.SUBTRACT: { 'material': Item.Material.BONE },
+				t.ADD: [{ 'material': Item.Material.BONE }],
+				t.SUBTRACT: [{ 'material': Item.Material.BONE }],
 			},
 			t.ADD: {
 				'last_name': 'Smith',
@@ -184,7 +184,7 @@ func test_apply_simulated_state_to_world_state():
 		}
 	}
 
-	output = t.apply_simulated_state_to_world_state(world, sim)
+	output = t.apply_transform_to_world_state(sim, world)
 	
 	assert_eq_deep(output, expected_output)
 	
@@ -199,14 +199,14 @@ func test_add_simulated_object_to_simulated_object():
 	var world = {
 		'creature': obj
 	}
-	var sim = {
+	var transform = {
 		'creature': {
 			'inventory': {
-				t.ADD: item
+				t.ADD: [item]
 			}
 		}
 	}
-	var result = t.apply_simulated_state_to_world_state(world, sim)
+	var result = t.apply_transform_to_world_state(transform, world)
 	assert_typeof(result, TYPE_DICTIONARY)
 	assert_eq(result['creature']['inventory'].size(), 1)
 	assert_eq(result['creature']['inventory'][0]['material'], Item.Material.BONE)

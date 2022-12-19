@@ -21,7 +21,7 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 # The outcome of the Action
 # Action never actually changes the idle state, but still seeks the PLAYING state.
 # This way, the action will be performed endlessly until another, better action becomes available
-func end_state(conditions: Dictionary = {}) -> Dictionary:
+func applied_transform(conditions: Dictionary = {}) -> Dictionary:
 	conditions = {
 		'creature': {
 			'idle_state': Creature.IdleState.PLAYING

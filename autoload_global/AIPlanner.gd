@@ -18,9 +18,9 @@ func _find_best_plan(creature: OGCreature, goal: GOAPGoal):
 #		'children': []
 #	}
 	var root = {
-		'goal': goal.end_state(),
-		'triggers': goal.trigger_conditions(),
-		'paths': []
+		'desired_state': goal.desired_state(),
+		'trigger_conditions': {},
+		'potential_actions': []
 	}
 
 	# I don't understand why this has to be duplicated, when it's never mutated
@@ -32,19 +32,45 @@ func _find_best_plan(creature: OGCreature, goal: GOAPGoal):
 	return []
 	
 func _path_exists(creature: OGCreature, step: Dictionary, simulated_state: Dictionary = {}):
-	var has_followup = false
+	var keep_searching = false
+	
+	var next_step = step.duplicate
 	
 	for action in creature.state_tracker.actions:
+		# 'requirements' are things that can't be changed during an action path. If they aren't valid
+		# in the current state of the world, the action won't be considered. (Is this a thing I even want?)
 		var is_valid = eval_query(action.requirements(), simulated_state)
 		if !is_valid: continue
-		var requirements_met = eval_query(action.trigger_conditions(), simulated_state)
-		if !requirements_met: continue
-		var new_state = simulated_state.duplicate(true)
-		var transform = action.end_state()
-		var outcome = apply_simulated_state_to_world_state(new_state, transform)
-		var any_matches = any_conditions_satisfied(step.goal, outcome)
-	
-	
+		
+		var this_step = {
+			'desired_state': action.trigger_conditions,
+#			'trigger_conditions': action.trigger_conditions,
+			# potential previous actions to make desired_state true
+			'potential_actions': []
+		}
+		
+		var transformed_state = apply_transform_to_world_state(action.applied_transform, simulated_state)
+		var any_matches = any_conditions_satisfied(next_step.desired_state, transformed_state)
+		if !any_matches: continue
+
+#		next_step.desired_state = Creature.IdleState.PLAYING
+#		next_step.trigger_conditions = Creature.IdleState.IDLE
+		var trigger_conditions_met = eval_query(action.trigger_conditions(), simulated_state)
+		if !trigger_conditions_met: 
+#			this_step.desired_state = apply_transform_to_world_state(action.applied_transform, next_step.desired_state)
+			var paths = _path_exists(creature, this_step, simulated_state)
+			if paths.size() > 0:
+				# ???
+				next_step.potential_actions.append(this_step)
+		var all_conditions_satisfied = eval_query(next_step.desired_state, transformed_state)
+		
+
+func _any_conditions_satisfied_by_action(action: GOAPAction, desired_state: Dictionary, state: Dictionary) -> bool:
+	var new_state = state.duplicate(true)
+	var transformed_state = action.applied_transform()
+	var outcome = apply_transform_to_world_state(new_state, transformed_state)
+	var any_matches = any_conditions_satisfied(desired_state, outcome)
+	return any_matches
 	
 #	var desired_state = step.goal.duplicate()
 #
@@ -81,7 +107,6 @@ func _path_exists(creature: OGCreature, step: Dictionary, simulated_state: Dicti
 ##				step.children.push_back(next_step)
 ##				has_followup = true
 				
-	return has_followup
 				
 func _transform_tree_into_array(p, blackboard):
 	var plans = []

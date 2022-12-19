@@ -15,13 +15,13 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 	return conditions
 
 # The desired outcome of the goal
-func end_state(transform: Dictionary = {}) -> Dictionary:
-	transform = {
+func desired_state(query: Dictionary = {}) -> Dictionary:
+	query = {
 		'creature': {
 			'idle_state': Creature.IdleState.PLAYING
 		}
 	}
-	return transform
+	return query
 
 func get_priority() -> int:
 	return Goal.PRIORITY_IDLE

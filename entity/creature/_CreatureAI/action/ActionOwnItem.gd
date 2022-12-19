@@ -13,11 +13,11 @@ func trigger_conditions(conditions: Array = []) -> Array:
 	)
 	return .trigger_conditions(all_conditions)
 	
-func end_state(results: Array) -> Array:
+func applied_transform(results: Array) -> Array:
 	var all_results = results.append_array([
 		{ 'creature.inventory': [ HAS, item ] }
 	])
 	return .get_results(all_results)
 	
-func get_cost(_blackboard) -> int:
+func get_cost() -> int:
 	return 0
