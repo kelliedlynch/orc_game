@@ -1,7 +1,12 @@
 extends GOAPQueryable
 class_name GOAPAction
 
-#var creature: OGCreature
+var creature: OGCreature
+
+
+func is_valid(state) -> bool:
+	return true
+
 
 # NOTE: there is no real difference between requirements and trigger conditions, they're just
 # a way to split things up a bit conceptually. In general, requirements are things that disqualify

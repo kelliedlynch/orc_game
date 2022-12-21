@@ -16,7 +16,7 @@ func _set_is_complete(val):
 	emit_signal('completed_changed', self)
 signal completed_changed()
 
-var is_paused: bool = false
+var is_suspended: bool = false
 var required_materials: Dictionary = {}
 var _materials_used: Dictionary = {}
 

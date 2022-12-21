@@ -6,6 +6,10 @@ var subtype: int
 var first_name: String
 var idle_state: int = Creature.IdleState.IDLE
 
+var fullness: int = 0
+
+var goals: Array = []
+var actions: Array = []
 
 
 var inventory = [] setget set_inventory

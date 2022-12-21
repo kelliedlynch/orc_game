@@ -4,6 +4,8 @@ class_name OGItem
 var material: int
 # TODO: FIGURE OUT HOW VALUE IS MEASURED
 var value: int
+var edible: bool = false
+var nutrition_value: int = 0
 
 var tagged: bool = false setget _set_tagged
 var owned: bool = false setget _set_owned
@@ -30,7 +32,7 @@ func _set_owned(val):
 	emit_signal('availability_changed', self)
 
 func _ready():
-	add_to_group('items')
+	add_to_group(Group.Item.ALL_ITEMS)
 	add_to_group(Group.Item.UNTAGGED_ITEMS)
 	add_to_group(Group.Item.UNOWNED_ITEMS)
 #	connect("location_changed", ItemManager, "_location_changed")

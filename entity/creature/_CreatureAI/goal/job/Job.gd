@@ -22,7 +22,7 @@ func assign_to_creature(creature: OGCreature):
 	emit_signal('job_assigned', self)
 
 func unassign():
-	actor.state_tracker.stop_tracking_state('job_completed')
+	creature.state_tracker.stop_tracking_state('job_completed')
 	.unassign()
 	emit_signal('job_unassigned', self)
 

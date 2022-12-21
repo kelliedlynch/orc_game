@@ -18,19 +18,25 @@ func _init():
 func _ready():
 	state_tracker.actor = self
 	
-	state_tracker.add_goals([
-		GoalClaimBone.new(),
+	goals = [
+#		GoalClaimBone.new(),
 		GoalEntertainSelf.new(),
-	])
-	# TODO NEXT
-	# Should probably convert Actions to singletons like I did with goals.
-	# They're going to be executed the same way for every creature, I'm pretty sure.
+		GoalFeedSelf.new(),
+	]
+	for goal in goals:
+		goal.assign_to_creature(self)
+		add_child(goal)
 	
-	state_tracker.add_actions([
-		ActionClaimBone.new(),
+	actions = [
+		ActionOwnItem.new(),
 		ActionWander.new(),
 		ActionConstructBuilt.new(),
-	])
+		ActionPickUpItem.new(),
+		ActionEatFood.new(),
+	]
+	for act in actions:
+		act.creature = self
+		add_child(act)
 
 	state_tracker.add_skills([
 		Creature.Skill.BUILDING,

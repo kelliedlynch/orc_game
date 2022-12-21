@@ -20,7 +20,7 @@
  "post_run_script": "",
  "pre_run_script": "",
  "prefix": "test_",
- "selected": null,
+ "selected": "test_gut_AIPlanner.gd",
  "should_exit": false,
  "should_exit_on_success": false,
  "should_maximize": false,
@@ -30,7 +30,7 @@
  "tests": [
 
  ],
- "unit_test_name": null,
+ "unit_test_name": "test_get_plan",
  "gut_on_top": true,
  "panel_options": {
   "font_name": "CourierPrime",

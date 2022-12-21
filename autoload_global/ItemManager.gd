@@ -1,5 +1,15 @@
 extends EntityManager
 
+# Flags for item searches
+enum {
+	PREFER_CLOSER,
+	# lower value
+	PREFER_CHEAPER,
+	# items in stockpiles
+	PREFER_STORED,
+	PREFER_FAVORITE,
+}
+
 	
 func get_items_on_tile(tile: OrcGameMapTile):
 	return tile.get_items()
@@ -13,7 +23,7 @@ func item_is_at_location(item: OGItem, loc: Vector2):
 	return get_items_on_tile(tile).has(item)
 
 # finds an item on the map with the given properties and returns it
-func is_available_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
+func find_any_available_item_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
 	# { class_name: OGItemBone }
 	var found = []
 	for item in get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS):
@@ -32,6 +42,42 @@ func is_available_with_properties(properties: Dictionary, qty: int = 1) -> OGIte
 			if found.size() >= qty:
 				return found
 	return found
+
+func find_all_available_items_with_properties(properties: Dictionary,\
+			 sort_condition: int = PREFER_CLOSER, creature: OGCreature = null) -> Array:
+	var items = []
+	# TODO: ACTUALLY LOOK AT THE PROPERTIES
+	if creature:
+		for item in get_tree().get_nodes_in_group(Group.Item.ALL_ITEMS):
+			if item_is_available_to(item, creature):
+				items.append(item)
+	else:
+		for item in get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS):
+			if item.is_in_group(Group.Item.TAGGED_ITEMS) || item.is_in_group(Group.Item.USED_IN_BUILT):
+				continue
+			else:
+				items.append(item)
+	# TODO: ADD SORT CONDITIONS
+	return items
+
+func find_closest_available_item_with_properties(properties: Dictionary, qty: int = 1):
+	pass
+	
+func find_most_preferred_item_with_properties(properties: Dictionary):
+	pass
+
+func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
+	# checks that the item is not owned or tagged by another creature, and that the item is
+	# reachable by this creature
+	if item.tagged and !creature.tagged.has(item):
+		return false
+	if item.owned and !creature.owned.has(item):
+		return false
+	if (item.is_in_group(Group.Item.UNTAGGED_ITEMS) or creature.tagged.has(item)) \
+			and (item.is_in_group(Group.Item.UNOWNED_ITEMS) or creature.owned.has(item)) \
+			and (!item.is_in_group(Group.Item.USED_IN_BUILT) or creature.tagged.has(item)):
+		return true
+	return false
 
 func creature_pick_up_item(creature: OGCreature, item: OGItem):
 	if item_is_at_location(item, creature.location):

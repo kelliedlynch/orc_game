@@ -1,6 +1,7 @@
 extends Node
 
 const Item = {
+	'ALL_ITEMS': 'all_items',
 	'UNTAGGED_ITEMS': 'untagged_items',
 	'TAGGED_ITEMS': 'tagged_items',
 	'USED_IN_BUILT': 'used_in_built',

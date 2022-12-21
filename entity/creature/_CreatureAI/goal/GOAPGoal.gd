@@ -1,7 +1,7 @@
 extends GOAPQueryable
 class_name GOAPGoal
 
-var actor: OGCreature
+var creature: OGCreature
 
 # NOTE: there is no real difference between requirements and trigger conditions, they're just
 # a way to split things up a bit conceptually. In general, requirements are things that disqualify
@@ -22,11 +22,11 @@ var actor: OGCreature
 #	query.append_array([])
 #	return query
 
-func assign_to_creature(creature: OGCreature):
-	actor = creature
+func assign_to_creature(creature_: OGCreature):
+	creature = creature_
 
 func unassign():
-	actor = null
+	creature = null
 
 func is_valid() -> bool:
 	return true

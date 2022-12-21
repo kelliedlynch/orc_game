@@ -10,14 +10,24 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "GOAPAction",
-"class": "ActionClaimBone",
-"language": "GDScript",
-"path": "res://entity/creature/_CreatureAI/action/ActionClaimBone.gd"
-}, {
-"base": "GOAPAction",
 "class": "ActionConstructBuilt",
 "language": "GDScript",
 "path": "res://entity/creature/_CreatureAI/action/ActionConstructBuilt.gd"
+}, {
+"base": "GOAPAction",
+"class": "ActionEatFood",
+"language": "GDScript",
+"path": "res://entity/creature/_CreatureAI/action/ActionEatFood.gd"
+}, {
+"base": "GOAPAction",
+"class": "ActionOwnItem",
+"language": "GDScript",
+"path": "res://entity/creature/_CreatureAI/action/ActionOwnItem.gd"
+}, {
+"base": "GOAPAction",
+"class": "ActionPickUpItem",
+"language": "GDScript",
+"path": "res://entity/creature/_CreatureAI/action/ActionPickUpItem.gd"
 }, {
 "base": "GOAPAction",
 "class": "ActionWander",
@@ -634,6 +644,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entity/creature/_CreatureAI/goal/GoalEntertainSelf.gd"
 }, {
+"base": "GOAPGoal",
+"class": "GoalFeedSelf",
+"language": "GDScript",
+"path": "res://entity/creature/_CreatureAI/goal/GoalFeedSelf.gd"
+}, {
 "base": "GdUnitMonitor",
 "class": "GodotGdErrorMonitor",
 "language": "GDScript",
@@ -708,6 +723,11 @@ _global_script_classes=[ {
 "class": "OGItemBone",
 "language": "GDScript",
 "path": "res://entity/item/OGItemBone.gd"
+}, {
+"base": "OGItem",
+"class": "OGItemSandwich",
+"language": "GDScript",
+"path": "res://entity/item/OGItemSandwich.gd"
 }, {
 "base": "Node",
 "class": "OrcGameMap",
@@ -870,8 +890,10 @@ _global_script_classes=[ {
 "path": "res://addons/gdUnit3/src/core/_TestSuiteScanner.gd"
 } ]
 _global_script_class_icons={
-"ActionClaimBone": "",
 "ActionConstructBuilt": "",
+"ActionEatFood": "",
+"ActionOwnItem": "",
+"ActionPickUpItem": "",
 "ActionWander": "",
 "AnyArgumentMatcher": "",
 "AnyBuildInTypeArgumentMatcher": "",
@@ -995,6 +1017,7 @@ _global_script_class_icons={
 "GdUnitVector3AssertImpl": "",
 "GoalClaimBone": "",
 "GoalEntertainSelf": "",
+"GoalFeedSelf": "",
 "GodotGdErrorMonitor": "",
 "GutHookScript": "",
 "GutTest": "",
@@ -1010,6 +1033,7 @@ _global_script_class_icons={
 "OGEntity": "",
 "OGItem": "",
 "OGItemBone": "",
+"OGItemSandwich": "",
 "OrcGameMap": "",
 "OrcGameMapController": "",
 "OrcGameMapLayer": "",

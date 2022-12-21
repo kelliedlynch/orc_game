@@ -3,15 +3,45 @@ class_name ActionConstructBuilt
 
 var built: OGBuilt
 
-func get_requirements():
-	return { 
-		'job_materials_available': true
+# Things that must be true for this Action to be considered
+# These are not compared against a simulated state--for purposes of planning, these are not things
+# that creature actions can affect
+func requirements(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {}
+	if !built or built.is_suspended:
+		conditions[OVERRIDE] = false
+	return conditions
+
+# The conditions that activate the Action
+func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
+	conditions = {
+		OR: {
+			'items': {
+				Group.Item.UNTAGGED_ITEMS: {
+					HAS: { VARIABLE_PROPERTY: VARIABLE_VALUE }
+				}
+			},
+			'creature': {
+				'tagged': {
+#					HAS: { VARIABLE_PROPERTY: VARIABLE_VALUE }
+				}
+			}
+		}
 	}
-	
-func get_results():
-	return {
-		'job_completed': true
+	return conditions
+
+# The outcome of the Action
+func applied_transform(transform: Dictionary = {}) -> Dictionary:
+	transform = {
+		'creature': {
+			'inventory': {
+#				HAS: { VARIABLE_PROPERTY: VARIABLE_VALUE }
+			}
+		}
 	}
+	return transform
+
+
 
 func perform(actor: OGCreature):
 	# Tag the required items

@@ -282,9 +282,12 @@ func test_eval_query():
 			'type': Creature.Type.TYPE_HUMANOID,
 			t.NOT: {
 				'subtype': Creature.Subtype.SUBTYPE_DWARF,
-			},
-			t.NOT: {
-				'first_name': 'Florence'
+				'first_name': 'Florence',
+				'inventory': {
+					t.HAS: [
+						{ 'material': Item.Material.STONE },
+					]
+				}
 			},
 			'inventory': {
 				t.HAS: [
@@ -292,13 +295,6 @@ func test_eval_query():
 					{ 'material': Item.Material.BONE, t.QUANTITY: 2 },
 				]
 			},
-			t.NOT: {
-				'inventory': {
-					t.HAS: [
-						{ 'material': Item.Material.STONE },
-					]
-				}
-			}
 		}
 	}
 	result = t.eval_query(query, state)
@@ -355,3 +351,108 @@ func test_any_conditions_satisfied():
 	assert_true(result)
 	
 	t.free()
+
+func test_remove_satisfied_conditions_from_query():
+	var t = target.new()
+	var query = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID
+		}
+	}
+	var state = query
+	var expected_output = {}
+	var output = t.remove_satisfied_conditions_from_query(query, state)
+	
+	assert_eq_deep(output, expected_output)
+	
+	query = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID,
+			'subtype': Creature.Subtype.SUBTYPE_ORC
+		}
+	}
+	state = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID
+		}
+	}
+	expected_output = {
+		'creature': {
+			'subtype': Creature.Subtype.SUBTYPE_ORC
+		}
+	}
+	output = t.remove_satisfied_conditions_from_query(query, state)
+	
+	assert_eq_deep(output, expected_output)
+	
+	query = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID,
+			'subtype': Creature.Subtype.SUBTYPE_ORC,
+			'intelligence': [t.GREATER_THAN, 10],
+			'inventory': {
+				t.HAS: [
+					{ 'material': Item.Material.BONE }
+				]
+			}
+		}
+	}
+	state = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID,
+			'intelligence': 12,
+			'inventory': [
+					{ 'material': Item.Material.BONE, 'value': 100 }
+				]
+		}
+	}
+	expected_output = {
+		'creature': {
+			'subtype': Creature.Subtype.SUBTYPE_ORC
+		}
+	}
+	output = t.remove_satisfied_conditions_from_query(query, state)
+	
+	assert_eq_deep(output, expected_output)
+	
+	query = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID,
+			t.NOT: { 'subtype': Creature.Subtype.SUBTYPE_ORC },
+			'intelligence': [t.LESS_THAN, 10],
+			'inventory': {
+				t.HAS: [
+					{ 'material': Item.Material.BONE, t.QUANTITY: [t.LESS_THAN, 2] },
+					{ 'material': Item.Material.WOOD, t.QUANTITY: 4 }
+				]
+			}
+		}
+	}
+	state = {
+		'creature': {
+			'type': Creature.Type.TYPE_HUMANOID,
+			'intelligence': 12,
+			'inventory': [
+					{ 'material': Item.Material.BONE, 'value': 100 },
+					{ 'material': Item.Material.BONE, t.QUANTITY: 3 },
+					{ 'material': Item.Material.WOOD, t.QUANTITY: 2 },
+				]
+		}
+	}
+	expected_output = {
+		'creature': {
+			'intelligence': [t.LESS_THAN, 10],
+			'inventory': {
+				t.HAS: [
+					{ 'material': Item.Material.BONE, t.QUANTITY: [t.LESS_THAN, 2] },
+					{ 'material': Item.Material.WOOD, t.QUANTITY: 2 }
+				]
+			}
+		}
+	}
+	output = t.remove_satisfied_conditions_from_query(query, state)
+	
+	assert_eq_deep(output, expected_output)
+	
+	t.free()
+
