@@ -12,8 +12,8 @@ func _add_job_to_queue(job: Job):
 #	add_child(job)
 #	_add_job_to_queue(job)
 	
-func assign_job_to_evaluate(job: Job, actor: OGCreature):
-	pass
+#func assign_job_to_evaluate(job: Job, actor: OGCreature):
+#	pass
 
 func _on_job_assigned(job: Job):
 	job.remove_from_group(Group.Jobs.INACTIVE_JOBS)

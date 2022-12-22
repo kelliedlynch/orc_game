@@ -19,7 +19,7 @@ func _ready():
 	state_tracker.actor = self
 	
 	goals = [
-#		GoalClaimBone.new(),
+		GoalClaimBone.new(),
 		GoalEntertainSelf.new(),
 		GoalFeedSelf.new(),
 	]

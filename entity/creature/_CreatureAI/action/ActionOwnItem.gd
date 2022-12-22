@@ -14,12 +14,15 @@ var target_item: OGItem = null
 func is_valid(query: Dictionary) -> bool:
 	if target_item and ItemManager.item_is_available_to(target_item, creature):
 		return true
-	elif target_item: target_item = null
+	elif target_item: 
+		target_item = null
 	# action is relevant if the query relates to items in creature's owned list
 	if !(query.has('creature') and query['creature'].has('owned') and query['creature']['owned'].has(HAS)):
 		return false
-	var items = query['creature']['inventory']['owned'][HAS]
+	var items = query['creature']['owned'][HAS]
+	
 	for item in items:
+#		var sim_item = simulate_object(item)
 		var found = ItemManager.find_all_available_items_with_properties(item, ItemManager.PREFER_FAVORITE, creature)
 		if !found.empty():
 			target_item = found.front()
@@ -38,13 +41,21 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 	transform = {
 		'creature': {
 			'owned': {
-				HAS: [item]
+				ADD: [item]
 			},
-			'inventory': {
-				HAS: [item]
-			}
+#			'inventory': {
+#				ADD: [item]
+#			}
 		}
 	}
 	return transform
+
+func get_cost(): return 1
+
+func perform():
+	target_item = null
+	
+func reset():
+	target_item = null
 
 func get_class(): return 'ActionOwnItem'

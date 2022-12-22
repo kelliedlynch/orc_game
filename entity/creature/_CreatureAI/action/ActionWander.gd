@@ -2,7 +2,7 @@ extends GOAPAction
 class_name ActionWander
 
 
-func is_valid(query: Dictionary) -> bool:
+func is_valid(_query: Dictionary) -> bool:
 	return true
 
 # Things that must be true for this Action to be considered

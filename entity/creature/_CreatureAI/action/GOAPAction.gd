@@ -4,7 +4,7 @@ class_name GOAPAction
 var creature: OGCreature
 
 
-func is_valid(state) -> bool:
+func is_valid(_state) -> bool:
 	return true
 
 
@@ -31,3 +31,5 @@ func is_valid(state) -> bool:
 func get_cost() -> int:
 	return 0
 
+func reset():
+	pass

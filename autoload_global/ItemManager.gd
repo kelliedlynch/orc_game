@@ -49,8 +49,19 @@ func find_all_available_items_with_properties(properties: Dictionary,\
 	# TODO: ACTUALLY LOOK AT THE PROPERTIES
 	if creature:
 		for item in get_tree().get_nodes_in_group(Group.Item.ALL_ITEMS):
-			if item_is_available_to(item, creature):
-				items.append(item)
+			for property in properties:
+				var prop = properties[property]
+				var found
+				if prop is Array:
+					var matches = _eval_operator_query(prop.front(), item.get(property), prop.back())
+					if matches: found = item
+				else:
+					if property == QUANTITY:
+						continue
+					if item[property] == properties[property]:
+						found = item
+				if found and item_is_available_to(found, creature):
+					items.append(found)
 	else:
 		for item in get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS):
 			if item.is_in_group(Group.Item.TAGGED_ITEMS) || item.is_in_group(Group.Item.USED_IN_BUILT):
@@ -60,11 +71,11 @@ func find_all_available_items_with_properties(properties: Dictionary,\
 	# TODO: ADD SORT CONDITIONS
 	return items
 
-func find_closest_available_item_with_properties(properties: Dictionary, qty: int = 1):
-	pass
-	
-func find_most_preferred_item_with_properties(properties: Dictionary):
-	pass
+#func find_closest_available_item_with_properties(properties: Dictionary, qty: int = 1):
+#	pass
+#
+#func find_most_preferred_item_with_properties(properties: Dictionary):
+#	pass
 
 func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
 	# checks that the item is not owned or tagged by another creature, and that the item is

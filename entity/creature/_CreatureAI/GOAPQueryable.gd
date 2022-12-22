@@ -38,9 +38,11 @@ func simulate_object(obj: Object) -> Dictionary:
 	var sim = {}
 	if !obj:
 		return sim
-	for property in obj.script.get_script_property_list():
+	var list = obj.script.get_script_property_list()
+	for property in list:
 		var type = property.type
-		if !(type in SimulatedPropertyTypes): continue
+		if !(type in SimulatedPropertyTypes): 
+			continue
 		if type == TYPE_OBJECT:
 			sim[property.name] = simulate_object(obj.get(property.name))
 			continue
@@ -83,55 +85,31 @@ func simulate_world_state_for_creature(creature: OGCreature) -> Dictionary:
 	}
 	return state
 
-#func apply_transform_to_world_state(transform_: Dictionary, world_: Dictionary, has_properties: Array):
-#	var world = world_.duplicate(true)
-#	var transform = transform_.duplicate(true)
-#	for key in transform:
-#		var ttype = typeof(transform[key])
-#		if ttype == TYPE_DICTIONARY:
-#			var wtype = typeof(world[key]) if key in world else ""
-#			if wtype == TYPE_DICTIONARY:
-#				# TODO, IS THE THIRD PROPERTY CORRECT?
-#				world[key] = apply_transform_to_world_state(transform[key], world[key], [])
-#				continue
-#			if key in TransformOperators:
-#				world = _apply_transform_step_to_world_state(key, transform[key], world)
-#			else:
-#				for simkey in transform[key]:
-#					if simkey in TransformOperators:
-#						world[key] = _apply_transform_step_to_world_state(simkey, transform[key][simkey], world[key])
-#					else:
-#						push_error("Invalid transform format in simulated state")
-#		else:
-#			world[key] = transform[key]
-##		else:
-##			push_error('Invalid key %s in simulated state' % key)
-#	return world
-
-func apply_transform_to_world_state(transform: Dictionary, state: Dictionary) -> Dictionary:
-
+func apply_transform_to_world_state(transform: Dictionary, state_: Dictionary) -> Dictionary:
+	var state = state_.duplicate(true)
 	for key in transform:
 		var t_type = typeof(transform[key])
 		if t_type == TYPE_DICTIONARY:
 			if key in state and state[key] is Dictionary:
 				state[key] = apply_transform_to_world_state(transform[key], state[key])
+				pass
 			elif key in TransformOperators:
-				_apply_transform_step_to_world_state(key, transform[key], state)
+				state = _apply_transform_step_to_world_state(key, transform[key], state)
+				pass
 			else:
 				for t_key in transform[key]:
 					if t_key in TransformOperators:
 						state[key] = _apply_transform_step_to_world_state(t_key, transform[key][t_key], state[key])
+						pass
 					else:
-						push_error("Invalid transform format")
-		else:
+						state[key] = apply_transform_to_world_state(transform[key], state[key])
+						pass
+		elif t_type in PropertyValueTypes:
 			state[key] = transform[key]
 	return state
 			
 func _apply_transform_step_to_world_state(transform_type: String, transform, state_):
-	# transform_type: ADD or SUBTRACT
-	# action transform might look like [ { VARIABLE_PROPERTY: VARIABLE_VALUE } ]
-	# properties might look like  [ { 'material': bone, QUANTITY: 3 } ]  (operator is HAS)
-	var state = state_
+	var state = state_.duplicate(true) if state_ is Array or state_ is Dictionary else state_
 	var s_type = typeof(state)
 	var t_type = typeof(transform)
 	if transform_type == ADD or transform_type == SUBTRACT:
@@ -140,13 +118,6 @@ func _apply_transform_step_to_world_state(transform_type: String, transform, sta
 				for t_item in transform:
 					var t_item_type = typeof(t_item)
 					if t_item_type == TYPE_DICTIONARY:
-
-								
-								
-								
-						
-						
-						
 						state = _apply_dictionary_transform_to_world_array(transform_type, t_item, state)
 			elif t_type == TYPE_DICTIONARY:
 				state = _apply_dictionary_transform_to_world_array(transform_type, transform, state)
@@ -157,7 +128,7 @@ func _apply_transform_step_to_world_state(transform_type: String, transform, sta
 				if state >= transform:
 					state = state - transform
 		elif s_type == TYPE_DICTIONARY:
-			state = state_.duplicate()
+			state = state_.duplicate(true)
 			for key in transform:
 				if transform_type == ADD:
 					if key in state:
@@ -180,7 +151,8 @@ func _apply_transform_step_to_world_state(transform_type: String, transform, sta
 		return state_
 	return state
 
-func _apply_dictionary_transform_to_world_array(transform: String, dict: Dictionary, world: Array):
+func _apply_dictionary_transform_to_world_array(transform: String, dict: Dictionary, world_: Array):
+	var world = world_.duplicate(true)
 	var t_qty = 1
 	var d_keys = dict.keys()
 	if dict.has(QUANTITY):
@@ -215,19 +187,30 @@ func _apply_dictionary_transform_to_world_array(transform: String, dict: Diction
 func remove_satisfied_conditions_from_query(query_: Dictionary, state: Dictionary) -> Dictionary:
 	var query = query_.duplicate(true)
 	for key in query.keys():
-		query[key] = _remove_satisfied_query_key(query[key], state[key])
-		if query[key].empty(): 
+		var scrubbed = _remove_satisfied_query_key(query[key], state[key])
+		if scrubbed.empty(): 
 			query.erase(key)
+		else:
+			query[key] = scrubbed
+		pass
+		print(scrubbed)
+	pass
 	return query
 		
-func _remove_satisfied_query_key(query, state):
+func _remove_satisfied_query_key(query_, state_):
+	var query = query_.duplicate(true) if query_ is Array or query_ is Dictionary else query_
+	var state = state_.duplicate(true) if state_ is Array or state_ is Dictionary else state_
 	var qtype = typeof(query)
 	var stype = typeof(state)
 	if qtype == TYPE_DICTIONARY:
 		if query.has(HAS) and state is Array:
-			return _remove_satisfied_has_conditions(query[HAS], state)
-		var query_copy = query.duplicate()
+			var return_val = _remove_satisfied_has_conditions(query[HAS], state)
+			if return_val.empty():
+				return {}
+			return { HAS: return_val }
+		var query_copy = query.duplicate(true)
 		for condition in query:
+			pass
 			if condition in QueryConditionals:
 				var passes = _eval_conditional_query(condition, query[condition], state)
 				if passes: query_copy.erase(condition)
@@ -236,7 +219,12 @@ func _remove_satisfied_query_key(query, state):
 				var remaining = _remove_satisfied_query_key(query[condition], state[condition])
 				if ((remaining is Array or remaining is Dictionary) and remaining.empty())\
 					or remaining == null: 
+					pass
 					query_copy.erase(condition)
+				else:
+					pass
+					query_copy[condition] = remaining
+		pass
 		return query_copy
 	elif qtype == TYPE_ARRAY and stype in PropertyValueTypes:
 		var passes = _eval_operator_query(query[0], state, query[1])
@@ -253,58 +241,68 @@ func _remove_satisfied_query_key(query, state):
 	return query
 		
 func _remove_satisfied_has_conditions(has_: Array, state_: Array) -> bool:
-	var has = has_.duplicate()
-	var state = state_.duplicate()
+	var has = has_.duplicate(true)
+	var state = state_.duplicate(true)
 	var has_index = -1
 	for has_item in has:
 		has_index += 1
 		if !has_item.has(QUANTITY):
 			has_item[QUANTITY] = 1
 			has[has_index][QUANTITY] = 1
+		var operator = GREATER_OR_EQUAL
+		var has_qty = has_item[QUANTITY]
 		if typeof(has_item[QUANTITY]) == TYPE_ARRAY:
-			var operator = has_item[QUANTITY][0]
-			var has_qty = has_item[QUANTITY][1]
-			var state_index = -1
-			for state_item in state:
-				state_index += 1
-				if !state_item.has(QUANTITY):
-					state_item[QUANTITY] = 1
-					state[state_index][QUANTITY] = 1
-				if !state_item.has_all(has_item.keys()): continue
-				var state_qty = state_item[QUANTITY]
-				var passed = _eval_operator_query(operator, state_qty, has_qty)
-				if operator == GREATER_THAN or operator == GREATER_OR_EQUAL:
-					if !passed:
-						has_item[QUANTITY][1] -= state_qty
+			operator = has_item[QUANTITY][0]
+			has_qty = has_item[QUANTITY][1]
+
+		var state_index = -1
+		for state_item in state:
+			state_index += 1
+			if !state_item.has(QUANTITY):
+				state_item[QUANTITY] = 1
+				state[state_index][QUANTITY] = 1
+			if !state_item.has_all(has_item.keys()): 
+				continue
+			var props_match = true
+			for key in has_item:
+				if key == QUANTITY:
+					continue
+				if has_item[key] != state_item[key]:
+					props_match = false
+					break
+			if props_match == false:
+				continue	
+			var state_qty = state_item[QUANTITY]
+			var passed = _eval_operator_query(operator, state_qty, has_qty)
+			if operator == GREATER_THAN or operator == GREATER_OR_EQUAL:
+				if !passed:
+					has_qty -= state_qty
+				else:
+					has[has_index] = null
+					break
+			elif operator == LESS_THAN or operator == LESS_OR_EQUAL:
 				if passed:
-					has[has_index] = null
+					has_qty -= state_qty
+				else:
+					has_qty = has[has_index][QUANTITY]
+					has_item = 'operator query fail'
 					break
+		if operator == LESS_OR_EQUAL or operator == LESS_THAN:
+			if !(has_item is String and has_item == 'operator query fail'):
+				if has[has_index][QUANTITY] is Array and has_qty == has[has_index][QUANTITY][1]:
+					has[has_index] = null
+				elif has[has_index][QUANTITY] is int and has_qty == has[has_index][QUANTITY]:
+					has[has_index] = null
 		else:
-			var state_index = -1
-			for state_item in state:
-				state_index +=1
-				if !state_item.has(QUANTITY):
-					state_item[QUANTITY] = 1
-					state[state_index][QUANTITY] = 1
-				if !state_item.has_all(has_item.keys()): continue
-				var passes = false
-				for key in has_item:
-					if key == QUANTITY: continue
-					passes = _eval_query_key(has_item[key], state_item[key])
-					if !passes: break
-				if !passes: continue
-				var qty_found = min(has_item[QUANTITY], state_item[QUANTITY])
-				has[has_index][QUANTITY] -= qty_found
-				state[state_index][QUANTITY] -= qty_found
-				if state[state_index][QUANTITY] <= 0:
-					state[state_index] = null
-				if has[has_index][QUANTITY] <= 0:
-					has[has_index] = null
-					break
+			if has[has_index] and typeof(has[has_index][QUANTITY]) == TYPE_ARRAY:
+				has[has_index][QUANTITY][1] = has_qty
+			elif has[has_index]:
+				has[has_index][QUANTITY] = has_qty
 		while state.has(null):
 			state.remove(state.find(null))
 	while has.has(null):
 		has.remove(has.find(null))
+	pass
 	return has
 
 func _eval_operator_query(operator: String, l_val, r_val) -> bool:
@@ -331,8 +329,10 @@ func eval_query(query_: Dictionary, state_: Dictionary):
 		if !passed: break
 	return passed
 	
-func _eval_query_key(query, state):
-	if query is Dictionary and query.has(OVERRIDE): return query.OVERRIDE
+func _eval_query_key(query_, state_):
+	if query_ is Dictionary and query_.has(OVERRIDE): return query_.OVERRIDE
+	var query = query_.duplicate(true) if query_ is Array or query_ is Dictionary else query_
+	var state = state_.duplicate(true) if state_ is Array or state_ is Dictionary else state_
 	var qtype = typeof(query) 
 	var stype = typeof(state) 
 	if qtype == TYPE_DICTIONARY:
@@ -359,8 +359,10 @@ func _eval_query_key(query, state):
 		# but it's terribly unlikely
 		return hash(query) == hash(state)
 	
-func _eval_conditional_query(condition: String, query: Dictionary, state: Dictionary):
-	if query is Dictionary and query.has(OVERRIDE): return query.OVERRIDE
+func _eval_conditional_query(condition: String, query_: Dictionary, state_: Dictionary):
+	if query_ is Dictionary and query_.has(OVERRIDE): return query_.OVERRIDE
+	var query = query_.duplicate(true) 
+	var state = state_.duplicate(true)
 	if condition == AND:
 		for key in query:
 			if !(key in state): return false
@@ -384,8 +386,8 @@ func _eval_conditional_query(condition: String, query: Dictionary, state: Dictio
 		return true
 
 func _eval_has_condition(has_: Array, state_: Array, is_OR_query = false) -> bool:
-	var has = has_.duplicate()
-	var state = state_.duplicate()
+	var has = has_.duplicate(true)
+	var state = state_.duplicate(true)
 	
 	var has_index = -1
 	for has_item in has:
@@ -395,58 +397,65 @@ func _eval_has_condition(has_: Array, state_: Array, is_OR_query = false) -> boo
 			has_item[QUANTITY] = 1
 			has[has_index][QUANTITY] = 1
 		
+		var operator = GREATER_OR_EQUAL
+		var has_qty = has_item[QUANTITY]
 		if typeof(has_item[QUANTITY]) == TYPE_ARRAY:
-			var operator = has_item[QUANTITY][0]
-			var has_qty = has_item[QUANTITY][1]
-			var state_index = -1
-			for state_item in state:
-				state_index += 1
-				if !state_item.has(QUANTITY):
-					state_item[QUANTITY] = 1
-					state[state_index][QUANTITY] = 1
-				if !state_item.has_all(has_item.keys()): continue
-				var state_qty = state_item[QUANTITY]
-				var passed = _eval_operator_query(operator, state_qty, has_qty)
-				if operator == GREATER_THAN or operator == GREATER_OR_EQUAL:
-					if passed: 
-						if is_OR_query: return true
-						has[has_index] = null
-						break
-					else:
-						has_item[QUANTITY][1] -= state_qty
-				elif operator == LESS_THAN or operator == LESS_OR_EQUAL:
-					if passed:
-						has_item[QUANTITY][1] -= state_qty
-						has[has_index] = null
-						continue
-					if is_OR_query: return false
-					has[has_index] = 'operator query fail'
-					break
-		else:
-			var state_index = -1
-			for state_item in state:
-				state_index +=1
-				if !state_item.has(QUANTITY):
-					state_item[QUANTITY] = 1
-					state[state_index][QUANTITY] = 1
-				if !state_item.has_all(has_item.keys()): 
+			operator = has_item[QUANTITY][0]
+			has_qty = has_item[QUANTITY][1]
+		var total_qty_found = 0
+		var state_index = -1
+		for state_item in state:
+			state_index += 1
+			if !state_item.has(QUANTITY):
+				state_item[QUANTITY] = 1
+				state[state_index][QUANTITY] = 1
+			if !state_item.has_all(has_item.keys()): 
+				continue
+			var props_match = true
+			for key in has_item:
+				if key == QUANTITY:
 					continue
-				var passes = false
-				for key in has_item:
-					if key == QUANTITY: continue
-					passes = _eval_query_key(has_item[key], state_item[key])
-					if !passes: break
-				if !passes: continue
-				var qty_found = min(has_item[QUANTITY], state_item[QUANTITY])
-				if qty_found > 0 and is_OR_query == true: 
-					return true
-				has[has_index][QUANTITY] -= qty_found
-				state[state_index][QUANTITY] -= qty_found
-				if state[state_index][QUANTITY] <= 0:
-					state[state_index] = null
-				if has[has_index][QUANTITY] <= 0:
-					has[has_index] = null
+				if has_item[key] != state_item[key]:
+					props_match = false
 					break
+			if props_match == false:
+				continue
+			var state_qty = state_item[QUANTITY]
+			var passed = _eval_operator_query(operator, state_qty, has_qty)
+			if operator == GREATER_THAN or operator == GREATER_OR_EQUAL:
+				if passed == true: 
+					if is_OR_query == true: 
+						return true
+					if has_qty >= state_qty:
+						state[state_index] = null
+					else:
+						state_item[QUANTITY] -= has_qty
+					has[has_index] = null
+					
+					break
+				else:
+					has_qty -= state_qty
+			elif operator == LESS_THAN or operator == LESS_OR_EQUAL:
+				if passed == true:
+					has_qty -= state_qty
+#					has[has_index] = null
+					continue
+				else:
+					# REMOVED AN IS_OR_QUERY CHECK HERE THAT MIGHT BREAK THINGS
+					has_qty = has[has_index][QUANTITY]
+					has_item = 'operator query fail'
+					break
+		if operator == LESS_OR_EQUAL or operator == LESS_THAN:
+			if !(has_item is String and has_item == 'operator query fail'):
+				if has[has_index][QUANTITY] is Array and has_qty == has[has_index][QUANTITY][1]:
+					has[has_index] = null
+				elif has[has_index][QUANTITY] is int and has_qty == has[has_index][QUANTITY]:
+					has[has_index] = null
+		else:
+			if has[has_index] and typeof(has[has_index][QUANTITY]) == TYPE_ARRAY:
+				has[has_index][QUANTITY][1] = has_qty
+			elif has[has_index]:
+				has[has_index][QUANTITY] = has_qty
 		while state.has(null):
 			state.remove(state.find(null))
 	while has.has(null):

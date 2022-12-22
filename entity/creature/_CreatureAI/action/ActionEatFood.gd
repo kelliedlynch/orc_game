@@ -6,7 +6,7 @@ var food: OGItem
 # Targeted actions need to find a target in their is_valid method
 func is_valid(query: Dictionary) -> bool:
 	# Action is relevant if creature wants to increase fullness
-	if !(query['creature'] and query['creature']['fullness']):
+	if !(query.has('creature') and query['creature'].has('fullness')):
 		return false
 	var operator
 	var goal_value = query['creature']['fullness']
@@ -70,5 +70,8 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 
 func get_cost() -> int:
 	return 1
+	
+func reset():
+	food = null
 
 func get_class(): return 'ActionEatFood'

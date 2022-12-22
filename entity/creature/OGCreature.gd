@@ -12,7 +12,7 @@ var goals: Array = []
 var actions: Array = []
 
 
-var inventory = [] setget set_inventory
+var inventory: Array = [] setget set_inventory
 func set_inventory(val: Array) -> void:
 	inventory = val
 	emit_signal("inventory_changed", self)
@@ -27,7 +27,7 @@ func remove_from_inventory(item: OGItem) -> void:
 	emit_signal("inventory_changed", self)
 signal inventory_changed()
 
-var tagged = [] 
+var tagged: Array = [] 
 func tag_item(item: OGItem) -> void:
 	if !tagged.has(item):
 		tagged.append(item)
@@ -40,7 +40,9 @@ func untag_item(item: OGItem) -> void:
 		emit_signal("creature_tagged_item", self, item, false)
 signal creature_tagged_item()
 		
-var owned = [] 
+var owned: Array = [] setget set_owned
+func set_owned(val):
+	owned = val
 func own_item(item: OGItem) -> void:
 	if !owned.has(item):
 		owned.append(item)
