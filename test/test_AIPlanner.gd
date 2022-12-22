@@ -53,7 +53,7 @@ func test_get_plan():
 		{ 'action': act_own, 'total_cost': 2 },
 	]
 	
-	for item in expected_output:
+	for item in output:
 		assert_has([act_get, act_own], item.action)
 		
 	output.invert()

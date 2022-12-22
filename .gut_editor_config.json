@@ -2,7 +2,7 @@
  "background_color": "ff262626",
  "config_file": "res://.gutconfig.json",
  "dirs": [
-  "res://test/gut"
+  "res://test"
  ],
  "disable_colors": false,
  "double_strategy": "partial",
@@ -20,7 +20,7 @@
  "post_run_script": "",
  "pre_run_script": "",
  "prefix": "test_",
- "selected": null,
+ "selected": "test_AIAgent.gd",
  "should_exit": true,
  "should_exit_on_success": false,
  "should_maximize": false,
@@ -30,7 +30,7 @@
  "tests": [
 
  ],
- "unit_test_name": null,
+ "unit_test_name": "test__check_goal_validity",
  "gut_on_top": true,
  "panel_options": {
   "font_name": "CourierPrime",

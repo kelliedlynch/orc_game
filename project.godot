@@ -104,6 +104,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/DefaultValueProvider.gd"
 }, {
+"base": "Sprite",
+"class": "EntitySprite",
+"language": "GDScript",
+"path": "res://entity/EntitySprite.gd"
+}, {
 "base": "GdUnitArgumentMatcher",
 "class": "EqualsArgumentMatcher",
 "language": "GDScript",
@@ -704,7 +709,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://entity/creature/OGCreature.gd"
 }, {
-"base": "OGCreature",
+"base": "OGSentientCreature",
 "class": "OGCreatureOrc",
 "language": "GDScript",
 "path": "res://entity/creature/orc/OGCreatureOrc.gd"
@@ -728,6 +733,11 @@ _global_script_classes=[ {
 "class": "OGItemSandwich",
 "language": "GDScript",
 "path": "res://entity/item/OGItemSandwich.gd"
+}, {
+"base": "OGCreature",
+"class": "OGSentientCreature",
+"language": "GDScript",
+"path": "res://entity/creature/OGSentientCreature.gd"
 }, {
 "base": "Node",
 "class": "OrcGameMap",
@@ -909,6 +919,7 @@ _global_script_class_icons={
 "Comparator": "",
 "CreatureTestingGround": "",
 "DefaultValueProvider": "",
+"EntitySprite": "",
 "EqualsArgumentMatcher": "",
 "Fuzzer": "",
 "FuzzerTool": "",
@@ -1034,6 +1045,7 @@ _global_script_class_icons={
 "OGItem": "",
 "OGItemBone": "",
 "OGItemSandwich": "",
+"OGSentientCreature": "",
 "OrcGameMap": "",
 "OrcGameMapController": "",
 "OrcGameMapLayer": "",
@@ -1100,7 +1112,7 @@ AIAgent="*res://autoload_global/AIAgent.gd"
 AIPlanner="*res://autoload_global/AIPlanner.gd"
 Goal="*res://autoload_global/Goal.gd"
 Group="*res://autoload_global/Group.gd"
-JobDispatch="*res://autoload_global/JobDispatch.gd"
+JobManager="*res://autoload_global/JobManager.gd"
 Item="*res://autoload_global/Item.gd"
 Creature="*res://autoload_global/Creature.gd"
 

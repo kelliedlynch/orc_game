@@ -31,7 +31,7 @@ const TransformOperators: Array = [ADD, SUBTRACT]
 const ArrayTypes: Array = [TYPE_ARRAY, TYPE_INT_ARRAY, TYPE_REAL_ARRAY, TYPE_STRING_ARRAY, TYPE_VECTOR2_ARRAY]
 const PropertyValueTypes: Array = [TYPE_STRING, TYPE_BOOL, TYPE_REAL, TYPE_INT, TYPE_VECTOR2]
 
-var SimulatedPropertyTypes: Array = [TYPE_DICTIONARY, 'OGEntity'] + ArrayTypes + PropertyValueTypes
+const SimulatedPropertyTypes: Array = [TYPE_DICTIONARY, 'OGEntity']
 #const prohibited_properties = ['script', 'script/source', 'viewport', 'root_node']
 # simulate_object cannot simulate methods; anything that must be queried needs to be stored as a property
 func simulate_object(obj: Object) -> Dictionary:
@@ -40,8 +40,11 @@ func simulate_object(obj: Object) -> Dictionary:
 		return sim
 	var list = obj.script.get_script_property_list()
 	for property in list:
-		var type = property.type
-		if !(type in SimulatedPropertyTypes): 
+		var type = typeof(property)
+		if type == TYPE_BOOL:
+			pass
+		var simtypes = SimulatedPropertyTypes + ArrayTypes + PropertyValueTypes
+		if !(type in simtypes): 
 			continue
 		if type == TYPE_OBJECT:
 			sim[property.name] = simulate_object(obj.get(property.name))
@@ -71,7 +74,7 @@ func simulate_property(prop):
 				sim[prop_name] = simulate_object(prop[prop_name])
 				continue
 			sim[prop_name] = simulate_property(prop[prop_name])
-	elif type == TYPE_INT or type == TYPE_STRING or type == TYPE_VECTOR2 or type == TYPE_REAL:
+	elif type in PropertyValueTypes:
 		return prop
 	else:
 		return null
@@ -80,9 +83,20 @@ func simulate_property(prop):
 func simulate_world_state_for_creature(creature: OGCreature) -> Dictionary:
 	var state = {}
 	state['creature'] = simulate_object(creature)
-	state['items'] = {
-		Group.Item.UNTAGGED_ITEMS: get_tree().get_nodes_in_group(Group.Item.UNTAGGED_ITEMS)
-	}
+	var groups = [ Group.Item.UNTAGGED_ITEMS, Group.Item.UNOWNED_ITEMS, Group.Item.AVAILABLE_ITEMS]
+	state['items'] = {}
+	for group in groups:
+		var items = get_tree().get_nodes_in_group(group)
+		var simitems = []
+		for item in items:
+			simitems.append(simulate_object(item))
+		state['items'][group] = simitems
+			
+#	state['items'] = {
+#		Group.Item.UNTAGGED_ITEMS: get_tree().get_nodes_in_group(Group.Item.UNTAGGED_ITEMS),
+#		Group.Item.UNOWNED_ITEMS: get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS),
+#		Group.Item.AVAILABLE_ITEMS: get_tree().get_nodes_in_group(Group.Item.AVAILABLE_ITEMS),
+#	}
 	return state
 
 func apply_transform_to_world_state(transform: Dictionary, state_: Dictionary) -> Dictionary:

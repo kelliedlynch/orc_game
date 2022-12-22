@@ -2,11 +2,11 @@ extends Node
 
 const Item = {
 	'ALL_ITEMS': 'all_items',
-	'UNTAGGED_ITEMS': 'untagged_items',
-	'TAGGED_ITEMS': 'tagged_items',
-	'USED_IN_BUILT': 'used_in_built',
-	'OWNED_ITEMS': 'owned_items',
-	'UNOWNED_ITEMS': 'unowned_items',
+	'UNTAGGED_ITEMS': 'untagged_items', # Items not currently tagged by a creature
+	'TAGGED_ITEMS': 'tagged_items', # Items currently tagged by a creature (is this necessary?)
+	'OWNED_ITEMS': 'owned_items', # Items currently owned by a creature (is this necessary?)
+	'UNOWNED_ITEMS': 'unowned_items', # Items currently not owned by a creature
+	'AVAILABLE_ITEMS': 'available_items', # Items not currently owned, tagged, or prohibited
 }
 
 const Creature = {

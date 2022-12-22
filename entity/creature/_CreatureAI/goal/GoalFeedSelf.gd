@@ -16,6 +16,13 @@ func requirements(conditions: Dictionary = {}) -> Dictionary:
 # The conditions that activate the goal
 func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 	# There is food that can be eaten
+	conditions = {
+		'items': {
+			Group.Item.AVAILABLE_ITEMS: {
+				HAS: [{ 'edible': true }]
+			}
+		}
+	}
 	return conditions
 
 # The desired outcome of the goal

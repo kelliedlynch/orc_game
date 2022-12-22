@@ -1,7 +1,7 @@
 extends GOAPQueryable
 #class_name AIPlanner
 
-# Generic singleton action planner. For a given goal, picks the creature's best path to victory
+# For a given goal, picks the creature's best path to victory
 
 func get_plan(creature: OGCreature, goal: GOAPGoal) -> Array:
 	var desired_outcome = goal.desired_state()
@@ -70,20 +70,10 @@ func _find_branching_paths(creature: OGCreature, step: Dictionary, state_: Dicti
 			trigger_paths.append_array(addl_paths)
 
 	return return_array
-			
-
-
-func _any_conditions_satisfied_by_action(action: GOAPAction, desired_state: Dictionary, state: Dictionary) -> bool:
-	var new_state = state.duplicate(true)
-	var transformed_state = action.applied_transform()
-	var outcome = apply_transform_to_world_state(new_state, transformed_state)
-	var any_matches = any_conditions_satisfied(desired_state, outcome)
-	return any_matches
 	
 func _pick_cheapest_branch(path: Dictionary, prev_steps: Array) -> Array:
 	if path.branching_paths.empty():
 		prev_steps.append({ 'action': path.action, 'total_cost': path.action.get_cost() })
-		prints('action', path.action, 'cost', path.action.get_cost())
 		return prev_steps
 	var cheapest_path
 	for branch in path.branching_paths:
@@ -92,6 +82,6 @@ func _pick_cheapest_branch(path: Dictionary, prev_steps: Array) -> Array:
 			cheapest_path = cheapest
 	var next = cheapest_path.back()
 	if path.has('action'):
-		var cost = next.total_cost + path.action.get_cost() if path.action else next.total_cost
+		var cost = next.total_cost + path.action.get_cost() 
 		prev_steps.append({ 'action': path.action, 'total_cost': cost })
 	return prev_steps

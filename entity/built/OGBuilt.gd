@@ -11,37 +11,41 @@ func _set_build_cost_paid(val):
 var is_complete: bool = false setget _set_is_complete
 func _set_is_complete(val):
 	is_complete = val
-	if is_complete:
-		$EntitySprite.modulate.a = 1.0
-	emit_signal('completed_changed', self)
-signal completed_changed()
+	sprite.set_is_ghost(!is_complete)
 
 var is_suspended: bool = false
-var required_materials: Dictionary = {}
-var _materials_used: Dictionary = {}
+const QTY = 'QUANTITY'
+var materials_required: Array = []
+var _required_materials_remaining: Array = []
 
 
 func use_item_in_construction(item: OGItem):
-	for material_name in required_materials:
-		if material_name == item.get_class():
-			if _materials_used[material_name] < required_materials[material_name]:
-				_materials_used[material_name] += 1
-				item.add_to_group(Group.Item.USED_IN_BUILT)
+	var all_props_match = true
+	var index = -1
+	for mat in _required_materials_remaining:
+		index +=1
+		var material = mat.duplicate()
+		var qty_needed = 1
+		if QTY in material:
+			qty_needed = material[QTY]
+			material.erase(QTY)
+		if item.has_all(material.keys()):
+			qty_needed -= 1
+			ItemManager.item_used_in_built(item)
+			if qty_needed <= 0:
+				_required_materials_remaining[index] = null
+			else:
+				_required_materials_remaining[index][QTY] = qty_needed
+			break
+	while null in _required_materials_remaining:
+		_required_materials_remaining.remove(_required_materials_remaining.find(null))
 
 
 func _ready():
-	for material_name in required_materials:
-		_materials_used[material_name] = 0
-	
+	_required_materials_remaining = materials_required
 	if !is_complete:
-		$EntitySprite.modulate.a = 0.4
-		construct()
-
-func construct():
-	JobDispatch.generate_job_for_built(self)
+		$EntitySprite.set_is_ghost(true)
+		JobManager.generate_job_for_built(self)
 
 func is_materials_cost_paid() -> bool:
-	for material_name in required_materials:
-		if required_materials[material_name] > _materials_used[material_name]:
-			return false
-	return true
+	return _required_materials_remaining.empty()

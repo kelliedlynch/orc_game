@@ -3,11 +3,11 @@ class_name GOAPGoal
 
 var creature: OGCreature
 
-# NOTE: there is no real difference between requirements and trigger conditions, they're just
-# a way to split things up a bit conceptually. In general, requirements are things that disqualify
-# the goal from consideration, while trigger conditions are things that qualify
 
 # Things that must be true for this goal to be considered
+# These are things that can't be affected by the creature during execution of the goal
+# OR
+# things that might change during execution, but should not stop execution when they do
 #func requirements(conditions: Dictionary = {}) -> Dictionary:
 #	conditions.append_array([])
 #	return conditions
@@ -22,22 +22,8 @@ var creature: OGCreature
 #	query.append_array([])
 #	return query
 
-func assign_to_creature(creature_: OGCreature):
-	creature = creature_
-
-func unassign():
-	creature = null
-
-func is_valid() -> bool:
-	return true
-
 func get_priority() -> int:
 	return Goal.PRIORITY_IDLE
-	
-
-	
-func get_desired_outcome() -> Dictionary:
-	return {}
 
 func get_class(): return 'GOAPGoal'
 
