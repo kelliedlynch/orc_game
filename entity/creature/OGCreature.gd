@@ -28,13 +28,10 @@ func tag_item(item: OGItem) -> void:
 	if !tagged.has(item):
 		tagged.append(item)
 		item.tagged = true
-		emit_signal("creature_tagged_item", self, item, true)
 func untag_item(item: OGItem) -> void:
 	if tagged.has(item):
 		tagged.erase(item)
 		item.tagged = false
-		emit_signal("creature_tagged_item", self, item, false)
-signal creature_tagged_item()
 		
 var owned: Array = [] setget set_owned
 func set_owned(val):
@@ -43,15 +40,10 @@ func own_item(item: OGItem) -> void:
 	if !owned.has(item):
 		owned.append(item)
 		item.owned = true
-		emit_signal("creature_owned_item", self, item, true)
 func unown_item(item: OGItem) -> void:
 	if owned.has(item):
 		owned.erase(item)
 		item.owned = false
-		emit_signal("creature_owned_item", self, item, false)
-signal creature_owned_item()
-
-# TODO: LINK OWNED AND TAGGED SIGNALS TO ITEMMANAGER, IN ORDER TO UPDATE GROUPS
 
 # build_power is how much build_cost is paid toward the construction of a Built per tick
 var build_power: float = 1.1

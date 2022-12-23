@@ -17,6 +17,7 @@ func is_valid(query: Dictionary) -> bool:
 		if !found.empty():
 			target_item = found.front()
 			return true
+	target_item = null
 	return false
 
 # The conditions that activate the Action
@@ -42,5 +43,13 @@ func get_cost():
 	
 func reset():
 	target_item = null
+
+func perform():
+	if creature.location != target_item.location:
+		creature.move_toward_location(target_item.location)
+		return false
+	ItemManager.creature_pick_up_item(creature, target_item)
+	target_item = null
+	return true
 
 func get_class(): return 'ActionPickUpItem'

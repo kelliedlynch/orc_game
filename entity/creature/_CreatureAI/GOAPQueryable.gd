@@ -207,7 +207,6 @@ func remove_satisfied_conditions_from_query(query_: Dictionary, state: Dictionar
 		else:
 			query[key] = scrubbed
 		pass
-		print(scrubbed)
 	pass
 	return query
 		
@@ -337,9 +336,12 @@ func eval_query(query_: Dictionary, state_: Dictionary):
 	var query = query_.duplicate(true)
 	var state = state_.duplicate(true)
 
-	var passed = false	
+	var passed = false
 	for key in query:
-		passed = _eval_query_key(query[key], state[key])
+		if key in QueryConditionals:
+			passed = _eval_conditional_query(key, query[key], state)
+		else:
+			passed = _eval_query_key(query[key], state[key])
 		if !passed: break
 	return passed
 	
@@ -416,7 +418,6 @@ func _eval_has_condition(has_: Array, state_: Array, is_OR_query = false) -> boo
 		if typeof(has_item[QUANTITY]) == TYPE_ARRAY:
 			operator = has_item[QUANTITY][0]
 			has_qty = has_item[QUANTITY][1]
-		var total_qty_found = 0
 		var state_index = -1
 		for state_item in state:
 			state_index += 1

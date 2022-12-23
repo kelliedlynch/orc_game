@@ -10,21 +10,17 @@ enum {
 	PREFER_FAVORITE,
 }
 
-func set_groups_for_item(item: OGItem):
-	# TODO: SET ALL APPLICABLE GROUPS FOR THE ITEM, AND LINK THIS TO APPROPRIATE SIGNALS
-	# WHEN AN ITEM IS CREATED
-	pass
-	
-func get_items_on_tile(tile: OrcGameMapTile):
-	return tile.get_items()
+func add_to_world(item: OGItem):
+	item.add_to_group(Group.Item.ALL_ITEMS)
+	item.add_to_group(Group.Item.AVAILABLE_ITEMS)	
 
 func get_items_at_location(loc: Vector2):
 	var tile = map.tile_at(loc)
-	return get_items_on_tile(tile)
+	return tile.get_items()
 	
 func item_is_at_location(item: OGItem, loc: Vector2):
 	var tile = map.tile_at(loc)
-	return get_items_on_tile(tile).has(item)
+	return tile.get_items().has(item)
 
 # finds an item on the map with the given properties and returns it
 func find_any_available_item_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
@@ -46,12 +42,11 @@ func find_any_available_item_with_properties(properties: Dictionary, qty: int = 
 	return found
 
 func find_all_available_items_with_properties(properties: Dictionary,\
-			 sort_condition: int = PREFER_CLOSER, creature: OGCreature = null) -> Array:
+			 _sort_condition: int = PREFER_CLOSER, creature: OGCreature = null) -> Array:
 	var items = []
-	# TODO: ACTUALLY LOOK AT THE PROPERTIES
 	if creature:
-		# TODO: OPTIMIZE BY LOOKING AT OWNED, THEN AVAILABLE
-		for item in get_tree().get_nodes_in_group(Group.Item.ALL_ITEMS):
+		# TODO: ALSO CHECK OWNED AND TAGGED?
+		for item in get_tree().get_nodes_in_group(Group.Item.AVAILABLE_ITEMS):
 			for property in properties:
 				var prop = properties[property]
 				var found
@@ -73,25 +68,39 @@ func find_all_available_items_with_properties(properties: Dictionary,\
 func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
 	# checks that the item is not owned or tagged by another creature, and that the item is
 	# reachable by this creature
-	if item.tagged and !creature.tagged.has(item):
-		return false
-	if item.owned and !creature.owned.has(item):
-		return false
+	if item.tagged and creature.tagged.has(item):
+		return true
+	if item.owned and creature.owned.has(item):
+		return true
 	if (item.is_in_group(Group.Item.AVAILABLE_ITEMS)):
 		return true
 	return false
 
 func creature_pick_up_item(creature: OGCreature, item: OGItem):
 	if item_is_at_location(item, creature.location):
-#		remove_item_from_location(item, creature.location)
 		creature.add_to_inventory(item)
-		item.sprite.queue_free()
-#		creature.connect('location_changed', item, '_')
-		item.set_location(Global.OFF_MAP)
+		item.remove_from_map()
+
+func creature_own_item(creature: OGCreature, item: OGItem):
+	creature.own_item(item)
+	if !item.is_available() and item.is_in_group(Group.Item.AVAILABLE_ITEMS):
+		item.remove_from_group(Group.Item.AVAILABLE_ITEMS)
+	
+func creature_unown_item(creature: OGCreature, item: OGItem):
+	creature.unown_item(item)
+	if item.is_available() and !item.is_in_group(Group.Item.AVAILABLE_ITEMS):
+		item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	
+func creature_tag_item(creature: OGCreature, item: OGItem):
+	creature.tag_item(item)
+	if !item.is_available() and item.is_in_group(Group.Item.AVAILABLE_ITEMS):
+		item.remove_from_group(Group.Item.AVAILABLE_ITEMS)
 		
+func creature_untag_item(creature: OGCreature, item: OGItem):
+	creature.untag_item(item)
+	if item.is_available() and !item.is_in_group(Group.Item.AVAILABLE_ITEMS):
+		item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	
 func item_used_in_built(item: OGItem):
 	item.queue_free()
 
-func item_availability_changed(item: OGItem):
-	emit_signal('item_availability_changed', item)
-signal item_availability_changed()

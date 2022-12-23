@@ -1,7 +1,7 @@
 extends OGSentientCreature
 class_name OGCreatureOrc
 
-onready var agent: AIAgent = AIAgent
+
 #onready var state_tracker: GOAPStateTracker = $GOAPStateTracker
 
 func _init():

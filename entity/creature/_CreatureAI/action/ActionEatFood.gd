@@ -73,5 +73,8 @@ func get_cost() -> int:
 	
 func reset():
 	food = null
+	
+func perform():
+	pass
 
 func get_class(): return 'ActionEatFood'

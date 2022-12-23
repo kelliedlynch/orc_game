@@ -20,7 +20,6 @@ var _required_materials_remaining: Array = []
 
 
 func use_item_in_construction(item: OGItem):
-	var all_props_match = true
 	var index = -1
 	for mat in _required_materials_remaining:
 		index +=1

@@ -53,9 +53,7 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 func get_cost(): return 1
 
 func perform():
-	target_item = null
-	
-func reset():
-	target_item = null
+	ItemManager.creature_own_item(creature, target_item)
+	return true
 
 func get_class(): return 'ActionOwnItem'

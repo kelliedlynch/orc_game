@@ -33,8 +33,8 @@ func applied_transform(conditions: Dictionary = {}) -> Dictionary:
 	}
 	return conditions
 	
-func perform(actor):
-	var valid = CreatureManager.map.locations_adjacent_to(actor.location)
+func perform():
+	var valid = CreatureManager.map.locations_adjacent_to(creature.location)
 	var i = randi() % valid.size()
-	actor.set_location(valid[i])
+	creature.set_location(valid[i])
 	return false

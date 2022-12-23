@@ -31,9 +31,7 @@ func _check_goal_validity(goal: GOAPGoal, state: Dictionary) -> bool:
 	# This might need to do more checks, such as checking that the current path is still followable
 	return true
 
-#
-# Returns the highest priority goal available.
-#
+
 func _get_best_goal(creature: OGCreature, state: Dictionary) -> GOAPGoal:
 	var goals = creature.goals
 	var highest_priority
@@ -41,17 +39,15 @@ func _get_best_goal(creature: OGCreature, state: Dictionary) -> GOAPGoal:
 	var jobs_to_consider = []
 	for job in inactive_jobs:
 		if job.is_valid_for_creature(creature):
-
 			jobs_to_consider.append(job)
-			
 		goals.append_array(jobs_to_consider)
-		for goal in goals:
-			var valid = _check_goal_validity(goal, state)
-			if !valid: continue
 		
-
-			if highest_priority == null or goal.get_priority() > highest_priority.get_priority():
-				highest_priority = goal
+	for goal in goals:
+		var valid = _check_goal_validity(goal, state)
+		if !valid: continue
+	
+		if highest_priority == null or goal.get_priority() > highest_priority.get_priority():
+			highest_priority = goal
 		
 	if creature.current_goal and creature.current_goal != highest_priority and creature.current_goal is Job:
 		creature.current_goal.unassign()
@@ -66,6 +62,6 @@ func _follow_plan(creature: OGCreature):
 	var step = creature.current_plan_step
 	if plan.size() == 0:
 		return
-	var is_step_complete = plan[step].perform(creature)
+	var is_step_complete = plan[step].action.perform()
 	if is_step_complete and step < plan.size() - 1:
 		creature.current_plan_step += 1

@@ -71,17 +71,17 @@ func _find_branching_paths(creature: OGCreature, step: Dictionary, state_: Dicti
 
 	return return_array
 	
-func _pick_cheapest_branch(path: Dictionary, prev_steps: Array) -> Array:
+func _pick_cheapest_branch(path: Dictionary, next_steps_: Array) -> Array:
+	var next_steps = next_steps_.duplicate(true)
 	if path.branching_paths.empty():
-		prev_steps.append({ 'action': path.action, 'total_cost': path.action.get_cost() })
-		return prev_steps
+		return [{ 'action': path.action, 'total_cost': path.action.get_cost() }]
 	var cheapest_path
 	for branch in path.branching_paths:
-		var cheapest = _pick_cheapest_branch(branch, prev_steps)
+		var cheapest = _pick_cheapest_branch(branch, next_steps)
 		if !cheapest_path or cheapest.back()['total_cost'] < cheapest_path.back()['total_cost']:
 			cheapest_path = cheapest
 	var next = cheapest_path.back()
 	if path.has('action'):
 		var cost = next.total_cost + path.action.get_cost() 
-		prev_steps.append({ 'action': path.action, 'total_cost': cost })
-	return prev_steps
+		cheapest_path.append({ 'action': path.action, 'total_cost': cost })
+	return cheapest_path

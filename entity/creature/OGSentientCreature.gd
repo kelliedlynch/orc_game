@@ -1,6 +1,8 @@
 extends OGCreature
 class_name OGSentientCreature
 
+onready var agent: AIAgent = AIAgent
+
 var goals: Array = []
 var actions: Array = []
 
@@ -25,10 +27,7 @@ func move_toward_location(loc: Vector2):
 func _process(delta):
 	elapsed += delta
 	if elapsed > interval:
-		_run_agent()
+		agent.run(self)
 		elapsed = 0
-
-func _run_agent():
-	pass
 	
 func get_class(): return 'OGSentientCreature'

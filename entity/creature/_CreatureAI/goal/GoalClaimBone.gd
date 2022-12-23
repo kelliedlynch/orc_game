@@ -5,18 +5,18 @@ class_name GoalClaimBone
 func requirements(conditions: Dictionary = {}) -> Dictionary:
 	conditions = {
 		OR: {
-			'world': {
-				Group.Item.UNOWNED_ITEMS: {
-					HAS: {
-						'material': Item.Material.BONE
-					}
+			'items': {
+				Group.Item.AVAILABLE_ITEMS: {
+					HAS: [
+						{ 'material': Item.Material.BONE }
+					]
 				}
 			},
 			'creature': {
 				'owned': {
-					HAS: {
-						'material': Item.Material.BONE
-					}
+					HAS: [
+						{ 'material': Item.Material.BONE }
+					]
 				}
 			}
 		}
@@ -31,16 +31,12 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 				OR: {
 					'owned': {
 						HAS: [
-							{
-								'material': Item.Material.BONE
-							}
+							{ 'material': Item.Material.BONE }
 						]
 					},
 					'inventory': {
 						HAS: [
-							{
-								'material': Item.Material.BONE
-							}
+							{ 'material': Item.Material.BONE }
 						]
 					}
 					
@@ -56,16 +52,12 @@ func desired_state(query: Dictionary = {}) -> Dictionary:
 		'creature': {
 			'owned': {
 				HAS: [
-					{
-						'material': Item.Material.BONE
-					}
+					{ 'material': Item.Material.BONE }
 				]
 			},
 			'inventory': {
 				HAS: [
-					{
-						'material': Item.Material.BONE
-					}
+					{ 'material': Item.Material.BONE }
 				]
 			}
 		}
