@@ -7,7 +7,7 @@ extends Node
 class_name OGEntity
 
 var location: Vector2 = Global.OFF_MAP setget set_location
-var sprite: EntitySprite
+var sprite: Sprite
 var held_by_player: bool = false
 
 # Size and weight range from 0 to 1

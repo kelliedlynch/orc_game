@@ -4,6 +4,8 @@ var target = load('res://autoload_global/AIAgent.gd')
 var orc = load('res://entity/creature/orc/OGCreatureOrc.tscn')
 var meat = load('res://entity/item/OGItemMeat.tscn')
 var bone_item = load('res://entity/item/OGItemBone.tscn')
+var log_item = load('res://entity/item/OGItemLog.tscn')
+var built = load('res://entity/built/campfire/OGBuiltCampfire.tscn')
 var region_map = load('res://map/regionmap/RegionMap.tscn')
 var t: AIAgent
 var map: RegionMap
@@ -11,22 +13,14 @@ var creature: OGCreatureOrc
 var goal_entertain_self: GoalEntertainSelf
 var goal_feed_self: GoalFeedSelf
 var goal_claim_bone: GoalClaimBone
+var goal_construct_built: JobConstructBuilt
 var food: OGItemMeat
 var bone: OGItemBone
+var wood: OGItemLog
+var campfire: OGBuiltCampfire
 var action_eat_food: ActionEatFood
+var action_construct_built: ActionConstructBuilt
 
-#func before_all():
-#	t = target.new()
-#	add_child_autofree(t)
-#	map = region_map.instance()
-##	var world_tile = OrcGameMapTile.new(1, 1)
-##	map.create_tiles(world_tile)
-##	world_tile.free()
-#	add_child(map)
-#	EntityManager.map = map
-#
-#func after_all():
-#	map.free()
 
 func before_each():
 	t = target.new()
@@ -43,13 +37,21 @@ func before_each():
 			goal_feed_self = goal
 		elif goal is GoalClaimBone:
 			goal_claim_bone = goal
+#		elif goal is JobConstructBuilt:
+#			goal_construct_built = goal
 	for action in creature.actions:
 		if action is ActionEatFood:
 			action_eat_food = action
+		elif action is ActionConstructBuilt:
+			action_construct_built = action
 	food = meat.instance()
 	add_child_autofree(food)
 	bone = bone_item.instance()
 	add_child_autofree(bone)
+	wood = log_item.instance()
+	add_child_autofree(wood)
+	campfire = built.instance()
+	add_child_autofree(campfire)
 	
 
 func test__check_goal_validity():
@@ -81,15 +83,17 @@ func test__get_best_goal():
 	ItemManager.creature_own_item(creature2, food)
 	state = t.simulate_world_state_for_creature(creature)
 	best_goal = t._get_best_goal(creature, state)
+	assert_eq(best_goal.get_class(), 'JobConstructBuilt')
+	
+	ItemManager.creature_tag_item(creature2, wood)
+	state = t.simulate_world_state_for_creature(creature)
+	best_goal = t._get_best_goal(creature, state)
 	assert_eq(best_goal, goal_claim_bone)
 	
 	ItemManager.creature_own_item(creature2, bone)
 	state = t.simulate_world_state_for_creature(creature)
 	best_goal = t._get_best_goal(creature, state)
 	assert_eq(best_goal, goal_entertain_self)
-	
-func test__follow_plan():
-	pending()
 	
 func test_run():
 	var expected_plan = [

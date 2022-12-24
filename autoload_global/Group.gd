@@ -1,6 +1,6 @@
 extends Node
 
-const Item = {
+const Items = {
 	'ALL_ITEMS': 'all_items',
 	'UNTAGGED_ITEMS': 'untagged_items', # Items not currently tagged by a creature
 	'TAGGED_ITEMS': 'tagged_items', # Items currently tagged by a creature (is this necessary?)
@@ -9,15 +9,16 @@ const Item = {
 	'AVAILABLE_ITEMS': 'available_items', # Items not currently owned, tagged, or prohibited
 }
 
-const Creature = {
+const Creatures = {
 	'ALL_CREATURES': 'all_creatures',
 }
 
-const Built = {
+const Builts = {
 	'MEETING_PLACES': 'meeting_places',
 }
 
 const Jobs = {
+	'ALL_JOBS': 'all_jobs',
 	'INACTIVE_JOBS': 'inactive_jobs',
 	'ACTIVE_JOBS': 'active_jobs',
 }

@@ -66,7 +66,6 @@ func test_get_plan():
 	for item in output:
 		assert_has([action_pick_up_item, action_own_item], item.action)
 
-	output.invert()
 	for i in [1, 2]:
 		assert_eq(output[i-1].total_cost, i)
 

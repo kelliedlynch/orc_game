@@ -6,7 +6,7 @@ func requirements(conditions: Dictionary = {}) -> Dictionary:
 	conditions = {
 		OR: {
 			'items': {
-				Group.Item.AVAILABLE_ITEMS: {
+				Group.Items.AVAILABLE_ITEMS: {
 					HAS: [
 						{ 'material': Item.Material.BONE }
 					]

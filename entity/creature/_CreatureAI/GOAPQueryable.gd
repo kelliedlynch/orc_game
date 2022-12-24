@@ -83,7 +83,7 @@ func simulate_property(prop):
 func simulate_world_state_for_creature(creature: OGCreature) -> Dictionary:
 	var state = {}
 	state['creature'] = simulate_object(creature)
-	var groups = [ Group.Item.UNTAGGED_ITEMS, Group.Item.UNOWNED_ITEMS, Group.Item.AVAILABLE_ITEMS]
+	var groups = [ Group.Items.UNTAGGED_ITEMS, Group.Items.UNOWNED_ITEMS, Group.Items.AVAILABLE_ITEMS]
 	state['items'] = {}
 	for group in groups:
 		var items = get_tree().get_nodes_in_group(group)
@@ -91,7 +91,7 @@ func simulate_world_state_for_creature(creature: OGCreature) -> Dictionary:
 		for item in items:
 			simitems.append(simulate_object(item))
 		state['items'][group] = simitems
-			
+#	state['job'] = {}
 #	state['items'] = {
 #		Group.Item.UNTAGGED_ITEMS: get_tree().get_nodes_in_group(Group.Item.UNTAGGED_ITEMS),
 #		Group.Item.UNOWNED_ITEMS: get_tree().get_nodes_in_group(Group.Item.UNOWNED_ITEMS),

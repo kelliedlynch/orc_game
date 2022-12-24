@@ -5,9 +5,12 @@ var built: OGBuilt
 
 
 func is_valid(_query: Dictionary) -> bool:
-	if !built or built.is_suspended:
-		return false
-	return true
+	if creature.current_goal is JobConstructBuilt:
+		if !creature.current_goal.built.is_suspended:
+			built = creature.current_goal.built
+			return true
+	built = null
+	return false
 
 # The conditions that activate the Action
 func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
@@ -19,7 +22,13 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 # The outcome of the Action
 func applied_transform(transform: Dictionary = {}) -> Dictionary:
 	transform = {
-
+		ADD: {
+			'job': {
+				'built': {
+					'is_complete': true
+				}
+			}
+		}
 	}
 	return transform
 
@@ -28,12 +37,16 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 func perform():
 	# Tag the required items
 	if creature.tagged.size() == 0 && !built.is_materials_cost_paid():
-		for material_name in built.required_materials:
-			var found = ItemManager.find_available_item_with_properties({ 'class_name': material_name }, built.required_materials[material_name])
-			if found.size() > 0:
-				for item in found:
-					creature.tag_item(item)
-			else:
+		for material in built.materials_required:
+			var qty = material[QUANTITY] if QUANTITY in material else 1
+			var found = ItemManager.find_all_available_items_with_properties(material)
+			if found.size() < qty:
+				return false
+			for item in found:
+				ItemManager.creature_tag_item(creature, item)
+				qty -= 1
+				if qty <= 0: break
+			if qty > 0:
 				return false
 		return false
 		
@@ -56,24 +69,24 @@ func perform():
 	# Tagged items are gathered; build the Built
 	if !built.is_complete && !built.is_materials_cost_paid():
 		# Put tagged items into the Built skeleton
-		for material_name in built.required_materials:
-			var qty_found = built._materials_used[material_name]
-			if qty_found >= built.required_materials[material_name]:
-				continue
-				
-			if qty_found < built.required_materials[material_name]:
-				for item in creature.get_inventory():
-					if item.get_class() == material_name:
-						built.use_item_in_construction(item)
-						creature.untag_item(item)
-						creature.remove_from_inventory(item)
-						return false
-				return false
-	if !built.is_complete && built.is_materials_cost_paid():
+		if !creature.tagged.empty():
+			var mat = creature.tagged.back()
+			for remaining in built._required_materials_remaining:
+				var props_match = true
+				for prop_name in remaining:
+					if prop_name == QUANTITY: continue
+					if !(prop_name in mat):
+						props_match = false
+						break
+				if props_match:
+					built.use_item_in_construction(mat)
+					return false
+			return false
+						
+	if !built.is_complete && built._required_materials_remaining.empty():
 		built.build_cost_paid += creature.build_power
 		return false
 	if built.is_complete:
-		creature.state_tracker.set_state_for('job_completed', true)
 		return true
 	return false
 

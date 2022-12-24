@@ -11,8 +11,8 @@ enum {
 }
 
 func add_to_world(item: OGItem):
-	item.add_to_group(Group.Item.ALL_ITEMS)
-	item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	item.add_to_group(Group.Items.ALL_ITEMS)
+	item.add_to_group(Group.Items.AVAILABLE_ITEMS)
 	
 func remove_from_world(item: OGItem):
 	if item.location != Global.OFF_MAP:
@@ -20,11 +20,11 @@ func remove_from_world(item: OGItem):
 		if tile.get_items().has(item):
 			tile.remove_entity_from_tile(item)
 	while item.tagged or item.owned:
-		for creature in Group.Creature.ALL_CREATURES:
+		for creature in get_tree().get_nodes_in_group(Group.Creatures.ALL_CREATURES):
 			if creature.tagged.has(item):
-				creature.untag(item)
+				creature_untag_item(creature, item)
 			if creature.owned.has(item):
-				creature.unown(item)
+				creature_unown_item(creature, item)
 	item.queue_free()
 
 func get_items_at_location(loc: Vector2):
@@ -36,10 +36,9 @@ func item_is_at_location(item: OGItem, loc: Vector2):
 	return tile.get_items().has(item)
 
 # finds an item on the map with the given properties and returns it
-func find_any_available_item_with_properties(properties: Dictionary, qty: int = 1) -> OGItem:
+func find_any_available_item_with_properties(properties: Dictionary) -> OGItem:
 	# { class_name: OGItemBone }
-	var found = []
-	for item in get_tree().get_nodes_in_group(Group.Item.AVAILABLE_ITEMS):
+	for item in get_tree().get_nodes_in_group(Group.Items.AVAILABLE_ITEMS):
 		var item_is_match = false
 		for property_name in properties:
 			var property_value = item.get_class() if property_name == 'class_name' else item.get(property_name)
@@ -49,17 +48,15 @@ func find_any_available_item_with_properties(properties: Dictionary, qty: int = 
 				item_is_match = false
 				break
 		if item_is_match:
-			found.append(item)
-			if found.size() >= qty:
-				return found
-	return found
+			return item
+	return null
 
 func find_all_available_items_with_properties(properties: Dictionary,\
 			 _sort_condition: int = PREFER_CLOSER, creature: OGCreature = null) -> Array:
 	var items = []
 	if creature:
 		# TODO: ALSO CHECK OWNED AND TAGGED?
-		for item in get_tree().get_nodes_in_group(Group.Item.AVAILABLE_ITEMS):
+		for item in get_tree().get_nodes_in_group(Group.Items.AVAILABLE_ITEMS):
 			for property in properties:
 				var prop = properties[property]
 				var found
@@ -74,7 +71,7 @@ func find_all_available_items_with_properties(properties: Dictionary,\
 				if found and item_is_available_to(found, creature):
 					items.append(found)
 	else:
-		items = get_tree().get_nodes_in_group(Group.Item.AVAILABLE_ITEMS)
+		items = get_tree().get_nodes_in_group(Group.Items.AVAILABLE_ITEMS)
 	# TODO: ADD SORT CONDITIONS
 	return items
 
@@ -85,7 +82,7 @@ func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
 		return true
 	if item.owned and creature.owned.has(item):
 		return true
-	if (item.is_in_group(Group.Item.AVAILABLE_ITEMS)):
+	if (item.is_in_group(Group.Items.AVAILABLE_ITEMS)):
 		return true
 	return false
 
@@ -98,23 +95,23 @@ func creature_pick_up_item(creature: OGCreature, item: OGItem):
 
 func creature_own_item(creature: OGCreature, item: OGItem):
 	creature.own_item(item)
-	if !item.is_available() and item.is_in_group(Group.Item.AVAILABLE_ITEMS):
-		item.remove_from_group(Group.Item.AVAILABLE_ITEMS)
+	if !item.is_available() and item.is_in_group(Group.Items.AVAILABLE_ITEMS):
+		item.remove_from_group(Group.Items.AVAILABLE_ITEMS)
 	
 func creature_unown_item(creature: OGCreature, item: OGItem):
 	creature.unown_item(item)
-	if item.is_available() and !item.is_in_group(Group.Item.AVAILABLE_ITEMS):
-		item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	if item.is_available() and !item.is_in_group(Group.Items.AVAILABLE_ITEMS):
+		item.add_to_group(Group.Items.AVAILABLE_ITEMS)
 	
 func creature_tag_item(creature: OGCreature, item: OGItem):
 	creature.tag_item(item)
-	if !item.is_available() and item.is_in_group(Group.Item.AVAILABLE_ITEMS):
-		item.remove_from_group(Group.Item.AVAILABLE_ITEMS)
+	if !item.is_available() and item.is_in_group(Group.Items.AVAILABLE_ITEMS):
+		item.remove_from_group(Group.Items.AVAILABLE_ITEMS)
 		
 func creature_untag_item(creature: OGCreature, item: OGItem):
 	creature.untag_item(item)
-	if item.is_available() and !item.is_in_group(Group.Item.AVAILABLE_ITEMS):
-		item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	if item.is_available() and !item.is_in_group(Group.Items.AVAILABLE_ITEMS):
+		item.add_to_group(Group.Items.AVAILABLE_ITEMS)
 	
 func item_used_in_built(item: OGItem):
 	item.queue_free()

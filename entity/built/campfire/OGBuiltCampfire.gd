@@ -7,8 +7,8 @@ func _init():
 	build_cost = 10
 	entity_name = 'Campfire'
 	instance_name = entity_name
-	materials_required = [{ 'material': Item.Material.WOOD }]
-	add_to_group(Group.Built.MEETING_PLACES)
+	materials_required = [{ 'material': Item.Material.BONE }]
+	add_to_group(Group.Builts.MEETING_PLACES)
 	
 
 

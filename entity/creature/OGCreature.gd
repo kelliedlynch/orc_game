@@ -50,4 +50,7 @@ var build_power: float = 1.1
 
 var skills: PoolIntArray = [ Creature.Skill.HAULING, Creature.Skill.BUILDING]
 
+func _init():
+	add_to_group(Group.Creatures.ALL_CREATURES)
+
 func get_class(): return 'OGCreature'

@@ -18,7 +18,7 @@ func trigger_conditions(conditions: Dictionary = {}) -> Dictionary:
 	# There is food that can be eaten
 	conditions = {
 		'items': {
-			Group.Item.AVAILABLE_ITEMS: {
+			Group.Items.AVAILABLE_ITEMS: {
 				HAS: [{ 'edible': true }]
 			}
 		}

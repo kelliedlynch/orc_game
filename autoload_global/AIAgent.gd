@@ -17,6 +17,11 @@ func run(creature: OGCreature):
 			
 	# Current goal does not exist or is not relevant; pick a new goal
 	var best_goal = _get_best_goal(creature, state)
+	if creature.current_goal and creature.current_goal != best_goal and creature.current_goal is Job:
+		creature.current_goal.unassign()
+	if best_goal is Job:
+		JobManager.assign_job_to_creature(best_goal, creature)
+
 	creature.current_goal = best_goal
 	var plan = AIPlanner.get_plan(creature, best_goal)
 	creature.current_plan = plan
@@ -37,27 +42,24 @@ func _check_goal_validity(goal: GOAPGoal, state: Dictionary) -> bool:
 
 
 func _get_best_goal(creature: OGCreature, state: Dictionary) -> GOAPGoal:
-	var goals = creature.goals
+	var goals = creature.goals.duplicate()
 	var highest_priority
 	var inactive_jobs = get_tree().get_nodes_in_group(Group.Jobs.INACTIVE_JOBS)
-	var jobs_to_consider = []
+	var highest_priority_job
 	for job in inactive_jobs:
-		if job.is_valid_for_creature(creature):
-			jobs_to_consider.append(job)
-		goals.append_array(jobs_to_consider)
+		var valid = _check_goal_validity(job, state)
+		if valid:
+			if !highest_priority_job or job.get_priority() > highest_priority_job.get_priority():
+				highest_priority_job = job
+	if highest_priority_job: 
+		goals.append(highest_priority_job)
 		
 	for goal in goals:
-		var valid = _check_goal_validity(goal, state)
-		if !valid: continue
+		if !(goal is Job) and !_check_goal_validity(goal, state):
+			continue
 	
 		if highest_priority == null or goal.get_priority() > highest_priority.get_priority():
 			highest_priority = goal
-		
-	if creature.current_goal and creature.current_goal != highest_priority and creature.current_goal is Job:
-		creature.current_goal.unassign()
-		
-	if highest_priority is Job:
-		highest_priority.assign_to_creature(creature)
 		
 	return highest_priority
 
