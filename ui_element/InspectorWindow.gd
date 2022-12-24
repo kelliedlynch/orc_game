@@ -15,8 +15,6 @@ var _map: OrcGameMap setget set_current_map
 
 func set_current_map(map: OrcGameMap):
 	_map = map
-	
-var old_tab
 
 func _init():
 	visible = false
@@ -34,20 +32,10 @@ func _ready():
 func _process(_delta):
 	if visible:
 		populate_inspector()
-
+			
 func _on_player_target_changed(ptarget: Object, _prev):
-	if old_tab != current_tab:
-		if ptarget is OGCreature and current_tab != TAB_CREATURE:
-			current_tab = TAB_CREATURE
-		elif ptarget is OGItem and current_tab != TAB_ITEM:
-			current_tab = TAB_ITEM
-		elif ptarget is OGBuilt and current_tab != TAB_BUILT:
-			current_tab = TAB_BUILT
-		elif ptarget is OrcGameMapTile and current_tab != TAB_TILE:
-			current_tab = TAB_TILE
-		if ptarget and !visible:
-			visible = true
-
+	if ptarget and !visible:
+		visible = true
 		
 func _set_player_target_from_position_click(pos: Vector2):
 	var loc = SpriteManager.position_to_location(pos)
@@ -55,16 +43,12 @@ func _set_player_target_from_position_click(pos: Vector2):
 	var target
 	if !targets[TAB_CREATURE].empty():
 		target = targets[TAB_CREATURE].back()
-		old_tab = TAB_CREATURE
 	elif !targets[TAB_ITEM].empty():
 		target = targets[TAB_ITEM].back()
-		old_tab = TAB_ITEM
 	elif !targets[TAB_BUILT].empty():
 		target = targets[TAB_BUILT].back()
-		old_tab = TAB_BUILT
 	else:
 		target = targets[TAB_TILE]
-		old_tab = TAB_TILE
 	Global.set_player_target(target)
 
 func _all_targets_at_location(loc: Vector2) -> Dictionary:
@@ -89,47 +73,46 @@ func populate_inspector():
 		target_loc = SpriteManager.position_to_location(get_global_mouse_position())
 	var targets = _all_targets_at_location(target_loc)
 	
-	if current_tab == TAB_CREATURE:
-		set_tab_hidden(TAB_CREATURE, false)
-		populate_creature_tab(targets[TAB_CREATURE])
-	elif current_tab == TAB_ITEM:
-		print('showing item tab')
-		set_tab_hidden(TAB_ITEM, false)
-		populate_item_tab(targets[TAB_ITEM])
-	elif current_tab == TAB_BUILT:
-		set_tab_hidden(TAB_BUILT, false)
-		populate_built_tab(targets[TAB_BUILT])
-	elif current_tab == TAB_TILE:
-#		print('populating tile tab')
-		populate_tile_tab(targets[TAB_TILE])
 	if !get_tab_hidden(TAB_CREATURE) and targets[TAB_CREATURE].empty():
 		set_tab_hidden(TAB_CREATURE, true)
 	elif get_tab_hidden(TAB_CREATURE) and !targets[TAB_CREATURE].empty():
 		set_tab_hidden(TAB_CREATURE, false)
 	if !get_tab_hidden(TAB_ITEM) and targets[TAB_ITEM].empty():
-		print('hiding item tab')
 		set_tab_hidden(TAB_ITEM, true)
 	elif get_tab_hidden(TAB_ITEM) and !targets[TAB_ITEM].empty():
-		print('showing item tab')
 		set_tab_hidden(TAB_ITEM, false)
 	if !get_tab_hidden(TAB_BUILT) and targets[TAB_BUILT].empty():
 		set_tab_hidden(TAB_BUILT, true)
 	elif get_tab_hidden(TAB_BUILT) and !targets[TAB_BUILT].empty():
 		set_tab_hidden(TAB_BUILT, false)
-#	print('finished populating and hiding tabs')
+	
+	if player_target is OGCreature:
+		if current_tab != TAB_CREATURE:
+			current_tab = TAB_CREATURE
+		populate_creature_tab(targets[TAB_CREATURE])
+	elif player_target is OGItem:
+		if current_tab != TAB_ITEM:
+			current_tab = TAB_ITEM
+		populate_item_tab(targets[TAB_ITEM])
+	elif player_target is OGBuilt:
+		if current_tab != TAB_BUILT:
+			current_tab = TAB_BUILT
+		populate_built_tab(targets[TAB_BUILT])
+	elif player_target is OrcGameMapTile or !player_target:
+		if current_tab != TAB_TILE:
+			current_tab = TAB_TILE
+		populate_tile_tab(targets[TAB_TILE])
 	
 func on_tab_changed(tab):
 	var targets = _all_targets_at_location(Global.get_player_target().location)
-	if old_tab == current_tab:
-		if tab == TAB_CREATURE:
-			Global.set_player_target(targets[TAB_CREATURE][creature_index])
-		elif tab == TAB_ITEM:
-			Global.set_player_target(targets[TAB_ITEM][item_index])
-		elif tab == TAB_BUILT:
-			Global.set_player_target(targets[TAB_BUILT][built_index])
-		elif tab == TAB_TILE:
-			Global.set_player_target(targets[TAB_TILE])
-	
+	if tab == TAB_CREATURE:
+		Global.set_player_target(targets[TAB_CREATURE][creature_index])
+	elif tab == TAB_ITEM:
+		Global.set_player_target(targets[TAB_ITEM][item_index])
+	elif tab == TAB_BUILT:
+		Global.set_player_target(targets[TAB_BUILT][built_index])
+	elif tab == TAB_TILE:
+		Global.set_player_target(targets[TAB_TILE])
 		
 func show_next():
 	match current_tab:

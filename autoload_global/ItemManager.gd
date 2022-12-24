@@ -91,8 +91,8 @@ func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
 
 func creature_pick_up_item(creature: OGCreature, item: OGItem):
 	if item_is_at_location(item, creature.location):
-		var tile = map.tile_at(item.location)
-		tile.remove_entity_from_tile(item)
+#		var tile = map.tile_at(item.location)
+#		tile.remove_entity_from_tile(item)
 		creature.add_to_inventory(item)
 		item.remove_from_map()
 
