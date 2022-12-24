@@ -1,7 +1,7 @@
 extends EntityManager
 
 func creature_created(creature):
-	creature.add_to_group('creatures')
+	creature.add_to_group(Group.Creature.ALL_CREATURES)
 	
 func get_creatures_on_tile(tile):
 	return tile.get_creatures()

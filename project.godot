@@ -104,6 +104,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gdUnit3/src/asserts/DefaultValueProvider.gd"
 }, {
+"base": "Reference",
+"class": "Delaunay",
+"language": "GDScript",
+"path": "res://addons/gdDelaunay/Delaunay.gd"
+}, {
 "base": "Sprite",
 "class": "EntitySprite",
 "language": "GDScript",
@@ -730,9 +735,9 @@ _global_script_classes=[ {
 "path": "res://entity/item/OGItemBone.gd"
 }, {
 "base": "OGItem",
-"class": "OGItemSandwich",
+"class": "OGItemMeat",
 "language": "GDScript",
-"path": "res://entity/item/OGItemSandwich.gd"
+"path": "res://entity/item/OGItemMeat.gd"
 }, {
 "base": "OGCreature",
 "class": "OGSentientCreature",
@@ -919,6 +924,7 @@ _global_script_class_icons={
 "Comparator": "",
 "CreatureTestingGround": "",
 "DefaultValueProvider": "",
+"Delaunay": "",
 "EntitySprite": "",
 "EqualsArgumentMatcher": "",
 "Fuzzer": "",
@@ -1044,7 +1050,7 @@ _global_script_class_icons={
 "OGEntity": "",
 "OGItem": "",
 "OGItemBone": "",
-"OGItemSandwich": "",
+"OGItemMeat": "",
 "OGSentientCreature": "",
 "OrcGameMap": "",
 "OrcGameMapController": "",

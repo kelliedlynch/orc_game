@@ -37,4 +37,6 @@ func perform():
 	var valid = CreatureManager.map.locations_adjacent_to(creature.location)
 	var i = randi() % valid.size()
 	creature.set_location(valid[i])
-	return false
+	return true
+	
+func get_class(): return 'ActionWander'

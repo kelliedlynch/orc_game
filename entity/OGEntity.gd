@@ -6,7 +6,7 @@
 extends Node
 class_name OGEntity
 
-var location: Vector2 = Vector2.ZERO setget set_location
+var location: Vector2 = Global.OFF_MAP setget set_location
 var sprite: EntitySprite
 var held_by_player: bool = false
 

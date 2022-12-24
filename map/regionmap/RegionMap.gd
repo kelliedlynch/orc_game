@@ -17,6 +17,8 @@ func create_tiles(world_tile: OrcGameMapTile):
 	var elevation_noise = init_noise( int(floor(world_tile.terrain_intensity * 5.0)), 10.0 + 50.0 * (1.0 - world_tile.elevation), abs(world_tile.elevation), 1.0 + 2.0 * world_tile.terrain_intensity)
 	var soil_quality_noise = init_noise(3, 20.0, world_tile.soil_quality, 2.0)
 	for i in range(Global.map_size.x * Global.map_size.y):
+		if i > 19997:
+			pass
 		var x = i % int(Global.map_size.x)
 		#warning-ignore:integer_division
 		var y = i / int(Global.map_size.x)

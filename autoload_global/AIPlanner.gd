@@ -20,7 +20,7 @@ func get_plan(creature: OGCreature, goal: GOAPGoal) -> Array:
 	root.branching_paths = paths
 		
 	var cheapest_path = _pick_cheapest_branch(root, [])
-	cheapest_path.invert()
+#	cheapest_path.invert()
 	return cheapest_path
 	
 func _find_branching_paths(creature: OGCreature, step: Dictionary, state_: Dictionary) -> Array:

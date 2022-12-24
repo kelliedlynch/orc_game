@@ -520,11 +520,11 @@ margin_bottom = 36.0
 size_flags_horizontal = 7
 size_flags_vertical = 4
 
-[node name="Current Action\?" type="Label" parent="InspectorWindow/Creature/creature_data/creature_action"]
+[node name="Current Action" type="Label" parent="InspectorWindow/Creature/creature_data/creature_action"]
 margin_right = 90.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
-text = "???"
+text = "Current Action:"
 
 [node name="value" type="Label" parent="InspectorWindow/Creature/creature_data/creature_action"]
 margin_left = 94.0

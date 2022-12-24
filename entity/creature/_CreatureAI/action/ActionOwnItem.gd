@@ -43,9 +43,6 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 			'owned': {
 				ADD: [item]
 			},
-#			'inventory': {
-#				ADD: [item]
-#			}
 		}
 	}
 	return transform
@@ -53,7 +50,9 @@ func applied_transform(transform: Dictionary = {}) -> Dictionary:
 func get_cost(): return 1
 
 func perform():
-	ItemManager.creature_own_item(creature, target_item)
-	return true
+	if !target_item.owned:
+		ItemManager.creature_own_item(creature, target_item)
+		return true
+	return false
 
 func get_class(): return 'ActionOwnItem'

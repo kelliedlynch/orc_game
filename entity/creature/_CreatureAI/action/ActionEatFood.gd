@@ -35,6 +35,17 @@ func is_valid(query: Dictionary) -> bool:
 		'edible': true,
 		'nutrition_value': [GREATER_THAN, 1]
 	}
+	
+	# If the creature is already carrying suitable food, eat that
+	for item in creature.inventory:
+		if item.edible:
+			var sim = simulate_object(item)
+			var valid = _eval_has_condition(props, sim)
+			if valid:
+				food = item
+				return true
+				
+	# If creature is not carrying suitable food, find it in the world
 	var foods = ItemManager.find_all_available_items_with_properties(props, ItemManager.PREFER_CLOSER, creature)
 	var best_choice
 	var best_backup
@@ -75,6 +86,16 @@ func reset():
 	food = null
 	
 func perform():
-	pass
+	if creature.inventory.has(food):
+		# TODO: This should probably take some time, instead of happening instantly
+		creature.fullness += food.nutrition_value
+		ItemManager.remove_from_world(food)
+		food = null
+		return true
+	if creature.location == food.location:
+		ItemManager.creature_pick_up_item(creature, food)
+		return false
+	creature.move_toward_location(food.location)
+	return false
 
 func get_class(): return 'ActionEatFood'

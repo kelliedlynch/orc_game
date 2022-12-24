@@ -12,7 +12,20 @@ enum {
 
 func add_to_world(item: OGItem):
 	item.add_to_group(Group.Item.ALL_ITEMS)
-	item.add_to_group(Group.Item.AVAILABLE_ITEMS)	
+	item.add_to_group(Group.Item.AVAILABLE_ITEMS)
+	
+func remove_from_world(item: OGItem):
+	if item.location != Global.OFF_MAP:
+		var tile = map.tile_at(item.location)
+		if tile.get_items().has(item):
+			tile.remove_entity_from_tile(item)
+	while item.tagged or item.owned:
+		for creature in Group.Creature.ALL_CREATURES:
+			if creature.tagged.has(item):
+				creature.untag(item)
+			if creature.owned.has(item):
+				creature.unown(item)
+	item.queue_free()
 
 func get_items_at_location(loc: Vector2):
 	var tile = map.tile_at(loc)
@@ -78,6 +91,8 @@ func item_is_available_to(item: OGItem, creature: OGCreature) -> bool:
 
 func creature_pick_up_item(creature: OGCreature, item: OGItem):
 	if item_is_at_location(item, creature.location):
+		var tile = map.tile_at(item.location)
+		tile.remove_entity_from_tile(item)
 		creature.add_to_inventory(item)
 		item.remove_from_map()
 

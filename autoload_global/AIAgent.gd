@@ -9,14 +9,18 @@ func run(creature: OGCreature):
 	if creature.current_goal:
 		# Just check that the current goal is still relevant, don't do the whole planning process
 		var valid = _check_goal_validity(creature.current_goal, state)
+		# Also check that the creature has a current plan for the goal
+		valid = !creature.current_plan.empty()
 		if valid: 
 			_follow_plan(creature)
 			return
 			
 	# Current goal does not exist or is not relevant; pick a new goal
 	var best_goal = _get_best_goal(creature, state)
+	creature.current_goal = best_goal
 	var plan = AIPlanner.get_plan(creature, best_goal)
 	creature.current_plan = plan
+	creature.current_plan_step = 0
 	_follow_plan(creature)
 	
 
@@ -59,9 +63,9 @@ func _get_best_goal(creature: OGCreature, state: Dictionary) -> GOAPGoal:
 
 func _follow_plan(creature: OGCreature):
 	var plan = creature.current_plan
-	var step = creature.current_plan_step
-	if plan.size() == 0:
-		return
-	var is_step_complete = plan[step].action.perform()
-	if is_step_complete and step < plan.size() - 1:
-		creature.current_plan_step += 1
+#	var step = creature.current_plan_step
+	if !plan.empty():
+		var is_step_complete = plan.back().action.perform()
+		if is_step_complete:
+			plan.pop_back()
+

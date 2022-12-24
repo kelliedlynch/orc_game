@@ -2,18 +2,27 @@ extends GutTest
 
 var target = load('res://autoload_global/AIPlanner.gd')
 var orc = load('res://entity/creature/orc/OGCreatureOrc.tscn')
-var sandwich = load('res://entity/item/OGItemSandwich.tscn')
+var meat = load('res://entity/item/OGItemMeat.tscn')
 var bone_item = load('res://entity/item/OGItemBone.tscn')
 var t: AIPlanner
 var creature: OGCreatureOrc
 var goal_entertain_self: GoalEntertainSelf
 var goal_feed_self: GoalFeedSelf
 var goal_claim_bone: GoalClaimBone
-var food: OGItemSandwich
+var food: OGItemMeat
 var bone: OGItemBone
 var action_eat_food: ActionEatFood
 var action_pick_up_item: ActionPickUpItem
 var action_own_item: ActionOwnItem
+
+#func before_all():
+
+#	map = region_map.instance()
+#	var world_tile = OrcGameMapTile.new(1, 1)
+#	map.create_tiles(world_tile)
+#	world_tile.queue_free()
+#	add_child_autofree(map)
+#	EntityManager.map = map
 
 func before_each():
 	t = target.new()
@@ -34,7 +43,7 @@ func before_each():
 			action_pick_up_item = action
 		if action is ActionOwnItem:
 			action_own_item = action
-	food = sandwich.instance()
+	food = meat.instance()
 	add_child_autofree(food)
 	bone = bone_item.instance()
 	add_child_autofree(bone)

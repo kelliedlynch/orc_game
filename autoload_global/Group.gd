@@ -10,7 +10,7 @@ const Item = {
 }
 
 const Creature = {
-	'LOOKING_FOR_BONE': 'looking_for_bone',
+	'ALL_CREATURES': 'all_creatures',
 }
 
 const Built = {

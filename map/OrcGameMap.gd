@@ -32,7 +32,7 @@ func tile_at(loc: Vector2) -> OrcGameMapTile:
 	if loc.y > Global.map_size.y - 1:
 		push_error("Coord y:" + str(loc.y) + " out of bounds")
 		return null
-	var index = loc.y * Global.map_size.x + loc.x
+	var index = location_to_index(loc)
 	return map_tiles[index]
 
 #func tile_at_viewport_position(position: Vector2):
@@ -53,7 +53,7 @@ func locations_adjacent_to(loc: Vector2) -> Array:
 		adjacent[0] = null
 		adjacent[6] = null
 		adjacent[7] = null
-	if loc.x > Global.map_size.x - 2:
+	if loc.x >= Global.map_size.x - 1:
 		adjacent[2] = null
 		adjacent[3] = null
 		adjacent[4] = null
@@ -61,49 +61,50 @@ func locations_adjacent_to(loc: Vector2) -> Array:
 		adjacent[0] = null
 		adjacent[1] = null
 		adjacent[2] = null
-	if loc.y > Global.map_size.y - 2:
+	if loc.y >= Global.map_size.y - 1:
 		adjacent[4] = null
 		adjacent[5] = null
 		adjacent[6] = null
 	
-	var i = 0
-	var j = adjacent.count(null)
-	while i < j:
-		adjacent.erase(null)
-		i += 1
+	while adjacent.has(null):
+		adjacent.remove(adjacent.find(null))
 	return adjacent
 
 func tiles_adjacent_to(tile: OrcGameMapTile) -> Array:
 	var tiles = []
-	if tile.x > 0:
-		tiles.append(tile_at(Vector2(tile.x - 1, tile.y)))
-		if tile.y > 0:
-			tiles.append(tile_at(Vector2(tile.x - 1, tile.y - 1)))
-		if tile.y < Global.map_size.y - 1:
-			tiles.append(tile_at(Vector2(tile.x - 1, tile.y + 1)))
-	if tile.y > 0:
-		tiles.append(tile_at(Vector2(tile.x, tile.y - 1)))
-	if tile.y < Global.map_size.y - 1:
-		tiles.append(tile_at(Vector2(tile.x, tile.y + 1)))
-	if tile.x < Global.map_size.x - 1:
-		tiles.append(tile_at(Vector2(tile.x + 1, tile.y)))
-		if tile.y > 0:
-			tiles.append(tile_at(Vector2(tile.x + 1, tile.y - 1)))
-		if tile.y < Global.map_size.y - 1:
-			tiles.append(tile_at(Vector2(tile.x + 1, tile.y + 1)))
+	for location in locations_adjacent_to(tile.location):
+		tiles.append(tile_at(location))
 	return tiles
 
-func tiles_orthogonal_to(tile: OrcGameMapTile) -> Array:
-	var tiles = []
-	if tile.x > 0:
-		tiles.append(tile_at(Vector2(tile.x - 1, tile.y)))
-	if tile.x < Global.map_size.x - 1:
-		tiles.append(tile_at(Vector2(tile.x + 1, tile.y)))
-	if tile.y > 0:
-		tiles.append(tile_at(Vector2(tile.x, tile.y - 1)))
-	if tile.y < Global.map_size.y - 1:
-		tiles.append(tile_at(Vector2(tile.x, tile.y + 1)))
-	return tiles
+#	if tile.x > 0:
+#		tiles.append(tile_at(Vector2(tile.x - 1, tile.y)))
+#		if tile.y > 0:
+#			tiles.append(tile_at(Vector2(tile.x - 1, tile.y - 1)))
+#		if tile.y < Global.map_size.y - 1:
+#			tiles.append(tile_at(Vector2(tile.x - 1, tile.y + 1)))
+#	if tile.y > 0:
+#		tiles.append(tile_at(Vector2(tile.x, tile.y - 1)))
+#	if tile.y < Global.map_size.y - 1:
+#		tiles.append(tile_at(Vector2(tile.x, tile.y + 1)))
+#	if tile.x < Global.map_size.x - 1:
+#		tiles.append(tile_at(Vector2(tile.x + 1, tile.y)))
+#		if tile.y > 0:
+#			tiles.append(tile_at(Vector2(tile.x + 1, tile.y - 1)))
+#		if tile.y < Global.map_size.y - 1:
+#			tiles.append(tile_at(Vector2(tile.x + 1, tile.y + 1)))
+#	return tiles
+#
+#func tiles_orthogonal_to(tile: OrcGameMapTile) -> Array:
+#	var tiles = []
+#	if tile.x > 0:
+#		tiles.append(tile_at(Vector2(tile.x - 1, tile.y)))
+#	if tile.x < Global.map_size.x - 1:
+#		tiles.append(tile_at(Vector2(tile.x + 1, tile.y)))
+#	if tile.y > 0:
+#		tiles.append(tile_at(Vector2(tile.x, tile.y - 1)))
+#	if tile.y < Global.map_size.y - 1:
+#		tiles.append(tile_at(Vector2(tile.x, tile.y + 1)))
+#	return tiles
 	
 func apply_factor(value, factor) -> float:
 	# Adjusts value based on factor. Negative factor moves value toward zero. Positive moves away.

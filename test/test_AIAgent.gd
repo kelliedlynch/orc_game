@@ -2,20 +2,38 @@ extends GutTest
 
 var target = load('res://autoload_global/AIAgent.gd')
 var orc = load('res://entity/creature/orc/OGCreatureOrc.tscn')
-var sandwich = load('res://entity/item/OGItemSandwich.tscn')
+var meat = load('res://entity/item/OGItemMeat.tscn')
 var bone_item = load('res://entity/item/OGItemBone.tscn')
+var region_map = load('res://map/regionmap/RegionMap.tscn')
 var t: AIAgent
+var map: RegionMap
 var creature: OGCreatureOrc
 var goal_entertain_self: GoalEntertainSelf
 var goal_feed_self: GoalFeedSelf
 var goal_claim_bone: GoalClaimBone
-var food: OGItemSandwich
+var food: OGItemMeat
 var bone: OGItemBone
 var action_eat_food: ActionEatFood
+
+#func before_all():
+#	t = target.new()
+#	add_child_autofree(t)
+#	map = region_map.instance()
+##	var world_tile = OrcGameMapTile.new(1, 1)
+##	map.create_tiles(world_tile)
+##	world_tile.free()
+#	add_child(map)
+#	EntityManager.map = map
+#
+#func after_all():
+#	map.free()
 
 func before_each():
 	t = target.new()
 	add_child_autofree(t)
+	map = region_map.instance()
+	add_child_autofree(map)
+	EntityManager.map = map
 	creature = orc.instance()
 	add_child_autofree(creature)
 	for goal in creature.goals:
@@ -28,7 +46,7 @@ func before_each():
 	for action in creature.actions:
 		if action is ActionEatFood:
 			action_eat_food = action
-	food = sandwich.instance()
+	food = meat.instance()
 	add_child_autofree(food)
 	bone = bone_item.instance()
 	add_child_autofree(bone)
@@ -47,7 +65,7 @@ func test__check_goal_validity():
 	state = t.simulate_world_state_for_creature(creature)
 	assert_false(t._check_goal_validity(goal_feed_self, state))
 	
-	creature.untag_item(food)
+	creature2.untag_item(food)
 	creature.fullness = 100
 	state = t.simulate_world_state_for_creature(creature)
 	assert_false(t._check_goal_validity(goal_feed_self, state))
@@ -74,7 +92,6 @@ func test__follow_plan():
 	pending()
 	
 func test_run():
-	
 	var expected_plan = [
 		{ 'action': action_eat_food, 'total_cost': 1 },
 	]
